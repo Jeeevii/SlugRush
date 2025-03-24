@@ -1,0 +1,33 @@
+## Frontend Setup (React/Next.js)
+
+The frontend is built using **Next.js**.
+
+1. Navigate to the frontend folder:
+
+    ```bash
+    cd frontend
+    ```
+
+2. Install the required dependencies:
+
+    ```bash
+    npm install
+    ```
+
+3. Set up environment variables:
+    - Create a `.env.local` file in the `frontend` folder.
+    - Add the following environment variable (replace with actual URLs if needed):
+    
+      ```
+      NEXT_PUBLIC_API_URL=http://localhost:5000/api
+      ```
+
+4. Run the frontend locally:
+
+    ```bash
+    npm run dev
+    ```
+
+    This will start the frontend server on `http://localhost:3000`.
+
+---

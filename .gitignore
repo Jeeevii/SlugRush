@@ -1,0 +1,22 @@
+# Node.js / Next.js
+/node_modules/
+/.next/
+/out/
+/*.log
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Virtual environment
+env/
+.env/
+
+# VSCode settings
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
