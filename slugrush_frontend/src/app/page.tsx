@@ -1,5 +1,4 @@
 import Image from "next/image";
-
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 p-8">
@@ -18,9 +17,6 @@ export default function Home() {
         </div>
 
         <div className="mt-8 text-center">
-          <button className="bg-blue-500 text-white px-6 py-3 rounded-md shadow-lg hover:bg-blue-600 transition">
-            View Gym Crowd Data
-          </button>
         </div>
       </main>
 

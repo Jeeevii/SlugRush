@@ -16,19 +16,21 @@ This is a simple web app for UCSC students to track gym crowd levels. It feature
 git clone https://github.com/Jeeevii/SlugRush.git
 code slugrush
 ```
+## 2. Full-Stack Set Up 
 
-## 2. Running the Entire App Locally
+Each folder provide's an specfic README which provides a step by step for setting up the entire project, please refer to them before running the entire app locally.
 
-1. Make sure the **frontend** is running on `http://localhost:3000` and the **backend** is running on `http://localhost:5000`.
+## 3. Running the Entire App Locally
+
+1. Make sure the **frontend** is running on `http://localhost:3000` and the **backend** is running on `http://localhost:8000`.
 
 2. Navigate to `http://localhost:3000` in your browser to access the app.
 
 ---
-
-## 3. Additional Information
+## Additional Information
 
 - **Frontend URL:** `http://localhost:3000`
-- **Backend URL:** `http://localhost:5000`
-- **Mock DB Endpoint:** `http://localhost:5000/api/db`
+- **Backend URL:** `http://localhost:8000`
+- **Mock DB Endpoint:** `http://localhost:8000/gym/crowd_data`
 
 ---
