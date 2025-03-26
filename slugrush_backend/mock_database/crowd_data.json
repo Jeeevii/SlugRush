@@ -1,21 +1,105 @@
 [
-    {
-      "id": 1,
-      "timestamp": "2025-03-24 08:00:00",
-      "crowd_count": 50,
-      "date": "2025-03-24"
-    },
-    {
-      "id": 2,
-      "timestamp": "2025-03-24 09:00:00",
-      "crowd_count": 100,
-      "date": "2025-03-24"
-    },
-    {
-      "id": 3,
-      "timestamp": "2025-03-24 10:00:00",
-      "crowd_count": 75,
-      "date": "2025-03-24"
-    }
-  ]
-  
+  {
+    "id": 1,
+    "timestamp": "06:30:00",
+    "crowd_count": 15,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 2,
+    "timestamp": "07:30:00",
+    "crowd_count": 25,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 3,
+    "timestamp": "08:30:00",
+    "crowd_count": 40,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 4,
+    "timestamp": "09:30:00",
+    "crowd_count": 35,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 5,
+    "timestamp": "10:30:00",
+    "crowd_count": 30,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 6,
+    "timestamp": "11:30:00",
+    "crowd_count": 45,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 7,
+    "timestamp": "12:30:00",
+    "crowd_count": 90,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 8,
+    "timestamp": "13:30:00",
+    "crowd_count": 100,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 9,
+    "timestamp": "14:30:00",
+    "crowd_count": 85,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 10,
+    "timestamp": "15:30:00",
+    "crowd_count": 75,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 11,
+    "timestamp": "16:30:00",
+    "crowd_count": 95,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 12,
+    "timestamp": "17:30:00",
+    "crowd_count": 120,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 13,
+    "timestamp": "18:30:00",
+    "crowd_count": 130,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 14,
+    "timestamp": "19:30:00",
+    "crowd_count": 110,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 15,
+    "timestamp": "20:30:00",
+    "crowd_count": 80,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 16,
+    "timestamp": "21:30:00",
+    "crowd_count": 50,
+    "date": "2023-05-01"
+  },
+  {
+    "id": 17,
+    "timestamp": "22:30:00",
+    "crowd_count": 25,
+    "date": "2023-05-01"
+  }
+]
+
