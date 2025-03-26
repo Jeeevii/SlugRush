@@ -1,43 +1,55 @@
-## Backend Setup (Node.js)
+## Backend Setup (FastAPI + Python)
 
-The backend is built with **Node.js** and handles the API.
+The backend is built with **FastAPI** and handles the API using a mock database.
 
-1. Navigate to the backend folder:
+### 1. Set Up Python Environment (Windows)
+
+1. **Create a Virtual Environment:**
+
+    Open your terminal or PowerShell and navigate to the **backend** folder:
 
     ```bash
     cd ../backend
     ```
 
-2. Install the required dependencies:
+    Create a virtual environment:
 
     ```bash
-    npm install
+    python -m venv .venv
     ```
 
-3. Set up environment variables:
-    - Create a `.env` file in the `backend` folder.
-    - Add the following environment variable for local development (adjust the database URL if necessary):
+2. **Activate the Virtual Environment:**
+    - For Command Prompt:
 
-      ```
-      DATABASE_URL=mongodb://localhost:27017/slugrush
-      ```
+        ```bash
+        .venv\Scripts\activate
+        ```
 
-4. Run the backend locally:
+3. **Install Required Dependencies:**
+
+    Install the necessary Python modules, including **FastAPI** and **Uvicorn**, by running:
 
     ```bash
-    npm run dev
+    pip install fastapi uvicorn
     ```
 
-    This will start the backend server on `http://localhost:5000`.
+### 2. Mock Database
 
----
+For now, we are using a simple mock database stored in `mock_databse/crowd_data.json`.
 
-## 4. Mock Database
+- **URL for Mock DB:** `http://localhost:8000/gym/crowd`
+- This endpoint serves mock data from the `crowd_data.json` file.
 
-For now, we are using a simple mock database.
+### 3. Run the Backend Locally
 
-- URL for Mock DB: `http://localhost:5000/api/db`
-- This endpoint simulates basic data storage and retrieval.
-- The backend will mock interaction with the database, and you can view the data on the frontend.
+1. **Start the FastAPI Server:**
 
----
+    To start the FastAPI server with the mock database, use the following command:
+
+    ```bash
+    python -m uvicorn server:app --reload
+    ```
+
+    The server will be available at `http://localhost:8000`. You can access the mock database at `http://localhost:8000/gym/crowd`.
+
+    This will allow you to interact with the mock database using the FastAPI server.
