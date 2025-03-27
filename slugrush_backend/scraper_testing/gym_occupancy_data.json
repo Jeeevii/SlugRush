@@ -1,0 +1,77 @@
+[
+    {
+        "facility_name": "East Upper Field",
+        "current_occupancy": 0,
+        "max_occupancy": 6000
+    },
+    {
+        "facility_name": "Fitness Center",
+        "current_occupancy": 23,
+        "max_occupancy": 150
+    },
+    {
+        "facility_name": "50m Pool",
+        "current_occupancy": 0,
+        "max_occupancy": 100
+    },
+    {
+        "facility_name": "East Gym",
+        "current_occupancy": 5,
+        "max_occupancy": 100
+    },
+    {
+        "facility_name": "West Field House",
+        "current_occupancy": 0,
+        "max_occupancy": 100
+    },
+    {
+        "facility_name": "Dance Studio",
+        "current_occupancy": 0,
+        "max_occupancy": 65
+    },
+    {
+        "facility_name": "East Outdoor Basketball Courts",
+        "current_occupancy": 0,
+        "max_occupancy": 50
+    },
+    {
+        "facility_name": "East Sand Courts",
+        "current_occupancy": 0,
+        "max_occupancy": 40
+    },
+    {
+        "facility_name": "Multi-Purpose Room",
+        "current_occupancy": 5,
+        "max_occupancy": 36
+    },
+    {
+        "facility_name": "Martial Arts Studio",
+        "current_occupancy": 0,
+        "max_occupancy": 35
+    },
+    {
+        "facility_name": "West Sand Courts",
+        "current_occupancy": 0,
+        "max_occupancy": 30
+    },
+    {
+        "facility_name": "West Tennis Courts (WTC)",
+        "current_occupancy": 0,
+        "max_occupancy": 30
+    },
+    {
+        "facility_name": "ETC - East Tennis Courts",
+        "current_occupancy": 5,
+        "max_occupancy": 24
+    },
+    {
+        "facility_name": "Activities Room",
+        "current_occupancy": 0,
+        "max_occupancy": 23
+    },
+    {
+        "facility_name": "West Outdoor Basketball Courts",
+        "current_occupancy": 0,
+        "max_occupancy": 20
+    }
+]
