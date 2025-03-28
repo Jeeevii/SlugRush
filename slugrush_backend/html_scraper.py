@@ -7,7 +7,25 @@ class FOScraper:
         self.url = "https://campusrec.ucsc.edu/FacilityOccupancy"
         self.facility_id = "facility-bd6cf7a0-9924-4821-84d7-5a995cc63081"
     
-    def scrape_html(self):
+    def get_day_start(self):
+        # Get the current date and day of the week
+        current_datetime = datetime.now()
+        date = current_datetime.strftime("%Y-%m-%d")
+        
+        date_dict = {"Monday": 0, "Tuesday": 1, "Wednesday": 2, "Thursday": 3, "Friday": 4, "Saturday": 5, "Sunday": 6} 
+        day_of_week = current_datetime.strftime("%A")
+        id = f"{date_dict[day_of_week]}"
+
+        # Return the base data structure with empty hourly data
+        return {
+            "id": id,
+            "date": date,
+            "status": "live", # swap to INT -> 1 for Live, 0 for Old 
+            "day_of_week": day_of_week,
+            "hourly_data": []  # Empty list for now, will be filled later
+        }
+
+    def get_hour_count(self):
         response = requests.get(self.url)
         if response.status_code != 200:
             raise Exception("Failed to retrieve data")
@@ -24,10 +42,7 @@ class FOScraper:
         current_datetime = datetime.now() # current date
         timestamp = current_datetime.strftime("%Y-%m-%dT%H:%M:%S") # timestamp
         
-        # SQL Table Schema - manually incrimate for ID? 
         return {
-            "id": current_datetime.timestamp(),  # CHANGE TO MATCH DATE - even need unique ID? 
-            "day_of_week": current_datetime.strftime("%A"),
             "hour": current_datetime.hour,
             "occupancy_count": int(occupancy_count),
             "timestamp": timestamp
@@ -37,7 +52,13 @@ class FOScraper:
 if __name__ == "__main__":
     scraper = FOScraper()
     try:
-        data = scraper.scrape_html()
-        print(data)
+        full_day_data = scraper.get_day_start()
+        print(f"Full day data: {full_day_data}")
+
+        data = scraper.get_hour_count()
+        print("Hourly data: ", data)
     except Exception as e:
         print(f"Error: {e}")
+
+
+
