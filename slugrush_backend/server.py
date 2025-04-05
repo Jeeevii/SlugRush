@@ -63,7 +63,7 @@ def add_gym_data(hourly_data: HourlyData):
 def get_crowd_data():
     scraper = FOScraper()
     try:
-        data = scraper.scrape_html()
+        data = scraper.get_hour_count()
         return JSONResponse(data)
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)

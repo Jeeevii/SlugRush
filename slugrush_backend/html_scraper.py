@@ -5,7 +5,7 @@ from datetime import datetime
 class FOScraper:
     def __init__(self):
         self.url = "https://campusrec.ucsc.edu/FacilityOccupancy"
-        self.facility_id = "facility-bd6cf7a0-9924-4821-84d7-5a995cc63081"
+        self.facility_id = "facility-1799266f-57d9-4cb2-9f43-f5fd88b241db"
     
     def get_day_start(self):
         # Get the current date and day of the week
