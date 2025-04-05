@@ -8,10 +8,10 @@ The backend is built with **FastAPI** and now runs with a real PostgreSQL databa
 
 1. **Create a Virtual Environment**
 
-   Navigate to the `backend` folder:
+   Navigate to the `slugrush_backend` folder:
 
    ```bash
-   cd ../backend
+   cd ../slugrush_backend
    python -m venv .venv
    ```
 
@@ -57,7 +57,7 @@ You should see a `slugrush` container running on port **5432**.
 
 ### 3. 🔌 Connect to the Database
 
-#### 🖥️ GUI Access (DBeaver)
+#### 🖥️ GUI Access (Install DBeaver)
 
 Use the following credentials:
 
@@ -69,7 +69,7 @@ Use the following credentials:
 
 ---
 
-#### CLI Access
+#### Alternatively, CLI Access
 
 To enter the psql shell:
 
