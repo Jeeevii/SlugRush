@@ -36,27 +36,6 @@ def save_mock_data(data):
     with open(MOCK_DB_PATH, "w") as file:
         json.dump(data, file, indent=4)
 
-# GET endpoint to fetch gym data
-@app.get("/gym/crowd/daily", response_model=Dict[str, CrowdData])
-def get_gym_data():
-    #parse, look for data with status: 1, 
-    # return that specfic one
-    return load_mock_data()
-
-# POST endpoint to add new hourly data
-@app.post("/gym/crowd/add", response_model=Dict[str, str])
-def add_gym_data(hourly_data: HourlyData):
-    gym_data = load_mock_data()
-    today = datetime.now().strftime("%Y-%m-%d")
-    day_of_week = datetime.now().strftime("%A")
-    
-    if today not in gym_data:
-        gym_data[today] = {"date": today, "day_of_week": day_of_week, "hourly_data": []}
-    
-    gym_data[today]["hourly_data"].append(hourly_data.model_dump())
-    save_mock_data(gym_data)
-    
-    return {"message": "Data added successfully!"}
 
 # GET endpoint to return parsed scraped data
 @app.get("/gym/scrape")
