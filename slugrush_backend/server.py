@@ -37,6 +37,7 @@ def save_mock_data(data):
         json.dump(data, file, indent=4)
 
 
+
 # GET endpoint to return parsed scraped data
 @app.get("/gym/scrape")
 def get_crowd_data():
