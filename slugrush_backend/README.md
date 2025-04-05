@@ -1,55 +1,129 @@
-## Backend Setup (FastAPI + Python)
+## 🛠️ Backend Setup (FastAPI + PostgreSQL via Docker)
 
-The backend is built with **FastAPI** and handles the API using a mock database.
+The backend is built with **FastAPI** and now runs with a real PostgreSQL database using Docker.
 
-### 1. Set Up Python Environment (Windows)
+---
 
-1. **Create a Virtual Environment:**
+### 1. 🐍 Set Up Python Environment (Windows) - IF NEEDED/MANAGING MUTIPLE PROJECTS
 
-    Open your terminal or PowerShell and navigate to the **backend** folder:
+1. **Create a Virtual Environment**
 
-    ```bash
-    cd ../backend
-    ```
+   Navigate to the `backend` folder:
 
-    Create a virtual environment:
+   ```bash
+   cd ../backend
+   python -m venv .venv
+   ```
 
-    ```bash
-    python -m venv .venv
-    ```
+2. **Activate the Virtual Environment**
 
-2. **Activate the Virtual Environment:**
-    - For Command Prompt:
+   - For **Command Prompt**:
 
-        ```bash
-        .venv\Scripts\activate
-        ```
+     ```bash
+     .venv\Scripts\activate
+     ```
 
-3. **Install Required Dependencies:**
+3. **Install Dependencies**
 
-    Install the necessary Python modules, including **FastAPI** and **Uvicorn**, by running:
+   ```bash
+   pip install fastapi uvicorn psycopg2
+   ```
 
-    ```bash
-    pip install fastapi uvicorn
-    ```
+   > 💡 `psycopg2` is the PostgreSQL adapter for Python.
 
-### 2. Mock Database
+---
 
-For now, we are using a simple mock database stored in `mock_databse/crowd_data.json`.
+### 2. 🐘 PostgreSQL Database (via Docker)
 
-- **URL for Mock DB:** `http://localhost:8000/gym/crowd`
-- This endpoint serves mock data from the `crowd_data.json` file.
+We're using Docker to spin up a local PostgreSQL instance for development and testing. Here’s the setup:
 
-### 3. Run the Backend Locally
+#### 🚀 Start the Database
 
-1. **Start the FastAPI Server:**
+Launch the database container:
 
-    To start the FastAPI server with the mock database, use the following command:
+```bash
+docker-compose up -d
+```
 
-    ```bash
-    python -m uvicorn server:app --reload
-    ```
+Check if it’s running:
 
-    The server will be available at `http://localhost:8000`. You can access the mock database at `http://localhost:8000/gym/crowd`.
+```bash
+docker ps
+```
 
-    This will allow you to interact with the mock database using the FastAPI server.
+You should see a `slugrush` container running on port **5432**.
+
+---
+
+### 3. 🔌 Connect to the Database
+
+#### 🖥️ GUI Access (DBeaver)
+
+Use the following credentials:
+
+- **Host**: `localhost`
+- **Port**: `5432`
+- **User**: `homies`
+- **Password**: `banana`
+- **Database**: `crowd_data`
+
+---
+
+#### CLI Access
+
+To enter the psql shell:
+
+```bash
+docker exec -it slugrush psql -U homies -d crowd_data
+```
+
+### 4. 🚀 Run the Backend Locally
+
+Start the FastAPI server:
+
+```bash
+python -m uvicorn server:app --reload
+```
+
+- **Base URL**: [http://localhost:8000](http://localhost:8000)
+- **Sample Endpoint**: [http://localhost:8000/gym/crowd](http://localhost:8000/gym/crowd)
+
+---
+
+### 5. 🐳 Useful Docker Commands
+
+- 🔄 Restart DB container:
+
+  ```bash
+  docker-compose restart
+  ```
+
+- 📋 See logs:
+
+  ```bash
+  docker logs slugrush
+  ```
+
+- 🛑 Stop all containers:
+
+  ```bash
+  docker-compose down
+  ```
+
+- 💣 Remove volumes (reset the DB):
+
+  ```bash
+  docker-compose down -v
+  ```
+
+---
+
+### 6. 📦 Legacy Mock DB (Optional)
+
+Still available for quick testing:
+
+- File: `mock_database/crowd_data.json`
+- Endpoint: [http://localhost:8000/gym/crowd](http://localhost:8000/gym/crowd)
+```
+
+Let me know if you want this styled with emojis, badges, or split up by environments (like dev vs prod). Happy to help you glow this up even more ✨
