@@ -1,20 +1,36 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from html_scraper import FOScraper
 from pydantic import BaseModel
 import json
+from apscheduler.schedulers.background import BackgroundScheduler
+
+from html_scraper import FOScraper
+from scheduler import Scheduler
 
 MOCK_DB_PATH = "mock_database/crowd_week_data.json"
 
+class Crowd(BaseModel):
+    crowd_count: int
+
 app = FastAPI()
 
-class Crowd(BaseModel):
-    message: str
+scheduler = BackgroundScheduler() # runs on seperate thread
+scheduler_instance = Scheduler(scheduler)
+
+@app.on_event("startup") # when backend server runs 
+async def startup_event():
+    scheduler_instance.start_jobs(interval=5)
+
+
+@app.on_event("shutdown") # when server stops (manual ctrl + c)
+async def shutdown_event():
+    scheduler_instance.stop_jobs()
+
 
 @app.get("/")
 async def root():
     return {
-        "message": "SlugRush | Backend running on FastAPI on port 8000",
+        "message": "SlugRush | Backend running on FastAPI on PORT 8000",
         "routes": {
             "/docs": "FastAPI's docs with clear and visual examples",
             "/get/count": "GETS formatted count of Fitness Center",
@@ -23,6 +39,7 @@ async def root():
             "/post/crowd": "POSTS given count into daily table"
         }
     }
+
 
 # GET endpoint to return scraped count data
 @app.get("/get/count")
@@ -34,6 +51,8 @@ def get_count():
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
 
+
+# GET endpoint to return day table containing all live data
 @app.get("/get/daily")
 def get_daily():
 
@@ -53,18 +72,19 @@ def get_weekly():
         "data": []
     })
 
+
 @app.post("/post/crowd/")
 def post_crowd(crowd: Crowd):
-    msg = crowd.message
+    count = crowd.crowd_count
 
     return {
         "status": "success",
         "message": "POST crowd count currently under development",
-        "crowd": msg
+        "crowd": count
     }
 
 
-# internal testing 
-if __name__ == "__main__":
-    app.run(debug=True)
+# internal testing - CAN NOT FOR FAST API, need httpx 
+# if __name__ == "__main__":
+#     #app.run(debug=True)
 
