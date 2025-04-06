@@ -26,7 +26,7 @@ The backend is built with **FastAPI** and now runs with a real PostgreSQL databa
 3. **Install Dependencies**
 
    ```bash
-   pip install fastapi uvicorn psycopg2
+   pip install fastapi uvicorn psycopg2 requests bs4
    ```
 
    > 💡 `psycopg2` is the PostgreSQL adapter for Python.
