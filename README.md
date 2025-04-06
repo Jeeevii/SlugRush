@@ -4,9 +4,10 @@ This is a simple web app for UCSC students to track gym crowd levels. It feature
 
 ## Project Structure
 
-- **frontend/**: React/Next.js app
-- **backend/**: Node.js API (with mock data or mock DB)
-- **mockdb/**: A mock database used for simulating data.
+- **slugrush_frontend/**: React/Next.js app
+- **slugrush_backend/**: FastAPI (with PostgreSQL DB running on Docker & mock DB)
+- **slugrush_backend/docker-compose.yml**: Install Docker and follow backend instructions to set up SQL DB
+- **slugrush_backend/mockdb**: A mock database used for inital testing, runs when fastapi app starts
 
 ## Getting Started
 
@@ -31,6 +32,6 @@ Each folder provide's an specfic README which provides a step by step for settin
 
 - **Frontend URL:** `http://localhost:3000`
 - **Backend URL:** `http://localhost:8000`
-- **Mock DB Endpoint:** `http://localhost:8000/gym/crowd_data`
+- **Mock DB Endpoint:** `http://localhost:8000/get/daily` or `http://localhost:8000/get/weekly`
 
 ---
