@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from html_scraper import FOScraper
 from pydantic import BaseModel
+import json
 
 MOCK_DB_PATH = "mock_database/crowd_week_data.json"
 
@@ -29,7 +30,7 @@ def get_count():
     scraper = FOScraper()
     try:
         data = scraper.get_hour_count()
-        return JSONResponse(content=data)
+        return json.loads(data)
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
 
@@ -64,6 +65,6 @@ def post_crowd(crowd: Crowd):
 
 
 # internal testing 
-# if __name__ == "__main__":
-
+if __name__ == "__main__":
+    app.run(debug=True)
 

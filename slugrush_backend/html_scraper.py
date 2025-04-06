@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+import json
 
 class FOScraper:
     def __init__(self):
@@ -41,12 +42,16 @@ class FOScraper:
         occupancy_count = facility.find("p", class_="occupancy-count").strong.text.strip()
         current_datetime = datetime.now() # current date
         timestamp = current_datetime.strftime("%Y-%m-%dT%H:%M:%S") # timestamp
-        
-        return {
-            "hour": current_datetime.hour,
-            "occupancy_count": int(occupancy_count),
-            "timestamp": timestamp
-        }
+        # res = {}
+        # res['hour'] = current_datetime.hour
+        # res['occupancy_count'] = int(occupancy_count)
+        # res['timestamp'] = timestamp
+
+        return json.dumps({
+            'hour': current_datetime.hour,
+            'occupancy_count': int(occupancy_count),
+            'timestamp': timestamp
+        })
 
 # internal testing 
 if __name__ == "__main__":
@@ -56,7 +61,11 @@ if __name__ == "__main__":
         print(f"Full day data: {full_day_data}")
 
         data = scraper.get_hour_count()
-        print("Hourly data: ", data)
+        #print("Hourly data: ", data)
+        parsed_data = json.loads(data)
+        print(parsed_data['hour'])
+        print(parsed_data['occupancy_count'])
+        
     except Exception as e:
         print(f"Error: {e}")
 
