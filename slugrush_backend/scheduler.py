@@ -2,12 +2,13 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import requests
 import json
 import time
-
+from database import Database
 
 class Scheduler:
     def __init__(self):
         self.url = 'http://localhost:8000'
         self.scheduler = BackgroundScheduler()
+        self.database = Database()
 
     def start_jobs(self):
         # TEMP - schedule the task to run every `interval` seconds - SWAP TO CRON LATER
@@ -20,6 +21,8 @@ class Scheduler:
     def stop_jobs(self):
         print("Stopping the scheduler...")
         self.scheduler.shutdown()
+        self.database.close()
+
 
     def display(self, job, msg):
         print(f"Executed {job}: {msg}")
@@ -36,17 +39,10 @@ class Scheduler:
         except Exception as e:
             print("Error with fetching endpoint: ", e)
 
-    def get_day(self):
-        # Job for fetching occupancy count 
-        start_url = self.url + '/get/start'
-        try:
-            response = requests.get(start_url)
-            if response.status_code == 200:
-                self.display('get_day',response.json())
-            else:
-                print("Error with fetched data: ", response.status_code)
-        except Exception as e:
-            print("Error with fetching endpoint: ", e)
+    def post_day(self):
+        # Job for adding new row to days_count table
+        print("New Day Table Added")
+        self.database.add_new_day()
 
     def post_crowd(self, count):
         # temp Job for posting fetched data
@@ -65,9 +61,8 @@ class Scheduler:
 
 # internal testing
 if __name__ == "__main__":
-    scheduler = BackgroundScheduler()
-    job = Scheduler(scheduler)
-    job.start_jobs(interval=5)  # Start the scheduler with a 5-second interval
+    scheduler = Scheduler()
+    scheduler.start_jobs()  # Start the scheduler with a 5-second interval
 
     try:
         # Keep the program running to allow the scheduler to run tasks
@@ -76,4 +71,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         # Handle the Ctrl+C interruption and stop the scheduler
         print("Scheduler interrupted by user!")
-        job.stop_jobs()
+        scheduler.stop_jobs()

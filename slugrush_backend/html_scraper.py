@@ -7,23 +7,6 @@ class FOScraper:
     def __init__(self):
         self.url = "https://campusrec.ucsc.edu/FacilityOccupancy"
         self.facility_id = "facility-1799266f-57d9-4cb2-9f43-f5fd88b241db"
-    
-    def day_start(self):
-        # Get the current date and day of the week
-        current_datetime = datetime.now()
-        date = current_datetime.strftime("%Y-%m-%d")
-        
-        date_dict = {"Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4, "Friday": 5, "Saturday": 6, "Sunday": 7} 
-        day_of_week = current_datetime.strftime("%A")
-        id = f"{date_dict[day_of_week]}"
-
-        # Return the base data structure with empty hourly data
-        return json.dumps({
-            "id": id,
-            "date": date,
-            "status": 1, # swap to INT -> 1 for Live, 0 for Old 
-            "day_of_week": day_of_week,
-        })
 
     def get_crowd_count(self):
         response = requests.get(self.url)
@@ -48,6 +31,7 @@ class FOScraper:
 
         return json.dumps({
             'hour': current_datetime.hour,
+            'minute': current_datetime.minute,
             'crowd_count': int(occupancy_count),
             'timestamp': timestamp
         })

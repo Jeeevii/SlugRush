@@ -1,24 +1,24 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+import psycopg2
 import json
 
 from html_scraper import FOScraper
 from scheduler import Scheduler
 
-MOCK_DB_PATH = "mock_database/crowd_week_data.json"
+# MOCK_DB_PATH = "mock_database/crowd_week_data.json"
 
 class Crowd(BaseModel):
     crowd_count: int
 
 app = FastAPI()
- 
 scheduler = Scheduler() # runs background scheduler seperate thread
+
 
 @app.on_event("startup") # when backend server runs 
 async def startup_event():
     scheduler.start_jobs()
-
 
 @app.on_event("shutdown") # when server stops (manual ctrl + c)
 async def shutdown_event():
@@ -45,15 +45,6 @@ def get_count():
     scraper = FOScraper()
     try:
         data = scraper.get_crowd_count()
-        return json.loads(data)
-    except Exception as e:
-        return JSONResponse({"error": str(e)}, status_code=500)
-
-@app.get("/get/start")
-def get_count():
-    scraper = FOScraper()
-    try:
-        data = scraper.day_start()
         return json.loads(data)
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
