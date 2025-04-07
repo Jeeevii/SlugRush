@@ -5,58 +5,52 @@ import time
 from database import Database
 
 class Scheduler:
-    def __init__(self):
+    def __init__(self) -> None:
         self.url = 'http://localhost:8000'
         self.scheduler = BackgroundScheduler()
         self.database = Database()
 
-    def start_jobs(self):
+    def start_jobs(self) -> None:
+        self.database.start()
         # TEMP - schedule the task to run every `interval` seconds - SWAP TO CRON LATER
-        self.scheduler.add_job(self.get_day, 'interval', seconds=15) # add new table to db
-        self.scheduler.add_job(self.get_count, 'interval', seconds=5) # scrape and add data to new table
+        self.scheduler.add_job(self.post_new_day, 'interval', seconds=20) # add new table to db -- before start of new/end of day
+        self.scheduler.add_job(self.post_hourly_count, 'interval', seconds=10) # scrape and add data to new table -- every 30 minutes within operation hours
 
         self.scheduler.start()
         print("Scheduler started...")
 
-    def stop_jobs(self):
+    def stop_jobs(self) -> None:
         print("Stopping the scheduler...")
         self.scheduler.shutdown()
         self.database.close()
 
+    def display(self, job: str, msg: str) -> None:
+        print(f"Executed {job} with Message: {msg}")
 
-    def display(self, job, msg):
-        print(f"Executed {job}: {msg}")
+    def post_new_day(self) -> None:
+        # Job for adding new row to days_count table
+        print("SCHEDULER's Adding New Day Row...")
+        self.database.add_new_day()
+        return
 
-    def get_count(self):
+    def get_hourly_count(self) -> dict[str, int | str] | None:
         # Job for fetching occupancy count 
         count_url = self.url + '/get/count'
         try:
             response = requests.get(count_url)
             if response.status_code == 200:
-                self.display('get_count', response.json())
+                #self.display('get_count', response.json())
+                return response.json()
             else:
                 print("Error with fetched data: ", response.status_code)
         except Exception as e:
             print("Error with fetching endpoint: ", e)
 
-    def post_day(self):
-        # Job for adding new row to days_count table
-        print("New Day Table Added")
-        self.database.add_new_day()
-
-    def post_crowd(self, count):
-        # temp Job for posting fetched data
-        post_url = self.url + '/post/crowd/'
-        try:
-            response = requests.post(post_url, json={
-                'crowd_count': count
-            })
-            if response.status_code == 201:
-                print("Sucessfully posting count: ", response.content)
-            else:
-                print("Error with posting data: ", response.status_code)
-        except Exception as e:
-            print("Error with posting endpoint: ", e)
+    def post_hourly_count(self) -> None:
+        print("SCHEDULER's Adding New Hourly Row...")
+        crowd_data = self.get_hourly_count()
+        self.database.add_hourly_count(crowd_data)
+        return
 
 
 # internal testing

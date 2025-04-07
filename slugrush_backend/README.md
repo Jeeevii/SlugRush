@@ -26,7 +26,7 @@ The backend is built with **FastAPI** and now runs with a real PostgreSQL databa
 3. **Install Dependencies**
 
    ```bash
-   pip install fastapi uvicorn psycopg2 requests bs4
+   pip install fastapi uvicorn psycopg2 requests bs4 apscheduler
    ```
 
    > 💡 `psycopg2` is the PostgreSQL adapter for Python.
@@ -57,7 +57,7 @@ You should see a `slugrush` container running on port **5432**.
 
 ### 3. 🔌 Connect to the Database
 
-#### 🖥️ GUI Access (Install DBeaver)
+#### 🖥️ GUI Access (Install PostgreSQL or DBeaver)
 
 Use the following credentials:
 

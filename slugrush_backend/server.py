@@ -13,17 +13,15 @@ class Crowd(BaseModel):
     crowd_count: int
 
 app = FastAPI()
-scheduler = Scheduler() # runs background scheduler seperate thread
+# scheduler = Scheduler() # runs background scheduler seperate thread
 
+# @app.on_event("startup") # when backend server runs 
+# async def startup_event():
+#     scheduler.start_jobs()
 
-@app.on_event("startup") # when backend server runs 
-async def startup_event():
-    scheduler.start_jobs()
-
-@app.on_event("shutdown") # when server stops (manual ctrl + c)
-async def shutdown_event():
-    scheduler.stop_jobs()
-
+# @app.on_event("shutdown") # when server stops (manual ctrl + c)
+# async def shutdown_event():
+#     scheduler.stop_jobs()
 
 @app.get("/")
 async def root():
@@ -34,14 +32,13 @@ async def root():
             "/get/count": "GETS formatted count of Fitness Center",
             "/get/daily": "GETS all daily counts currently getting collected",
             "/get/weekly": "GETS previous week's counts",
-            "/post/crowd": "POSTS given count into daily table"
         }
     }
 
 
 # GET endpoint to return scraped count data
 @app.get("/get/count")
-def get_count():
+def get_count() -> None:
     scraper = FOScraper()
     try:
         data = scraper.get_crowd_count()
@@ -51,7 +48,7 @@ def get_count():
     
 # GET endpoint to return day table containing all live data
 @app.get("/get/daily")
-def get_daily():
+def get_daily() -> None:
 
     return JSONResponse(content={
         "status": "success",
@@ -59,9 +56,9 @@ def get_daily():
         "data": []
     })
 
-
+# GET endpoint to return previous weeks table (maybe all tables?)
 @app.get("/get/weekly")
-def get_weekly():
+def get_weekly() -> JSONResponse:
 
     return JSONResponse(content={
         "status": "success",
@@ -69,16 +66,6 @@ def get_weekly():
         "data": []
     })
 
-
-@app.post("/post/crowd/")
-def post_crowd(crowd: Crowd):
-    count = crowd.crowd_count
-
-    return {
-        "status": "success",
-        "message": "POST crowd count currently under development",
-        "crowd": count
-    }
 
 
 # internal testing - CAN NOT FOR FAST API, need httpx 

@@ -4,11 +4,11 @@ from datetime import datetime
 import json
 
 class FOScraper:
-    def __init__(self):
+    def __init__(self) -> None:
         self.url = "https://campusrec.ucsc.edu/FacilityOccupancy"
         self.facility_id = "facility-1799266f-57d9-4cb2-9f43-f5fd88b241db"
 
-    def get_crowd_count(self):
+    def get_crowd_count(self) -> None:
         response = requests.get(self.url)
         if response.status_code != 200:
             raise Exception("Failed to retrieve data")
@@ -40,15 +40,6 @@ class FOScraper:
 if __name__ == "__main__":
     scraper = FOScraper()
     try:
-        day_start = scraper.day_start()
-        print(f"Full day data: {day_start}")
-        parsed_day = json.loads(day_start)
-
-        print(parsed_day['id'])
-        print(parsed_day['date'])
-        print(parsed_day['status'])
-        print(parsed_day['day_of_week'])
-
         # hour testing
         crowd_data = scraper.get_crowd_count()
         print("Hourly data: ", crowd_data)

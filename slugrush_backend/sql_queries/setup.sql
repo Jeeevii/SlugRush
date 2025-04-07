@@ -1,5 +1,5 @@
 -- daily table which provides key for hourly count, also status check
-CREATE TABLE days_count (
+CREATE TABLE IF NOT EXISTS days_count (
     id INT PRIMARY KEY,  -- 1–14 rotation
     date DATE NOT NULL,
     status SMALLINT NOT NULL CHECK (status IN (0, 1)),  -- 0 = Old, 1 = Live
@@ -7,7 +7,7 @@ CREATE TABLE days_count (
 );
 
 -- unique count per 30 minutes, referenced by days_count tables
-CREATE TABLE hourly_count (
+CREATE TABLE IF NOT EXISTS hourly_count (
     id SERIAL PRIMARY KEY,  -- auto-increment
     day_id INT NOT NULL REFERENCES days_count(id),
     hour SMALLINT NOT NULL CHECK (hour BETWEEN 0 AND 23),
