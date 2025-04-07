@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import json
-from apscheduler.schedulers.background import BackgroundScheduler
 
 from html_scraper import FOScraper
 from scheduler import Scheduler
@@ -13,18 +12,17 @@ class Crowd(BaseModel):
     crowd_count: int
 
 app = FastAPI()
-
-scheduler = BackgroundScheduler() # runs on seperate thread
-scheduler_instance = Scheduler(scheduler)
+ 
+scheduler = Scheduler() # runs background scheduler seperate thread
 
 @app.on_event("startup") # when backend server runs 
 async def startup_event():
-    scheduler_instance.start_jobs(interval=5)
+    scheduler.start_jobs()
 
 
 @app.on_event("shutdown") # when server stops (manual ctrl + c)
 async def shutdown_event():
-    scheduler_instance.stop_jobs()
+    scheduler.stop_jobs()
 
 
 @app.get("/")
@@ -46,12 +44,20 @@ async def root():
 def get_count():
     scraper = FOScraper()
     try:
-        data = scraper.get_hour_count()
+        data = scraper.get_crowd_count()
         return json.loads(data)
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
 
-
+@app.get("/get/start")
+def get_count():
+    scraper = FOScraper()
+    try:
+        data = scraper.day_start()
+        return json.loads(data)
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=500)
+    
 # GET endpoint to return day table containing all live data
 @app.get("/get/daily")
 def get_daily():

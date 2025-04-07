@@ -5,13 +5,15 @@ import time
 
 
 class Scheduler:
-    def __init__(self, scheduler):
+    def __init__(self):
         self.url = 'http://localhost:8000'
-        self.scheduler = scheduler
+        self.scheduler = BackgroundScheduler()
 
-    def start_jobs(self, interval=3):
-        # TEMP - schedule the task to run every `interval` seconds
-        self.scheduler.add_job(self.get_count, 'interval', seconds=interval)
+    def start_jobs(self):
+        # TEMP - schedule the task to run every `interval` seconds - SWAP TO CRON LATER
+        self.scheduler.add_job(self.get_day, 'interval', seconds=15) # add new table to db
+        self.scheduler.add_job(self.get_count, 'interval', seconds=5) # scrape and add data to new table
+
         self.scheduler.start()
         print("Scheduler started...")
 
@@ -19,8 +21,8 @@ class Scheduler:
         print("Stopping the scheduler...")
         self.scheduler.shutdown()
 
-    def display(self, msg):
-        print(f"Scraped data: {msg}")
+    def display(self, job, msg):
+        print(f"Executed {job}: {msg}")
 
     def get_count(self):
         # Job for fetching occupancy count 
@@ -28,7 +30,19 @@ class Scheduler:
         try:
             response = requests.get(count_url)
             if response.status_code == 200:
-                self.display(response.json())
+                self.display('get_count', response.json())
+            else:
+                print("Error with fetched data: ", response.status_code)
+        except Exception as e:
+            print("Error with fetching endpoint: ", e)
+
+    def get_day(self):
+        # Job for fetching occupancy count 
+        start_url = self.url + '/get/start'
+        try:
+            response = requests.get(start_url)
+            if response.status_code == 200:
+                self.display('get_day',response.json())
             else:
                 print("Error with fetched data: ", response.status_code)
         except Exception as e:
