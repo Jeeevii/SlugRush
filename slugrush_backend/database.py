@@ -1,6 +1,7 @@
 import psycopg2
 from datetime import datetime
-import requests
+import json
+from web_scraper import Scraper
 
 NEXT_WEEK = 7
 LIVE = 1
@@ -9,6 +10,7 @@ DAY_TABLE = 'days_count'
 HOUR_TABLE = 'hourly_count'
 
 class Database():
+    # basic constructer starting database connection with psycopgg
     def __init__(self) -> None:
         self.connection = psycopg2.connect( 
             host = "localhost", 
@@ -17,8 +19,10 @@ class Database():
             password = "banana", 
             port = "5432"
         )
+        # main connection, has plently of built ins to talk to db
         self.cursor = self.connection.cursor()
 
+    # on start, CREATES days_count and hourly_count TABLES if they don't exist
     def start(self) -> None:
         days_table_query = """
             CREATE TABLE IF NOT EXISTS days_count (
@@ -45,21 +49,25 @@ class Database():
         self.send_query(hourly_table_query)
         return
 
-
-    def close(self) -> None: # closes all connections
+    # on call, disconnects any and all connections
+    def close(self) -> None: 
         self.cursor.close()
         self.connection.close()
 
+    # helper for sending queries
     def send_query(self, query: str) -> None:
         self.cursor.execute(query)
         self.connection.commit()
 
+    # helper for reading 1 row from response O(1)
     def read_one(self) -> None:
         return self.cursor.fetchone()
     
+    # helper for reading all from responses O(n)
     def read_all(self) -> None:
         return self.cursor.fetchall()
     
+    # helper for deleting rows from given table and range
     def delete_by_id(self, table: str, start: int, end: int) -> None: # Delete rows based on ID from days_count table
         delete_query = f"""
             DELETE FROM {table} WHERE id = %s;
@@ -70,6 +78,7 @@ class Database():
             self.connection.commit()
         return
 
+    # helper for checking if given id exist in days_count table
     def check_id(self, id: int) -> bool: # check if current ID is already in days_count table
         id_check_query = f"""
             SELECT * FROM days_count WHERE id = %s
@@ -81,6 +90,7 @@ class Database():
             return True
         return False
     
+    # helper for getting current date, day_id, and day of week 
     def get_day(self) -> None: 
         current_datetime = datetime.now()
         date_dict = {"Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4, "Friday": 5, "Saturday": 6, "Sunday": 7} 
@@ -95,36 +105,45 @@ class Database():
             'day_of_week': day_of_week
         }
 
-    def add_new_day(self) -> None: # add a new row for current day into days_count table
+    # sends a SQL query to days_count table - SHOULD BE DONE EVERY DAY 
+    def send_new_day(self) -> None:
         curr_day = self.get_day()
         date = curr_day['date']
         day_of_week = curr_day['day_of_week']
         id = curr_day['day_id']
-        id += 1
-        # if self.check_id(id) and self.check_id(id + NEXT_WEEK): # if both ids exist 
-        #     print(f"Both {id} and {id + NEXT_WEEK} exist in database, not sending")
-        #     return 
+
+        # when sending new day, edit previous day's status to 0 (not collecting anymore) - TO DO TASK
         
+        new_id = id 
         if self.check_id(id): # if ID exist, add for next week
             print(f"{id} exists, adding for next week")
-            id = id + NEXT_WEEK # next week
-        else: # if ID doesnt exist, current week 
+            new_id = id + NEXT_WEEK # next week
+        else: # if ID doesnt exist, its current week 
             print(f"{id} doesnt exist, adding to table")
 
+        
+        # when both ids exist for monday, delete first week and update with second week - TO DO TASK
+        # third weeks monday will be + 7 
+        # if monday and both ids for monday exist, do logic
+        if self.check_id(new_id):
+            print(f"{new_id} also exist in database, deleting and swapping")
+            return 
+        
         add_day_query = f"""
             INSERT INTO days_count(id, date, status, day_of_week)
-            VALUES ({id}, '{date}', {LIVE}, '{day_of_week}')
+            VALUES ({new_id}, '{date}', {LIVE}, '{day_of_week}')
         """
         print("DATABASE's Daily Query Sent!")
         self.send_query(add_day_query)
         return
     
+    # helper for rounding to closest 0 or 30 - NEEDED FOR HOURLY TABLE
     def round_minute(self, minute: str) -> int: # rounding to nearest 0 or 30
         if minute <= 15 or minute > 45:
             return 0
         return 30
     
-    def add_hourly_count(self, crowd_data: dict[str, int | str]) -> None: # sending hourly count 
+    def send_hourly_count(self, crowd_data: dict[str, int | str]) -> None: # sending hourly count 
         day_data = self.get_day()
         day_id = day_data['day_id']
 
@@ -132,6 +151,12 @@ class Database():
         minute = crowd_data['minute']
         crowd_count = crowd_data['crowd_count']   
         timestamp = crowd_data['timestamp']
+
+        # check if days_count table has day_id, if not don't send?? 
+        if not self.check_id(day_id):
+            print(f"Table DOESN'T HAVE {day_id} NOT SENDING")
+            return
+        
         add_hour_query = f"""
             INSERT INTO hourly_count(day_id, hour, minute, crowd_count, timestamp)
             VALUES({day_id}, {hour}, {self.round_minute(minute)}, {crowd_count}, '{timestamp}')
@@ -140,6 +165,10 @@ class Database():
         self.send_query(add_hour_query)              
         return
 
+
+
+# TESTING 
+# ------------------------------------------------------------------
 get_day_query = """
     SELECT * FROM days_count
 """
@@ -147,33 +176,22 @@ get_hour_query = """
     SELECT * FROM hourly_count
 """
 
-def get_hourly_count() -> dict[str, int | str] | None: 
-    # Job for fetching occupancy count 
-    count_url = 'http://localhost:8000/get/count'
-    try:
-        response = requests.get(count_url)
-        if response.status_code == 200:
-            #self.display('get_count', response.json())
-            return response.json()
-        else:
-            print("Error with fetched data: ", response.status_code)
-    except Exception as e:
-        print("Error with fetching endpoint: ", e)
-
 # internal testing
 if __name__ == "__main__":
     db = Database()
+    scrape = Scraper()
     #db.start()
 
     # PLEASE DOUBLE CHECK BEFORE DELETING ITEMS
-    # db.delete_by_id(HOUR_TABLE, 13, 21)
+    #db.delete_by_id(DAY_TABLE, 9, 9)
 
-    # db.add_new_day()
-    # crowd_data = get_hourly_count()
-    # db.add_hourly_count(crowd_data)
+    #db.send_new_day()
+    # data = scrape.gym_scrape()
+    # crowd_data = json.loads(data)
+    # db.send_hourly_count(crowd_data)
     
     # checking days table
-    print("CHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
+    print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
     db.send_query(get_day_query)
     print(db.read_all())
 

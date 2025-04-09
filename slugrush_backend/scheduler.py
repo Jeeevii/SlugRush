@@ -13,8 +13,8 @@ class Scheduler:
     def start_jobs(self) -> None:
         self.database.start()
         # TEMP - schedule the task to run every `interval` seconds - SWAP TO CRON LATER
-        self.scheduler.add_job(self.post_new_day, 'interval', seconds=20) # add new table to db -- before start of new/end of day
-        self.scheduler.add_job(self.post_hourly_count, 'interval', seconds=10) # scrape and add data to new table -- every 30 minutes within operation hours
+        self.scheduler.add_job(self.add_new_day, 'interval', seconds=19) # add new table to db -- before start of new/end of day
+        self.scheduler.add_job(self.add_hourly_count, 'interval', seconds=10) # scrape and add data to new table -- every 30 minutes within operation hours
 
         self.scheduler.start()
         print("Scheduler started...")
@@ -27,13 +27,13 @@ class Scheduler:
     def display(self, job: str, msg: str) -> None:
         print(f"Executed {job} with Message: {msg}")
 
-    def post_new_day(self) -> None:
+    def add_new_day(self) -> None:
         # Job for adding new row to days_count table
         print("SCHEDULER's Adding New Day Row...")
-        self.database.add_new_day()
+        self.database.send_new_day()
         return
 
-    def get_hourly_count(self) -> dict[str, int | str] | None:
+    def get_scraped_data(self) -> dict[str, int | str] | None:
         # Job for fetching occupancy count 
         count_url = self.url + '/get/count'
         try:
@@ -46,10 +46,10 @@ class Scheduler:
         except Exception as e:
             print("Error with fetching endpoint: ", e)
 
-    def post_hourly_count(self) -> None:
+    def add_hourly_count(self) -> None:
         print("SCHEDULER's Adding New Hourly Row...")
-        crowd_data = self.get_hourly_count()
-        self.database.add_hourly_count(crowd_data)
+        crowd_data = self.get_scraped_data()
+        self.database.send_hourly_count(crowd_data)
         return
 
 
