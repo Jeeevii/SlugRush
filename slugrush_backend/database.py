@@ -143,6 +143,7 @@ class Database():
             return 0
         return 30
     
+    # sends query to add crowd count into hourly_count table
     def send_hourly_count(self, crowd_data: dict[str, int | str]) -> None: # sending hourly count 
         day_data = self.get_day()
         day_id = day_data['day_id']
@@ -164,6 +165,16 @@ class Database():
         print("DATABASE's Hourly Query Sent!")
         self.send_query(add_hour_query)              
         return
+    
+    # send query to database joining all content in 1 day (containing all crowd_count per hour, etc), return parsed and formatted dict
+    def send_get_daily(self) -> dict: 
+        return {
+            'message': 'hello world'
+        }
+
+
+
+
 
 
 

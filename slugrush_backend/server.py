@@ -6,6 +6,7 @@ import json
 
 from web_scraper import Scraper
 from scheduler import Scheduler
+from database import Database
 
 # MOCK_DB_PATH = "mock_database/crowd_week_data.json"
 
@@ -13,17 +14,17 @@ class Crowd(BaseModel):
     crowd_count: int
 
 app = FastAPI()
-scheduler = Scheduler() # runs background scheduler seperate thread
+# scheduler = Scheduler() # runs background scheduler seperate thread
 
-# runs when backend server is started 
-@app.on_event("startup")  
-async def startup_event():
-    scheduler.start_jobs()
+# # runs when backend server is started 
+# @app.on_event("startup")  
+# async def startup_event():
+#     scheduler.start_jobs()
 
-# runs when backend server shuts down (manual ctrl + c)
-@app.on_event("shutdown") 
-async def shutdown_event():
-    scheduler.stop_jobs()
+# # runs when backend server shuts down (manual ctrl + c)
+# @app.on_event("shutdown") 
+# async def shutdown_event():
+#     scheduler.stop_jobs()
 
 # route 
 @app.get("/")
@@ -52,10 +53,12 @@ def get_count() -> None:
 # GET endpoint - queries database and returns all rows with current day crowd_counts - NEEDED FOR GRAPHING DAILY VIEW
 @app.get("/get/daily")
 def get_daily() -> None:
-
+    db = Database()
+    msg = db.send_get_daily()
+    
     return JSONResponse(content={
         "status": "success",
-        "message": "GET daily route currently under development",
+        "message": msg,
         "data": []
     })
 

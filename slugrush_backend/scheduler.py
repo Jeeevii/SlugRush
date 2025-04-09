@@ -30,7 +30,8 @@ class Scheduler:
     def add_new_day(self) -> None:
         # Job for adding new row to days_count table
         print("SCHEDULER's Adding New Day Row...")
-        self.database.send_new_day()
+
+        #self.database.send_new_day()
         return
 
     def get_scraped_data(self) -> dict[str, int | str] | None:
@@ -48,8 +49,9 @@ class Scheduler:
 
     def add_hourly_count(self) -> None:
         print("SCHEDULER's Adding New Hourly Row...")
-        crowd_data = self.get_scraped_data()
-        self.database.send_hourly_count(crowd_data)
+        
+        #crowd_data = self.get_scraped_data()
+        #self.database.send_hourly_count(crowd_data)
         return
 
 
