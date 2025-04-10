@@ -167,9 +167,37 @@ class Database():
         return
     
     # send query to database joining all content in 1 day (containing all crowd_count per hour, etc), return parsed and formatted dict
-    def send_get_daily(self) -> dict: 
+    def send_get_daily(self, crowd_data: dict[str, int | str]) -> dict:
+        curr_day = self.get_day()
+        date = curr_day['date']
+        day_of_week = curr_day['day_of_week']
+        id = curr_day['day_id']
+
+        hour = crowd_data['hour'] 
+        minute = crowd_data['minute']
+        crowd_count = crowd_data['crowd_count']   
+        timestamp = crowd_data['timestamp']
+
+        join_query = """
+            select * from days_count dc join hourly_count hc on dc.id = hc.day_id
+        """
+        print("Sent Joined Query!")
+        self.send_query(join_query)
+        joined_table = self.read_all()
+        id_pk = joined_table[0][4]
+        
         return {
-            'message': 'hello world'
+            'id': id,
+            'date': date,
+            'status': LIVE,
+            'day_of_week': day_of_week,
+            'id_pk': id_pk,
+            'day_id': id,
+            'hour': hour,
+            'minute': minute,
+            'crowd_count': crowd_count,
+            'timestamp': timestamp
+
         }
 
 
@@ -186,6 +214,9 @@ get_day_query = """
 get_hour_query = """
     SELECT * FROM hourly_count
 """
+join_query = """
+    select * from days_count dc join hourly_count hc on dc.id = hc.day_id
+"""
 
 # internal testing
 if __name__ == "__main__":
@@ -194,14 +225,14 @@ if __name__ == "__main__":
     #db.start()
 
     # PLEASE DOUBLE CHECK BEFORE DELETING ITEMS
-    #db.delete_by_id(DAY_TABLE, 9, 9)
-
-    #db.send_new_day()
-    # data = scrape.gym_scrape()
-    # crowd_data = json.loads(data)
+    #db.delete_by_id(DAY_TABLE, 3, 7)
+    #db.delete_by_id(HOUR_TABLE, 3, 7)
+    # db.send_new_day()
+    data = scrape.gym_scrape()
+    crowd_data = json.loads(data)
     # db.send_hourly_count(crowd_data)
     
-    # checking days table
+    #checking days table
     print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
     db.send_query(get_day_query)
     print(db.read_all())
@@ -210,5 +241,8 @@ if __name__ == "__main__":
     print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
     db.send_query(get_hour_query)
     print(db.read_all())
+
+    #db.send_get_daily(crowd_data)
+    print(db.send_get_daily(crowd_data))
 
     db.close()
