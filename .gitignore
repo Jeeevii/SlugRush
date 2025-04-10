@@ -13,6 +13,8 @@ __pycache__/
 # Virtual environment
 env/
 .env/
+venv/
+.venv/
 
 # VSCode settings
 .vscode/
