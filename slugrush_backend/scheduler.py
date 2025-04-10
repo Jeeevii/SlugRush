@@ -11,15 +11,14 @@ class Scheduler:
         #self.database = Database()
 
     def start_jobs(self) -> None:
-        #self.database.start()
-        # Schedule the task to run every '30 minutes' using cron
-        self.scheduler.add_job(self.add_new_day, 'cron', hour=0) # add new table to db -- at the start of 12 AM
-        # scrape and add data to new table -- every 30 minutes within operation hours during the weekdays
+        # self.database.start()
+        # schedule the task to run every '30 minutes' using cron
+        self.scheduler.add_job(self.add_new_day, 'cron', hour=0) # add new day table to db -- at the start of 12 AM
+        # scrape and add data to new table -- every 30 minutes within operation hours -- WEEKDAYS 
         self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week = "0-4" , hour = "6-23", minute = "*/30") 
-        # scrape and add data to new table -- every 30 minutes within operation hours during the weekends
+        # every 30 minutes within operation hours -- WEEKENDS
         self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week = "5-6" , hour = "8-22", minute = "*/30")
         
-
         self.scheduler.start()
         print("Scheduler started...")
 
