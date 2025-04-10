@@ -73,7 +73,7 @@ class Database():
         return self.cursor.fetchall()
     
     # helper for deleting rows from given table and range
-    def delete_by_id(self, table: str, start: int, end: int) -> None: # Delete rows based on ID from days_count table
+    def delete_by_id(self, table: str, start: int, end: int) -> None: # delete rows based on ID from days_count table
         if table not in ALLOWED: # prevents prompt injection 
             return 
         
@@ -182,11 +182,38 @@ class Database():
         return
     
     # send query to database joining all content in 1 day (containing all crowd_count per hour, etc), return parsed and formatted dict
-    def send_get_daily(self) -> dict: 
-        return {
-            'message': 'hello world'
-        }
+    def send_get_daily(self, crowd_data: dict[str, int | str]) -> dict:
+        curr_day = self.get_day()
+        date = curr_day['date']
+        day_of_week = curr_day['day_of_week']
+        id = curr_day['day_id']
 
+        hour = crowd_data['hour'] 
+        minute = crowd_data['minute']
+        crowd_count = crowd_data['crowd_count']   
+        timestamp = crowd_data['timestamp']
+
+        join_query = """
+            select * from days_count dc join hourly_count hc on dc.id = hc.day_id
+        """
+        print("Sent Joined Query!")
+        self.send_query(join_query)
+        joined_table = self.read_all()
+        id_pk = joined_table[0][4]
+        
+        return {
+            'id': id,
+            'date': date,
+            'status': LIVE,
+            'day_of_week': day_of_week,
+            'id_pk': id_pk,
+            'day_id': id,
+            'hour': hour,
+            'minute': minute,
+            'crowd_count': crowd_count,
+            'timestamp': timestamp
+
+        }
 
 
 
@@ -200,6 +227,9 @@ get_day_query = """
 """
 get_hour_query = """
     SELECT * FROM hourly_count
+"""
+join_query = """
+    select * from days_count dc join hourly_count hc on dc.id = hc.day_id
 """
 
 # internal testing
