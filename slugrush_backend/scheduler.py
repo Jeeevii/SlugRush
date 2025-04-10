@@ -8,13 +8,17 @@ class Scheduler:
     def __init__(self) -> None:
         self.url = 'http://localhost:8000'
         self.scheduler = BackgroundScheduler()
-        self.database = Database()
+        #self.database = Database()
 
     def start_jobs(self) -> None:
-        self.database.start()
-        # TEMP - schedule the task to run every `interval` seconds - SWAP TO CRON LATER
-        self.scheduler.add_job(self.add_new_day, 'interval', seconds=19) # add new table to db -- before start of new/end of day
-        self.scheduler.add_job(self.add_hourly_count, 'interval', seconds=10) # scrape and add data to new table -- every 30 minutes within operation hours
+        #self.database.start()
+        # Schedule the task to run every '30 minutes' using cron
+        self.scheduler.add_job(self.add_new_day, 'cron', hour=0) # add new table to db -- at the start of 12 AM
+        # scrape and add data to new table -- every 30 minutes within operation hours during the weekdays
+        self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week = "0-4" , hour = "6-23", minute = "*/30") 
+        # scrape and add data to new table -- every 30 minutes within operation hours during the weekends
+        self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week = "5-6" , hour = "8-22", minute = "*/30")
+        
 
         self.scheduler.start()
         print("Scheduler started...")
@@ -22,7 +26,7 @@ class Scheduler:
     def stop_jobs(self) -> None:
         print("Stopping the scheduler...")
         self.scheduler.shutdown()
-        self.database.close()
+        #self.database.close()
 
     def display(self, job: str, msg: str) -> None:
         print(f"Executed {job} with Message: {msg}")
