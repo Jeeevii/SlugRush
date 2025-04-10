@@ -1,10 +1,14 @@
 {
     "id": "1",
     "date": "2025-03-27",
-    "status": "0",
+    "status": "1",
     "day_of_week": "Monday",
-    "hourly_crowd": [
-        { "hour": 6, "occupancy_count": 30, "timestamp": "2025-03-27T06:00:00" },
+    "crowd_count": [
+        { 
+            "hour": 6, 
+            "occupancy_count": 30, 
+            "timestamp": "2025-03-27T06:00:00" 
+        },
         { "hour": 7, "occupancy_count": 40, "timestamp": "2025-03-27T07:00:00" },
         { "hour": 8, "occupancy_count": 45, "timestamp": "2025-03-27T08:00:00" },
         { "hour": 9, "occupancy_count": 50, "timestamp": "2025-03-27T09:00:00" },

@@ -181,7 +181,45 @@ class Database():
         self.send_query(add_hour_query)              
         return
     
-    # send query to database joining all content in 1 day (containing all crowd_count per hour, etc), return parsed and formatted dict
+
+    '''
+    Function should return a dict with id, day_of_week, status, timestamp (date), and a list with [hour, minute, crowd_count, timestamp (when collected)]
+    A couple approaches but simple one i can think of:
+    Make a query call to check what day has a status 1 (LIVE), store that ID
+    Send another query with ID to look for items in hourly_count with ID == day_id
+    Use read all for list output, iterate through that list and append to return dict (or just append that list i think?)
+    Input: Nothing/None
+    Output: FEEL FREE TO FORMAT IT TO WHATEVER SEEMS BEST - JUST AN EXAMPLE
+    {
+        "id": X,
+        "date": "2025-XX-XX",
+        "status": "1", - LIVE
+        "day_of_week": XXXX, - current date
+        "GOOD NAME": [
+            {
+                "day_id": X, - should match id 
+                "hour": 6, 
+                "minute": 0,
+                "crowd_count": 30, 
+                "timestamp": "2025-03-27T06:00:00" 
+            },
+            { "hour": 7, "occupancy_count": 40, "timestamp": "2025-03-27T07:00:00" },
+            { "hour": 8, "occupancy_count": 45, "timestamp": "2025-03-27T08:00:00" },
+            { "hour": 9, "occupancy_count": 50, "timestamp": "2025-03-27T09:00:00" },
+            { "hour": 10, "occupancy_count": 55, "timestamp": "2025-03-27T10:00:00" },
+            { "hour": 11, "occupancy_count": 60, "timestamp": "2025-03-27T11:00:00" },
+            { "hour": 12, "occupancy_count": 70, "timestamp": "2025-03-27T12:00:00" },
+            { "hour": 13, "occupancy_count": 80, "timestamp": "2025-03-27T13:00:00" },
+            { "hour": 14, "occupancy_count": 90, "timestamp": "2025-03-27T14:00:00" },
+            { "hour": 15, "occupancy_count": 100, "timestamp": "2025-03-27T15:00:00" },
+            { "hour": 16, "occupancy_count": 110, "timestamp": "2025-03-27T16:00:00" },
+            { "hour": 17, "occupancy_count": 120, "timestamp": "2025-03-27T17:00:00" },
+            { "hour": 18, "occupancy_count": 130, "timestamp": "2025-03-27T18:00:00" },
+            { "hour": 19, "occupancy_count": 140, "timestamp": "2025-03-27T19:00:00" },
+            { "hour": 20, "occupancy_count": 150, "timestamp": "2025-03-27T20:00:00" }
+        ]
+    }  
+    '''
     def send_get_daily(self, crowd_data: dict[str, int | str]) -> dict:
         curr_day = self.get_day()
         date = curr_day['date']
@@ -236,15 +274,17 @@ join_query = """
 if __name__ == "__main__":
     db = Database()
     scrape = Scraper()
-    db.start()
+    #db.start()
 
     # PLEASE DOUBLE CHECK BEFORE DELETING ITEMS
     #db.delete_by_id(DAY_TABLE, 4, 4)
     #db.update_status(2)
     
     #db.send_new_day()
-    # data = scrape.gym_scrape()
-    # crowd_data = json.loads(data)
+    data = scrape.gym_scrape()
+    crowd_data = json.loads(data)
+    res = db.send_get_daily(crowd_data)
+    print(res)
     # db.send_hourly_count(crowd_data)
     
     # checking days table
