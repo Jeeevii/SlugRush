@@ -8,6 +8,7 @@ LIVE = 1
 OLD = 0
 DAY_TABLE = 'days_count'
 HOUR_TABLE = 'hourly_count'
+ALLOWED = {DAY_TABLE, HOUR_TABLE}
 
 class Database():
     # basic constructer starting database connection with psycopgg
@@ -55,8 +56,12 @@ class Database():
         self.connection.close()
 
     # helper for sending queries
-    def send_query(self, query: str) -> None:
-        self.cursor.execute(query)
+    def send_query(self, query: str, id=None) -> None:
+        # using %s for modifying queries prevents prompt injection
+        if id is not None:
+            self.cursor.execute(query, (id,)) # if id is given, add it while sending
+        else:
+            self.cursor.execute(query)
         self.connection.commit()
 
     # helper for reading 1 row from response O(1)
@@ -69,13 +74,15 @@ class Database():
     
     # helper for deleting rows from given table and range
     def delete_by_id(self, table: str, start: int, end: int) -> None: # Delete rows based on ID from days_count table
+        if table not in ALLOWED: # prevents prompt injection 
+            return 
+        
         delete_query = f"""
-            DELETE FROM {table} WHERE id = %s;
+            DELETE FROM {table} WHERE id = %s; 
         """
         for i in range(start, end + 1):
             print(f"DATABASE Deleting {i} from {table}")
-            self.cursor.execute(delete_query, (i,))
-            self.connection.commit()
+            self.send_query(delete_query, i)
         return
 
     # helper for checking if given id exist in days_count table
@@ -84,8 +91,7 @@ class Database():
             SELECT * FROM days_count WHERE id = %s
         """
         print("DATABASE's Check ID Query Sent!")
-        self.cursor.execute(id_check_query, (id,))
-        self.connection.commit()
+        self.send_query(id_check_query, id)
         if self.read_one():
             return True
         return False
@@ -104,6 +110,15 @@ class Database():
             'day_id': day_id, 
             'day_of_week': day_of_week
         }
+    
+    # helper for updating value of status column to OLD - 0
+    def update_status(self, id):
+        # assuming id exist, send query to update status to 0 based on specfic id
+        update_query = f"""
+            UPDATE {DAY_TABLE} SET status = {OLD} WHERE id = %s
+        """
+        self.send_query(update_query, id)
+        return
 
     # sends a SQL query to days_count table - SHOULD BE DONE EVERY DAY 
     def send_new_day(self) -> None:
@@ -111,30 +126,30 @@ class Database():
         date = curr_day['date']
         day_of_week = curr_day['day_of_week']
         id = curr_day['day_id']
-
-        # when sending new day, edit previous day's status to 0 (not collecting anymore) - TO DO TASK
         
         new_id = id 
         if self.check_id(id): # if ID exist, add for next week
             print(f"{id} exists, adding for next week")
-            new_id = id + NEXT_WEEK # next week
+            new_id = id + NEXT_WEEK
         else: # if ID doesnt exist, its current week 
             print(f"{id} doesnt exist, adding to table")
 
-        
         # when both ids exist for monday, delete first week and update with second week - TO DO TASK
-        # third weeks monday will be + 7 
-        # if monday and both ids for monday exist, do logic
         if self.check_id(new_id):
             print(f"{new_id} also exist in database, deleting and swapping")
             return 
         
+        # when sending new day query, edit previous day's status to 0 (not collecting anymore)
+        if new_id != 1: 
+            self.update_status(new_id - 1) # prev day id ASSUMING IT EXIST
+
         add_day_query = f"""
             INSERT INTO days_count(id, date, status, day_of_week)
-            VALUES ({new_id}, '{date}', {LIVE}, '{day_of_week}')
+            VALUES (%s, %s, %s, %s)
         """
         print("DATABASE's Daily Query Sent!")
-        self.send_query(add_day_query)
+        self.cursor.execute(add_day_query, (new_id, date, LIVE, day_of_week))
+        self.connection.commit()
         return
     
     # helper for rounding to closest 0 or 30 - NEEDED FOR HOURLY TABLE
@@ -222,14 +237,15 @@ join_query = """
 if __name__ == "__main__":
     db = Database()
     scrape = Scraper()
-    #db.start()
+    db.start()
 
     # PLEASE DOUBLE CHECK BEFORE DELETING ITEMS
-    #db.delete_by_id(DAY_TABLE, 3, 7)
-    #db.delete_by_id(HOUR_TABLE, 3, 7)
-    # db.send_new_day()
-    data = scrape.gym_scrape()
-    crowd_data = json.loads(data)
+    #db.delete_by_id(DAY_TABLE, 4, 4)
+    #db.update_status(2)
+    
+    #db.send_new_day()
+    # data = scrape.gym_scrape()
+    # crowd_data = json.loads(data)
     # db.send_hourly_count(crowd_data)
     
     #checking days table
