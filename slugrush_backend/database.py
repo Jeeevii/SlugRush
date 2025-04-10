@@ -225,11 +225,11 @@ if __name__ == "__main__":
     #db.start()
 
     # PLEASE DOUBLE CHECK BEFORE DELETING ITEMS
-    #db.delete_by_id(DAY_TABLE, 3, 7)
-    #db.delete_by_id(HOUR_TABLE, 3, 7)
-    # db.send_new_day()
-    data = scrape.gym_scrape()
-    crowd_data = json.loads(data)
+    #db.delete_by_id(DAY_TABLE, 9, 9)
+
+    #db.send_new_day()
+    # data = scrape.gym_scrape()
+    # crowd_data = json.loads(data)
     # db.send_hourly_count(crowd_data)
     
     #checking days table
@@ -243,6 +243,6 @@ if __name__ == "__main__":
     print(db.read_all())
 
     #db.send_get_daily(crowd_data)
-    print(db.send_get_daily(crowd_data))
+    #print(db.send_get_daily(crowd_data))
 
     db.close()
