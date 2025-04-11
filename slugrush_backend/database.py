@@ -182,74 +182,45 @@ class Database():
         return
     
 
-    '''
-    Function should return a dict with id, day_of_week, status, timestamp (date), and a list with [hour, minute, crowd_count, timestamp (when collected)]
-    A couple approaches but simple one i can think of:
-    Make a query call to check what day has a status 1 (LIVE), store that ID
-    Send another query with ID to look for items in hourly_count with ID == day_id
-    Use read all for list output, iterate through that list and append to return dict (or just append that list i think?)
-    Input: Nothing/None
-    Output: FEEL FREE TO FORMAT IT TO WHATEVER SEEMS BEST - JUST AN EXAMPLE
-    {
-        "id": X,
-        "date": "2025-XX-XX",
-        "status": "1", - LIVE
-        "day_of_week": XXXX, - current date
-        "GOOD NAME": [
-            {
-                "day_id": X, - should match id 
-                "hour": 6, 
-                "minute": 0,
-                "crowd_count": 30, 
-                "timestamp": "2025-03-27T06:00:00" 
-            },
-            { "hour": 7, "occupancy_count": 40, "timestamp": "2025-03-27T07:00:00" },
-            { "hour": 8, "occupancy_count": 45, "timestamp": "2025-03-27T08:00:00" },
-            { "hour": 9, "occupancy_count": 50, "timestamp": "2025-03-27T09:00:00" },
-            { "hour": 10, "occupancy_count": 55, "timestamp": "2025-03-27T10:00:00" },
-            { "hour": 11, "occupancy_count": 60, "timestamp": "2025-03-27T11:00:00" },
-            { "hour": 12, "occupancy_count": 70, "timestamp": "2025-03-27T12:00:00" },
-            { "hour": 13, "occupancy_count": 80, "timestamp": "2025-03-27T13:00:00" },
-            { "hour": 14, "occupancy_count": 90, "timestamp": "2025-03-27T14:00:00" },
-            { "hour": 15, "occupancy_count": 100, "timestamp": "2025-03-27T15:00:00" },
-            { "hour": 16, "occupancy_count": 110, "timestamp": "2025-03-27T16:00:00" },
-            { "hour": 17, "occupancy_count": 120, "timestamp": "2025-03-27T17:00:00" },
-            { "hour": 18, "occupancy_count": 130, "timestamp": "2025-03-27T18:00:00" },
-            { "hour": 19, "occupancy_count": 140, "timestamp": "2025-03-27T19:00:00" },
-            { "hour": 20, "occupancy_count": 150, "timestamp": "2025-03-27T20:00:00" }
-        ]
-    }  
-    '''
+    
+    # function should return a dict with id, day_of_week, status, timestamp (date), and a list with [hour, minute, crowd_count, timestamp (when collected)]
     def send_get_daily(self) -> dict:
-        curr_day = self.get_day()
-        date = curr_day['date']
-        day_of_week = curr_day['day_of_week']
-        id = curr_day['day_id']
-
         id_query = """
-            select id from days_count where status = 1
+            select * from days_count where status = 1
         """
 
         self.send_query(id_query)
         print("Sent id Query!")
-        curr_id = self.read_all()[0][0]
-        # print(curr_id)
+        live_day = self.read_one()
+        id = live_day[0]
+        date = live_day[1]
+        day_of_week = live_day[3]
+        #print(id, date, day_of_week)
 
         day_query = f"""
-            select day_id, hour, minute, crowd_count, timestamp from hourly_count where day_id = {curr_id}
+            select day_id, hour, minute, crowd_count, timestamp from hourly_count where day_id = {id}
         """
         self.send_query(day_query)
         print("Sent Day Query!")
-        data = self.read_all()
-        # print(data)
-
+        day_data = self.read_all()
+        columns = ['day_id', 'hour', 'minute', 'crowd_count', 'timestamp']
+        day_list = []
+        for row in day_data: # monkey brain ahh logic but it works
+            hourly_dict = {}
+            i = 0
+            for item in row:
+                hourly_dict[columns[i]] = item
+                i += 1
+            day_list.append(hourly_dict)
+            
+        #print(day_list)
         
         return {
             'id': id,
             'date': date,
             'status': LIVE,
             'day_of_week': day_of_week,
-            'day_data': data
+            'day_data': day_list
         }
 
 
@@ -284,17 +255,17 @@ if __name__ == "__main__":
     # crowd_data = json.loads(data)
     # db.send_hourly_count(crowd_data)
     
-    # checking days table
-    print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
-    db.send_query(get_day_query)
-    print(db.read_all())
+    get_daily = db.send_get_daily()
+    #print(get_daily['day_data'][0])
 
-    # checking hours table
-    print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
-    db.send_query(get_hour_query)
-    print(db.read_all())
+    # # checking days table
+    # print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
+    # db.send_query(get_day_query)
+    # print(db.read_all())
 
-    res = db.send_get_daily()
-    print(res)
+    # # checking hours table
+    # print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
+    # db.send_query(get_hour_query)
+    # print(db.read_all())
 
     db.close()

@@ -20,4 +20,4 @@ SELECT * FROM days_count dc JOIN hourly_count hc ON dc.id = hc.day_id
 DELETE FROM hourly_count WHERE id = 5;
 
 --- updates status value based on id
-UPDATE days_count SET status = 1 WHERE id = 2
+UPDATE days_count SET status = 0 WHERE id = 2

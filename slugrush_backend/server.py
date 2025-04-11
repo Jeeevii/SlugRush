@@ -55,12 +55,7 @@ def get_count() -> None:
 def get_daily() -> None:
     db = Database()
     msg = db.send_get_daily()
-    
-    return JSONResponse(content={
-        "status": "success",
-        "message": msg,
-        "data": []
-    })
+    return msg
 
 # GET endpoint - queries database and returns all of previous weeks (1-7) crowd_count - NEEDED FOR GRAPHING WEEKLY VIEW
 @app.get("/get/weekly")
