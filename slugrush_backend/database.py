@@ -181,14 +181,12 @@ class Database():
         self.send_query(add_hour_query)              
         return
     
-
-    
+   
     # function should return a dict with id, day_of_week, status, timestamp (date), and a list with [hour, minute, crowd_count, timestamp (when collected)]
-    def send_get_daily(self) -> dict:
+    def get_daily_query(self) -> dict:
         id_query = """
             select * from days_count where status = 1
         """
-
         self.send_query(id_query)
         print("Sent id Query!")
         live_day = self.read_one()
@@ -198,9 +196,11 @@ class Database():
         #print(id, date, day_of_week)
 
         day_query = f"""
-            select day_id, hour, minute, crowd_count, timestamp from hourly_count where day_id = {id}
+            select day_id, hour, minute, crowd_count, timestamp from hourly_count where day_id = %s
         """
-        self.send_query(day_query)
+        self.cursor.execute(day_query, (id,))
+        self.connection.commit()
+        
         print("Sent Day Query!")
         day_data = self.read_all()
         columns = ['day_id', 'hour', 'minute', 'crowd_count', 'timestamp']
@@ -213,8 +213,6 @@ class Database():
                 i += 1
             day_list.append(hourly_dict)
             
-        #print(day_list)
-        
         return {
             'id': id,
             'date': date,
@@ -223,7 +221,9 @@ class Database():
             'day_data': day_list
         }
 
-
+    # get all previous weeks data to graph (same logic as get_daily but with all 7 days)
+    def get_weekly_query(self) -> dict:
+        return {'message': "Hello World"}
 
 
 
