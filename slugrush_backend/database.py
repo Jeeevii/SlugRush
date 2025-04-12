@@ -256,7 +256,7 @@ if __name__ == "__main__":
     # db.send_hourly_count(crowd_data)
     
     get_daily = db.send_get_daily()
-    #print(get_daily['day_data'][0])
+    print(get_daily['day_data'])
 
     # # checking days table
     # print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
