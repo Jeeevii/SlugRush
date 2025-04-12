@@ -1,6 +1,9 @@
 import psycopg2
+import logging 
+import os
+
+from dotenv import load_dotenv
 from datetime import datetime
-import json
 from web_scraper import Scraper
 
 NEXT_WEEK = 7
@@ -9,16 +12,29 @@ OLD = 0
 DAY_TABLE = 'days_count'
 HOUR_TABLE = 'hourly_count'
 ALLOWED = {DAY_TABLE, HOUR_TABLE}
+load_dotenv()
+
+db_logger = logging.getLogger("database")
+db_logger.setLevel(logging.INFO)
+
+file_handler = logging.FileHandler("database.log")
+file_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
+
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
+
+db_logger.addHandler(file_handler)
+db_logger.addHandler(console_handler)
 
 class Database():
     # basic constructer starting database connection with psycopgg
     def __init__(self) -> None:
         self.connection = psycopg2.connect( 
-            host = "localhost", 
-            dbname = "crowd_data", 
-            user = "homies",
-            password = "banana", 
-            port = "5432"
+            host = os.environ.get("HOST"), 
+            dbname = os.environ.get("DBNAME"), 
+            user = os.environ.get("USER"),
+            password = os.environ.get("PASSWORD"), 
+            port = os.environ.get("PORT")
         )
         # main connection, has plently of built ins to talk to db
         self.cursor = self.connection.cursor()
@@ -43,15 +59,17 @@ class Database():
                 timestamp TIMESTAMP NOT NULL
             );
         """
-        print("DATABASE's Days Table Query Sent!")
-        self.send_query(days_table_query)
-
-        print("DATABASE's Hourly Table Query Sent!")
-        self.send_query(hourly_table_query)
+        try:
+            db_logger.info("Sent days, and hourly table to Database!")
+            self.send_query(days_table_query)
+            self.send_query(hourly_table_query)
+        except Exception as e:
+            db_logger.info("Failed to send Tables to Database: ", e)
         return
 
     # on call, disconnects any and all connections
     def close(self) -> None: 
+        db_logger.info("Closing connections to database!")
         self.cursor.close()
         self.connection.close()
 
@@ -65,11 +83,11 @@ class Database():
         self.connection.commit()
 
     # helper for reading 1 row from response O(1)
-    def read_one(self) -> None:
+    def read_one(self) -> tuple:
         return self.cursor.fetchone()
     
     # helper for reading all from responses O(n)
-    def read_all(self) -> None:
+    def read_all(self) -> list[tuple]:
         return self.cursor.fetchall()
     
     # helper for deleting rows from given table and range
@@ -81,7 +99,7 @@ class Database():
             DELETE FROM {table} WHERE id = %s; 
         """
         for i in range(start, end + 1):
-            print(f"DATABASE Deleting {i} from {table}")
+            db_logger.info(f"DATABASE Deleting {i} from {table}")
             self.send_query(delete_query, i)
         return
 
@@ -90,7 +108,7 @@ class Database():
         id_check_query = f"""
             SELECT * FROM days_count WHERE id = %s
         """
-        print("DATABASE's Check ID Query Sent!")
+        db_logger.info("DATABASE's Check ID Query Sent!")
         self.send_query(id_check_query, id)
         if self.read_one():
             return True
@@ -105,6 +123,7 @@ class Database():
         date = current_datetime.strftime("%Y-%m-%d")
         day_id = date_dict[day_of_week]
 
+        db_logger.info("Getting current day data!")
         return {
             'date': date, 
             'day_id': day_id, 
@@ -112,11 +131,12 @@ class Database():
         }
     
     # helper for updating value of status column to OLD - 0
-    def update_status(self, id):
+    def update_status(self, id: int) -> None:
         # assuming id exist, send query to update status to 0 based on specfic id
         update_query = f"""
-            UPDATE {DAY_TABLE} SET status = {OLD} WHERE id = %s
+            UPDATE days_count SET status = 0 WHERE id = %s
         """
+        db_logger.info("Updating previous days status")
         self.send_query(update_query, id)
         return
 
@@ -129,25 +149,25 @@ class Database():
         
         new_id = id 
         if self.check_id(id): # if ID exist, add for next week
-            print(f"{id} exists, adding for next week")
+            db_logger.info(f"{id} exists, adding for next week")
             new_id = id + NEXT_WEEK
         else: # if ID doesnt exist, its current week 
-            print(f"{id} doesnt exist, adding to table")
+            db_logger.info(f"{id} doesnt exist, adding to table")
 
         # when both ids exist for monday, delete first week and update with second week - TO DO TASK
         if self.check_id(new_id):
-            print(f"{new_id} also exist in database, deleting and swapping")
+            db_logger.info(f"{new_id} also exist in database, deleting and swapping")
             return 
         
         # when sending new day query, edit previous day's status to 0 (not collecting anymore)
         if new_id != 1: 
             self.update_status(new_id - 1) # prev day id ASSUMING IT EXIST
 
-        add_day_query = f"""
+        add_day_query = """
             INSERT INTO days_count(id, date, status, day_of_week)
             VALUES (%s, %s, %s, %s)
         """
-        print("DATABASE's Daily Query Sent!")
+        db_logger.info("Sending new day to Database!")
         self.cursor.execute(add_day_query, (new_id, date, LIVE, day_of_week))
         self.connection.commit()
         return
@@ -170,15 +190,19 @@ class Database():
 
         # check if days_count table has day_id, if not don't send?? 
         if not self.check_id(day_id):
-            print(f"Table DOESN'T HAVE {day_id} NOT SENDING")
+            db_logger.info(f"Table DOESN'T HAVE {day_id} NOT SENDING")
             return
         
-        add_hour_query = f"""
+        add_hour_query = """
             INSERT INTO hourly_count(day_id, hour, minute, crowd_count, timestamp)
-            VALUES({day_id}, {hour}, {self.round_minute(minute)}, {crowd_count}, '{timestamp}')
+            VALUES(%s, %s, %s, %s, %s)
         """
-        print("DATABASE's Hourly Query Sent!")
-        self.send_query(add_hour_query)              
+        try:
+            db_logger.info("Sent hourly data to Database!")
+            self.cursor.execute(add_hour_query, (day_id, hour, self.round_minute(minute), crowd_count, timestamp))
+            self.connection.commit()       
+        except Exception as e:
+            db_logger.info(f"Failed to insert hourly data into Database: {e}")    
         return
     
    
@@ -188,7 +212,7 @@ class Database():
             select * from days_count where status = 1
         """
         self.send_query(id_query)
-        print("Sent id Query!")
+        #print("Sent id Query!")
         live_day = self.read_one()
         id = live_day[0]
         date = live_day[1]
@@ -201,7 +225,7 @@ class Database():
         self.cursor.execute(day_query, (id,))
         self.connection.commit()
         
-        print("Sent Day Query!")
+        #print("Sent Day Query!")
         day_data = self.read_all()
         columns = ['day_id', 'hour', 'minute', 'crowd_count', 'timestamp']
         day_list = []
@@ -250,22 +274,22 @@ if __name__ == "__main__":
     #db.delete_by_id(DAY_TABLE, 4, 4)
     #db.update_status(2)
     
-    #db.send_new_day()
+    db.send_new_day()
     # data = scrape.gym_scrape()
     # crowd_data = json.loads(data)
     # db.send_hourly_count(crowd_data)
     
-    get_daily = db.send_get_daily()
-    print(get_daily['day_data'])
+    get_daily = db.get_day()
+    #print(get_daily['day_data'][0])
 
-    # # checking days table
-    # print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
-    # db.send_query(get_day_query)
-    # print(db.read_all())
+    # checking days table
+    print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
+    db.send_query(get_day_query)
+    print(db.read_all())
 
-    # # checking hours table
-    # print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
-    # db.send_query(get_hour_query)
-    # print(db.read_all())
+    # checking hours table
+    print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
+    db.send_query(get_hour_query)
+    print(db.read_all())
 
     db.close()
