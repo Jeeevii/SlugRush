@@ -1,14 +1,19 @@
 import requests
+import json
+import os
+
 from bs4 import BeautifulSoup
 from datetime import datetime
-import json
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Scraper:
     def __init__(self) -> None:
-        self.url = "https://campusrec.ucsc.edu/FacilityOccupancy"
-        self.facility_id = "facility-1799266f-57d9-4cb2-9f43-f5fd88b241db"
+        self.url = os.environ.get("FO_URL")
+        self.facility_id = os.environ.get("FO_ID")
 
-    def gym_scrape(self) -> None:
+    def gym_scrape(self) -> json:
         response = requests.get(self.url)
         if response.status_code != 200:
             raise Exception("Failed to retrieve data")

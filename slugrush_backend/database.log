@@ -1,0 +1,22 @@
+2025-04-12 14:38:34,240 [INFO] Sent days, and hourly table to Database!
+2025-04-12 14:39:00,538 [INFO] Getting current day data!
+2025-04-12 14:39:00,538 [INFO] DATABASE's Check ID Query Sent!
+2025-04-12 14:39:00,544 [INFO] Sent hourly data to Database!
+2025-04-12 14:40:00,552 [INFO] Getting current day data!
+2025-04-12 14:40:00,553 [INFO] DATABASE's Check ID Query Sent!
+2025-04-12 14:40:00,556 [INFO] Sent hourly data to Database!
+2025-04-12 14:40:02,743 [INFO] Closing connections to database!
+2025-04-12 14:49:57,040 [INFO] Getting current day data!
+2025-04-12 14:49:57,040 [INFO] DATABASE's Check ID Query Sent!
+2025-04-12 14:49:57,042 [INFO] 6 exists, adding for next week
+2025-04-12 14:49:57,044 [INFO] DATABASE's Check ID Query Sent!
+2025-04-12 14:49:57,045 [INFO] 13 also exist in database, deleting and swapping
+2025-04-12 14:49:57,045 [INFO] Getting current day data!
+2025-04-12 14:49:57,049 [INFO] Closing connections to database!
+2025-04-12 14:53:34,562 [INFO] Sent days, and hourly table to Database!
+2025-04-12 14:53:38,417 [INFO] Closing connections to database!
+2025-04-12 14:53:43,021 [INFO] Sent days, and hourly table to Database!
+2025-04-12 14:54:00,536 [INFO] Getting current day data!
+2025-04-12 14:54:00,536 [INFO] DATABASE's Check ID Query Sent!
+2025-04-12 14:54:00,541 [INFO] Sent hourly data to Database!
+2025-04-12 14:54:07,818 [INFO] Closing connections to database!
