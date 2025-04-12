@@ -1,60 +1,65 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-import requests
 import json
 import time
+import logging
+
 from database import Database
+from web_scraper import Scraper
+
+scheduler_logger = logging.getLogger("scheduler")
+scheduler_logger.setLevel(logging.INFO)
+
+file_handler = logging.FileHandler("scheduler.log")
+file_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
+
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
+
+scheduler_logger.addHandler(file_handler)
+scheduler_logger.addHandler(console_handler)
 
 class Scheduler:
     def __init__(self) -> None:
-        self.url = 'http://localhost:8000'
         self.scheduler = BackgroundScheduler()
-        #self.database = Database()
+        self.database = Database()
+        self.scraper = Scraper()
 
     def start_jobs(self) -> None:
-        # self.database.start()
-        # schedule the task to run every '30 minutes' using cron
-        self.scheduler.add_job(self.add_new_day, 'cron', hour=0) # add new day table to db -- at the start of 12 AM
-        # scrape and add data to new table -- every 30 minutes within operation hours -- WEEKDAYS 
-        self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week = "0-4" , hour = "6-23", minute = "*/30") 
-        # every 30 minutes within operation hours -- WEEKENDS
-        self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week = "5-6" , hour = "8-22", minute = "*/30")
-        
+        self.database.start()
+        # Daily at 12:00 AM
+        self.scheduler.add_job(self.add_new_day, 'cron', hour=0, minute=0)
+        # Weekdays: 6 AM to 11 PM every 30 min
+        self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week="0-4", hour="6-23", minute="*/30")
+        # Weekends: 8 AM to 8 PM every 30 min
+        self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week="5-6", hour="8-20", minute="*/1")
+                
         self.scheduler.start()
-        print("Scheduler started...")
+        scheduler_logger.info("Scheduler started...")
 
     def stop_jobs(self) -> None:
-        print("Stopping the scheduler...")
+        scheduler_logger.info("Stopping the scheduler...")
         self.scheduler.shutdown()
-        #self.database.close()
+        self.database.close()
 
     def display(self, job: str, msg: str) -> None:
         print(f"Executed {job} with Message: {msg}")
 
     def add_new_day(self) -> None:
         # Job for adding new row to days_count table
-        print("SCHEDULER's Adding New Day Row...")
+        scheduler_logger.info("Executing ADD_NEW_DAY Task!")
 
-        #self.database.send_new_day()
+        self.database.send_new_day()
         return
 
-    def get_scraped_data(self) -> dict[str, int | str] | None:
+    def get_scraped_data(self) -> dict[str, int | str]:
         # Job for fetching occupancy count 
-        count_url = self.url + '/get/count'
-        try:
-            response = requests.get(count_url)
-            if response.status_code == 200:
-                #self.display('get_count', response.json())
-                return response.json()
-            else:
-                print("Error with fetched data: ", response.status_code)
-        except Exception as e:
-            print("Error with fetching endpoint: ", e)
+        scraped_data = self.scraper.gym_scrape()
+        return json.loads(scraped_data)
 
     def add_hourly_count(self) -> None:
-        print("SCHEDULER's Adding New Hourly Row...")
-        
-        #crowd_data = self.get_scraped_data()
-        #self.database.send_hourly_count(crowd_data)
+        scheduler_logger.info("Executing ADD_HOURLY_COUNT Task!")
+        crowd_data = self.get_scraped_data()
+        self.database.send_hourly_count(crowd_data)
         return
 
 
