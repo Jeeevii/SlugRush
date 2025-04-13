@@ -1,8 +1,10 @@
-# Node.js / Next.js
+# Logs
+/*.log
+
+# Next.js
 /node_modules/
 /.next/
 /out/
-/*.log
 
 # Python
 *.pyc
