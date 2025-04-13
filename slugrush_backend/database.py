@@ -248,41 +248,39 @@ class Database():
 
     # get all previous weeks data to graph (same logic as get_daily but with all 7 days)
     def get_weekly_query(self) -> dict:
-
-        id_query = """
-            SELECT * FROM days_count WHERE id <= 7
+        weekly_query = """
+            select dc.id, dc.date, dc.status, dc.day_of_week, 
+            hc.day_id, hc.hour, hc.minute, hc.crowd_count, hc.timestamp
+            from days_count dc
+            left join hourly_count hc on dc.id = hc.day_id
+            where dc.id <= 7
+            ORDER BY dc.id, hc.hour, hc.minute
         """
-        self.send_query(id_query)
-        print("Sent days_count query!")
-        day_count_data = self.read_all()
+        self.send_query(weekly_query)
+        rows = self.read_all()
+        final_data = {}
+        for row in rows:
+            day_id = row[0]
+            if day_id not in final_data:
+                final_data[day_id] = {
+                    'id': row[0],
+                    'date': row[1],
+                    'status': row[2],
+                    'day_of_week': row[3],
+                    'hourly_data': []
+                }
+            
+            if row[4] is not None:
+                hourly = {
+                    'day_id': row[4],
+                    'hour': row[5],
+                    'minute': row[6],
+                    'crowd_count': row[7],
+                    'timestamp': row[8]
+                }
+                final_data[day_id]['hourly_data'].append(hourly)
 
-        day_columns = ['id', 'date', 'status', 'day_of_week']
-        day_list = []
-
-        for row in day_count_data:
-            day_dict = {day_columns[i]: row[i] for i in range(len(day_columns))}
-            day_list.append(day_dict)
-
-        day_map = {day['id']: day for day in day_list}
-
-        hourly_query = """
-            SELECT day_id, hour, minute, crowd_count, timestamp FROM hourly_count WHERE day_id <= 7
-        """
-        self.send_query(hourly_query)
-        print("Sent hourly_count query!")
-        hourly_data = self.read_all()
-
-        hourly_columns = ['day_id', 'hour', 'minute', 'crowd_count', 'time_stamp']
-
-        for row in hourly_data:
-            hour_dict = {hourly_columns[i]: row[i] for i in range(len(hourly_columns))}
-            day_id = hour_dict['day_id']
-
-            if day_id in day_map:
-                if 'hourly_data' not in day_map[day_id]:
-                    day_map[day_id]['hourly_data'] = []
-                day_map[day_id]['hourly_data'].append(hour_dict)
-
+        day_list = list(final_data.values())
         return day_list
 
 
@@ -318,7 +316,8 @@ if __name__ == "__main__":
     
     #get_daily = db.get_day()
     #print(get_daily['day_data'][0])
-    print(db.get_weekly_query())
+    print(db.get_daily_query() )
+    #print(db.get_weekly_query())
 
     # # checking days table
     # print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
