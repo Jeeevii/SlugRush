@@ -1,5 +1,6 @@
 import psycopg2
-import logging 
+import logging
+import json 
 import os
 
 from dotenv import load_dotenv
@@ -247,7 +248,43 @@ class Database():
 
     # get all previous weeks data to graph (same logic as get_daily but with all 7 days)
     def get_weekly_query(self) -> dict:
-        return {'message': "Hello World"}
+
+        id_query = """
+            SELECT * FROM days_count WHERE id <= 7
+        """
+        self.send_query(id_query)
+        print("Sent days_count query!")
+        day_count_data = self.read_all()
+
+        day_columns = ['id', 'date', 'status', 'day_of_week']
+        day_list = []
+
+        for row in day_count_data:
+            day_dict = {day_columns[i]: row[i] for i in range(len(day_columns))}
+            day_list.append(day_dict)
+
+        day_map = {day['id']: day for day in day_list}
+
+        hourly_query = """
+            SELECT day_id, hour, minute, crowd_count, timestamp FROM hourly_count WHERE day_id <= 7
+        """
+        self.send_query(hourly_query)
+        print("Sent hourly_count query!")
+        hourly_data = self.read_all()
+
+        hourly_columns = ['day_id', 'hour', 'minute', 'crowd_count', 'time_stamp']
+
+        for row in hourly_data:
+            hour_dict = {hourly_columns[i]: row[i] for i in range(len(hourly_columns))}
+            day_id = hour_dict['day_id']
+
+            if day_id in day_map:
+                if 'hourly_data' not in day_map[day_id]:
+                    day_map[day_id]['hourly_data'] = []
+                day_map[day_id]['hourly_data'].append(hour_dict)
+
+        return day_list
+
 
 
 
@@ -274,22 +311,23 @@ if __name__ == "__main__":
     #db.delete_by_id(DAY_TABLE, 4, 4)
     #db.update_status(2)
     
-    db.send_new_day()
+    #db.send_new_day()
     # data = scrape.gym_scrape()
     # crowd_data = json.loads(data)
     # db.send_hourly_count(crowd_data)
     
-    get_daily = db.get_day()
+    #get_daily = db.get_day()
     #print(get_daily['day_data'][0])
+    print(db.get_weekly_query())
 
-    # checking days table
-    print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
-    db.send_query(get_day_query)
-    print(db.read_all())
+    # # checking days table
+    # print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
+    # db.send_query(get_day_query)
+    # print(db.read_all())
 
-    # checking hours table
-    print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
-    db.send_query(get_hour_query)
-    print(db.read_all())
+    # # checking hours table
+    # print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
+    # db.send_query(get_hour_query)
+    # print(db.read_all())
 
     db.close()
