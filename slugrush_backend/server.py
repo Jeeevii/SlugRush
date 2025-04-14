@@ -54,7 +54,7 @@ def get_count() -> Dict:
 # GET endpoint - queries database and returns all rows with current day crowd_counts - NEEDED FOR GRAPHING DAILY VIEW
 @app.get("/get/daily")
 def get_daily() -> Dict:
-    msg = db.get_day()
+    msg = db.get_daily_query()
     return msg
 
 # GET endpoint - queries database and returns all of previous weeks (1-7) crowd_count - NEEDED FOR GRAPHING WEEKLY VIEW

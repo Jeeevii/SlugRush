@@ -27,11 +27,11 @@ class Scheduler:
     def start_jobs(self) -> None:
         self.database.start()
         # Daily at 12:00 AM
-        self.scheduler.add_job(self.add_new_day, 'cron', hour=0, minute=0)
+        self.scheduler.add_job(self.add_new_day, 'cron', hour=1, minute=0)
         # Weekdays: 6 AM to 11 PM every 30 min
         self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week="0-4", hour="6-23", minute="*/30")
         # Weekends: 8 AM to 8 PM every 30 min
-        self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week="5-6", hour="8-20", minute="*/1")
+        self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week="5-6", hour="8-20", minute="*/30")
                 
         self.scheduler.start()
         scheduler_logger.info("Scheduler started...")

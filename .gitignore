@@ -1,24 +1,58 @@
-# Node.js / Next.js
-/node_modules/
-/.next/
-/out/
-/*.log
+# === GENERAL ===
+.DS_Store
+Thumbs.db
 
-# Python
+# === LOGS ===
+*.log
+
+# === ENVIRONMENT FILES ===
+.env
+*.env
+
+# === PYTHON ===
 *.pyc
 *.pyo
 *.pyd
 __pycache__/
+*.sqlite3
 
-# Virtual environment
-env/
-.env/
+# Virtual Environments
 venv/
 .venv/
+*env/
 
-# VSCode settings
+# === NODE.JS ===
+node_modules/
+.next/
+out/
+
+# === IDEs / EDITORS ===
 .vscode/
+.idea/
 
-# System files
-.DS_Store
-Thumbs.db
+# === TESTS / COVERAGE ===
+coverage/
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# === DIST / BUILD ===
+dist/
+build/
+*.egg-info/
+
+# === BACKEND LOGIC ===
+# (Optional: backend-specific ignores if you separate folders)
+slugrush_backend/*.log
+slugrush_backend/*.env
+
+# === FRONTEND LOGIC ===
+# (Optional: if using Next.js or similar)
+slugrush_frontend/.next/
+slugrush_frontend/out/
+slugrush_frontend/node_modules/
+
+# === OS-SPECIFIC ===
+ehthumbs.db
+Icon?
