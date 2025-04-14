@@ -32,7 +32,10 @@ class Scheduler:
         self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week="0-4", hour="6-23", minute="*/30")
         # Weekends: 8 AM to 8 PM every 30 min
         self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week="5-6", hour="8-20", minute="*/30")
-                
+        
+        # Ping the main backend every 10 minutes to prevent idle timeout
+        self.scheduler.add_job(self.ping_backend, 'interval', minutes=10)
+        
         self.scheduler.start()
         scheduler_logger.info("Scheduler started...")
 
@@ -62,6 +65,17 @@ class Scheduler:
         self.database.send_hourly_count(crowd_data)
         return
 
+    def ping_backend(self) -> None:
+        # Function to ping the main backend (root endpoint)
+        try:
+            # Replace with your production URL if necessary
+            response = requests.get("https://slugrush-backend.onrender.com/")
+            if response.status_code == 200:
+                scheduler_logger.info("Ping successful: Backend is alive")
+            else:
+                scheduler_logger.warning(f"Ping failed with status code: {response.status_code}")
+        except Exception as e:
+            scheduler_logger.error(f"Ping failed with error: {e}")
 
 # internal testing
 if __name__ == "__main__":
