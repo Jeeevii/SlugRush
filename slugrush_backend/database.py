@@ -94,15 +94,13 @@ class Database():
                 db_logger.info("Reconnection successful.")
             else:
                 # Optional: test with a quick ping
-                self.cursor.execute("SELECT 1;")
+                self.cursor.execute("select id from days_count where status = 1")
                 self.connection.commit()
         except Exception as e:
             db_logger.error(f"Failed to reconnect to database: {e}")
 
     # helper for sending queries
     def send_query(self, query: str, id=None) -> None:
-        db_logger.info("Sending reconnect ping to Database!")
-        self.reconnect()
         # using %s for modifying queries prevents prompt injection
         if id is not None:
             self.cursor.execute(query, (id,)) # if id is given, add it while sending
@@ -170,6 +168,9 @@ class Database():
 
     # sends a SQL query to days_count table - SHOULD BE DONE EVERY DAY 
     def send_new_day(self) -> None:
+        db_logger.info("Sending reconnect ping from send_new_day() to Database!")
+        self.reconnect()
+
         curr_day = self.get_curr_day()
         date = curr_day['date']
         day_of_week = curr_day['day_of_week']
@@ -208,6 +209,9 @@ class Database():
     
     # sends query to add crowd count into hourly_count table
     def send_hourly_count(self, crowd_data: dict[str, int | str]) -> None: # sending hourly count 
+        db_logger.info("Sending reconnect ping from send_hourly_count() to Database!")
+        self.reconnect()
+
         day_data = self.get_curr_day()
         day_id = day_data['day_id']
 
@@ -236,6 +240,9 @@ class Database():
    
     # function should return a dict with id, day_of_week, status, timestamp (date), and a list with [hour, minute, crowd_count, timestamp (when collected)]
     def get_daily_query(self) -> dict:
+        db_logger.info("Sending reconnect ping from get_daily_query() to Database!")
+        self.reconnect()
+
         id_query = """
             select * from days_count where status = 1
         """
@@ -285,6 +292,9 @@ class Database():
 
     # get all previous weeks data to graph (same logic as get_daily but with all 7 days)
     def get_weekly_query(self) -> dict:
+        db_logger.info("Sending reconnect ping from get_weekly_query() to Database!")
+        self.reconnect()
+
         weekly_query = """
             select dc.id, dc.date, dc.status, dc.day_of_week, 
             hc.day_id, hc.hour, hc.minute, hc.crowd_count, hc.timestamp
