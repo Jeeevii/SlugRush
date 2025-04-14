@@ -2,6 +2,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import json
 import time
 import logging
+import requests
 
 from database import Database
 from web_scraper import Scraper
