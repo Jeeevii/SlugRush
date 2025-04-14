@@ -79,9 +79,29 @@ class Database():
         db_logger.info("Closing connections to database!")
         self.cursor.close()
         self.connection.close()
+    
+    # helper to avoid cursor idle connection loss 
+    def reconnect(self):
+        try:
+            if self.connection is None or self.connection.closed != 0:
+                db_logger.warning("Reconnecting to database...")
+                self.connection = psycopg2.connect(
+                    host=HOST, dbname=DB, user=USER,
+                    password=PASS, port=PORT
+                )
+                self.cursor = self.connection.cursor()
+                db_logger.info("Reconnection successful.")
+            else:
+                # Optional: test with a quick ping
+                self.cursor.execute("SELECT 1;")
+                self.connection.commit()
+        except Exception as e:
+            db_logger.error(f"Failed to reconnect to database: {e}")
 
     # helper for sending queries
     def send_query(self, query: str, id=None) -> None:
+        db_logger.info("Sending reconnect ping to Database!")
+        self.reconnect()
         # using %s for modifying queries prevents prompt injection
         if id is not None:
             self.cursor.execute(query, (id,)) # if id is given, add it while sending
@@ -341,10 +361,9 @@ if __name__ == "__main__":
     # crowd_data = json.loads(data)
     # db.send_hourly_count(crowd_data)
     
-    #get_daily = db.get_day_query()
-    #print(get_daily['day_data'][0])
-    # day_data = db.get_daily_query()
-    # print(day_data['hourly_data'][0]['crowd_count'])
+
+    day_data = db.get_daily_query()
+    print(day_data)
     # for hour in day_data['hourly_data']:
     #     print(hour['crowd_count'])
 
