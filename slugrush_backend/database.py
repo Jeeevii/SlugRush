@@ -1,6 +1,7 @@
 import psycopg2
 import logging
 import os
+import json
 
 from dotenv import load_dotenv
 from datetime import datetime
@@ -344,12 +345,12 @@ join_query = """
 if __name__ == "__main__":
     db = Database()
     #scrape = Scraper()
-    db.start()
+    # db.start()
 
-    db.send_query(get_developers_query)
-    dev_data = db.read_all()
-    for row in dev_data:
-        print(row)
+    # db.send_query(get_developers_query)
+    # dev_data = db.read_all()
+    # for row in dev_data:
+    #     print(row)
 
     
     # PLEASE DOUBLE CHECK BEFORE DELETING ITEMS
@@ -359,11 +360,12 @@ if __name__ == "__main__":
     #db.send_new_day()
     # data = scrape.gym_scrape()
     # crowd_data = json.loads(data)
+    #print(crowd_data)
     # db.send_hourly_count(crowd_data)
     
 
-    day_data = db.get_daily_query()
-    print(day_data)
+    # day_data = db.get_daily_query()
+    # print(day_data)
     # for hour in day_data['hourly_data']:
     #     print(hour['crowd_count'])
 
