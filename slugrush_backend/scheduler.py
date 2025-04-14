@@ -62,7 +62,7 @@ class Scheduler:
         return json.loads(scraped_data)
 
     def add_hourly_count(self) -> None:
-        scheduler_logger.log("Executing ADD_HOURLY_COUNT Task!")
+        scheduler_logger.info("Executing ADD_HOURLY_COUNT Task!")
         crowd_data = self.get_scraped_data()
         self.database.send_hourly_count(crowd_data)
         return
