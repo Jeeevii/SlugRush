@@ -376,10 +376,10 @@ if __name__ == "__main__":
     #db.update_status(13)
     
     #db.send_new_day()
-    # data = scrape.gym_scrape()
-    # crowd_data = json.loads(data)
-    # print(crowd_data)
-    # db.send_hourly_count(crowd_data)
+    data = scrape.gym_scrape()
+    crowd_data = json.loads(data)
+    #print(crowd_data)
+    db.send_hourly_count(crowd_data)
     
 
     # day_data = db.get_daily_query()
@@ -393,14 +393,14 @@ if __name__ == "__main__":
     #     for hour in row['hourly_data']:
     #         print(hour)
 
-    # # checking days table
-    # print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
-    # db.send_query(get_day_query)
-    # print(db.read_all())
+    # checking days table
+    print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
+    db.send_query(get_day_query)
+    print(db.read_all())
 
-    # # checking hours table
-    # print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
-    # db.send_query(get_hour_query)
-    # print(db.read_all())
+    # checking hours table
+    print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
+    db.send_query(get_hour_query)
+    print(db.read_all())
 
     db.close()

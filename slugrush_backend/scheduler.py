@@ -34,7 +34,7 @@ class Scheduler:
         # Weekends: 8 AM to 8 PM every 30 min
         self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week="5-6", hour="8-20", minute="*/30")
         # Ping the main backend every 10 minutes to prevent idle timeout (15 minutes)
-        self.scheduler.add_job(self.ping_backend, 'interval', seconds=2)
+        self.scheduler.add_job(self.ping_backend, 'interval', minutes=5)
         # Ping main database every 5 minutes to prevent idle timeout (10 minutes)
         self.scheduler.add_job(self.ping_database, 'interval', minutes=5)
         
