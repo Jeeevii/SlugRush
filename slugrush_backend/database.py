@@ -5,7 +5,7 @@ import json
 
 from dotenv import load_dotenv
 from datetime import datetime
-#from web_scraper import Scraper
+from web_scraper import Scraper
 
 # logging for database.log
 db_logger = logging.getLogger("database")
@@ -354,7 +354,7 @@ join_query = """
 # internal testing
 if __name__ == "__main__":
     db = Database()
-    #scrape = Scraper()
+    scrape = Scraper()
     # db.start()
 
     # db.send_query(get_developers_query)
@@ -370,7 +370,7 @@ if __name__ == "__main__":
     #db.send_new_day()
     # data = scrape.gym_scrape()
     # crowd_data = json.loads(data)
-    #print(crowd_data)
+    # print(crowd_data)
     # db.send_hourly_count(crowd_data)
     
 
