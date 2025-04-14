@@ -324,12 +324,12 @@ join_query = """
 if __name__ == "__main__":
     db = Database()
     #scrape = Scraper()
-    db.start()
+    # db.start()
 
-    db.send_query(get_developers_query)
-    dev_data = db.read_all()
-    for row in dev_data:
-        print(row)
+    # db.send_query(get_developers_query)
+    # dev_data = db.read_all()
+    # for row in dev_data:
+    #     print(row)
 
     
     # PLEASE DOUBLE CHECK BEFORE DELETING ITEMS
