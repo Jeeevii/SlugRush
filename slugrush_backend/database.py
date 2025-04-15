@@ -5,6 +5,7 @@ import json
 
 from dotenv import load_dotenv
 from datetime import datetime
+from pytz import timezone
 from web_scraper import Scraper
 
 # logging for database.log
@@ -36,16 +37,21 @@ PORT = os.environ.get("PORT")
 class Database():
     # basic constructer starting database connection with psycopgg
     def __init__(self) -> None:
+        self.local_time = timezone("America/Los_Angeles")
         self.connection = psycopg2.connect( 
             host = HOST, 
             dbname = DB, 
             user = USER,
             password = PASS, 
-            port = PORT
+            port = PORT,
+            keepalives = 1, # heart beat pings to prove server is still alive
+            keepalives_idle = 30, # if no queries in 30 seconds, send a ping
+            keepalives_interval = 10, # every 10 seconds 
+            keepalives_count = 3 # 3 attempts before properly closing (in case connection is actually broken)
         )
+        self.cursor = self.connection.cursor()
         db_logger.info("Starting connections to database!")
         # main connection, has plently of built ins to talk to db
-        self.cursor = self.connection.cursor()
 
     # on start, CREATES days_count and hourly_count TABLES if they don't exist
     def start(self) -> None:
@@ -76,36 +82,13 @@ class Database():
         return
 
     # on call, disconnects any and all connections
-    def close(self) -> None: 
-        db_logger.info("Closing connections to database!")
+    def exit(self) -> None: 
         try:
-            if self.cursor and not self.cursor.closed:
-                db_logger.info("Cursor is not closed, closing now!")
-                self.cursor.close()
-            if self.connection and self.connection.closed == 0:
-                db_logger.info("Connection is not closed, closing now!")
-                self.connection.close()
+            db_logger.info("Closing cursor and connection to Database!")
+            self.cursor.close()
+            self.connection.close()        
         except Exception as e:
-            db_logger.warning(f"Error during close: {e}")
-    
-    # helper to avoid cursor idle connection loss 
-    def reconnect(self):
-        self.close()
-        try:
-            db_logger.warning("Reconnecting to database...")
-            self.connection = psycopg2.connect( 
-                host = HOST, 
-                dbname = DB, 
-                user = USER,
-                password = PASS, 
-                port = PORT
-            )
-            self.cursor = self.connection.cursor()
-            db_logger.info("Reconnection successful.")
-            # basic ping
-            self.send_query("select id from days_count where status = 1")
-        except Exception as e:
-            db_logger.error(f"Failed to reconnect to database: {e}")
+            db_logger.warning(f"Error exiting connections: {e}")
 
     # helper for sending queries
     def send_query(self, query: str, id=None) -> None:
@@ -125,16 +108,15 @@ class Database():
         return self.cursor.fetchall()
     
     # helper for deleting rows from given table and range
-    def delete_by_id(self, table: str, start: int, end: int) -> None: # delete rows based on ID from days_count table
+    def delete_by_id(self, table: str, id: int) -> None: # delete rows based on ID from days_count table
         if table not in ALLOWED: # prevents prompt injection 
             return 
         
         delete_query = f"""
             DELETE FROM {table} WHERE id = %s; 
         """
-        for i in range(start, end + 1):
-            db_logger.info(f"DATABASE Deleting {i} from {table}")
-            self.send_query(delete_query, i)
+        db_logger.info(f"DATABASE Deleting {id} from {table}")
+        self.send_query(delete_query, id)
         return
 
     # helper for checking if given id exist in days_count table
@@ -150,7 +132,7 @@ class Database():
     
     # helper for getting current date, day_id, and day of week 
     def get_curr_day(self) -> None: 
-        current_datetime = datetime.now()
+        current_datetime = datetime.now(self.local_time)
         date_dict = {"Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4, "Friday": 5, "Saturday": 6, "Sunday": 7} 
         
         day_of_week = current_datetime.strftime("%A")
@@ -176,9 +158,6 @@ class Database():
 
     # sends a SQL query to days_count table - SHOULD BE DONE EVERY DAY 
     def send_new_day(self) -> None:
-        # db_logger.info("Sending reconnect ping from send_new_day() to Database!")
-        # self.reconnect()
-
         curr_day = self.get_curr_day()
         date = curr_day['date']
         day_of_week = curr_day['day_of_week']
@@ -217,9 +196,6 @@ class Database():
     
     # sends query to add crowd count into hourly_count table
     def send_hourly_count(self, crowd_data: dict[str, int | str]) -> None: # sending hourly count 
-        # db_logger.info("Sending reconnect ping from send_hourly_count() to Database!")
-        # self.reconnect()
-
         day_data = self.get_curr_day()
         day_id = day_data['day_id']
 
@@ -238,19 +214,16 @@ class Database():
             VALUES(%s, %s, %s, %s, %s)
         """
         try:
-            db_logger.info("Sent hourly data to Database!")
+            db_logger.warning("Sent hourly data to Database!")
             self.cursor.execute(add_hour_query, (day_id, hour, self.round_minute(minute), crowd_count, timestamp))
             self.connection.commit()       
         except Exception as e:
-            db_logger.info(f"Failed to insert hourly data into Database: {e}")    
+            db_logger.warning(f"Failed to insert hourly data into Database: {e}")    
         return
     
    
     # function should return a dict with id, day_of_week, status, timestamp (date), and a list with [hour, minute, crowd_count, timestamp (when collected)]
     def get_daily_query(self) -> dict:
-        # db_logger.info("Sending reconnect ping from get_daily_query() to Database!")
-        # self.reconnect()
-
         id_query = """
             select * from days_count where status = 1
         """
@@ -270,11 +243,10 @@ class Database():
             select day_id, hour, minute, crowd_count, timestamp from hourly_count where day_id = %s
         """
         try:
-            db_logger.info('Sent get_daily_query to Database!')
-            self.cursor.execute(day_query, (id,))
-            self.connection.commit()
+            db_logger.warning('Sent get_daily_query to Database!')
+            self.send_query(day_query, (id,))
         except Exception as e:
-            db_logger.info('Failed to send get_daily_query to Database: ', e)
+            db_logger.warning('Failed to send get_daily_query to Database: ', e)
         
         #db_logger.info("Sent Day Query!")
         day_data = self.read_all()
@@ -300,9 +272,6 @@ class Database():
 
     # get all previous weeks data to graph (same logic as get_daily but with all 7 days)
     def get_weekly_query(self) -> dict:
-        # db_logger.info("Sending reconnect ping from get_weekly_query() to Database!")
-        # self.reconnect()
-
         weekly_query = """
             select dc.id, dc.date, dc.status, dc.day_of_week, 
             hc.day_id, hc.hour, hc.minute, hc.crowd_count, hc.timestamp
@@ -311,8 +280,11 @@ class Database():
             where dc.id <= 7
             ORDER BY dc.id, hc.hour, hc.minute
         """
-        db_logger.info("Sent get_weekly_query to Database!")
-        self.send_query(weekly_query)
+        try:    
+            db_logger.warning("Sent get_weekly_query to Database!")
+            self.send_query(weekly_query)
+        except Exception as e:
+            db_logger.warning("Error sending get_weekly_query to Database: ", e)
         rows = self.read_all()
         #print(rows)
         final_data = {}
@@ -335,12 +307,10 @@ class Database():
                     'crowd_count': row[7],
                     'timestamp': row[8]
                 }
-                final_data[day_id]['hourly_data'].append(hourly)
+                final_data[day_id]['hourly_data'].append(hourly) # adding to query list
 
         day_list = list(final_data.values())
         return day_list
-
-
 
 
 
@@ -372,18 +342,18 @@ if __name__ == "__main__":
 
     
     # PLEASE DOUBLE CHECK BEFORE DELETING ITEMS
-    #db.delete_by_id(DAY_TABLE, 4, 4)
-    #db.update_status(13)
+    #db.delete_by_id(DAY_TABLE, 2)
+    #db.update_status(1)
     
     #db.send_new_day()
-    data = scrape.gym_scrape()
-    crowd_data = json.loads(data)
+    # data = scrape.gym_scrape()
+    # crowd_data = json.loads(data)
     #print(crowd_data)
-    db.send_hourly_count(crowd_data)
+    #db.send_hourly_count(crowd_data)
     
 
-    # day_data = db.get_daily_query()
-    # print(day_data)
+    day_data = db.get_daily_query()
+    print(day_data)
     # for hour in day_data['hourly_data']:
     #     print(hour['crowd_count'])
 
@@ -393,14 +363,14 @@ if __name__ == "__main__":
     #     for hour in row['hourly_data']:
     #         print(hour)
 
-    # checking days table
-    print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
-    db.send_query(get_day_query)
-    print(db.read_all())
+    # # checking days table
+    # print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
+    # db.send_query(get_day_query)
+    # print(db.read_all())
 
-    # checking hours table
-    print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
-    db.send_query(get_hour_query)
-    print(db.read_all())
+    # # checking hours table
+    # print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
+    # db.send_query(get_hour_query)
+    # print(db.read_all())
 
-    db.close()
+    db.exit()

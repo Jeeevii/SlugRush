@@ -4,6 +4,7 @@ import os
 
 from bs4 import BeautifulSoup
 from datetime import datetime
+from pytz import timezone
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -12,6 +13,8 @@ class Scraper:
     def __init__(self) -> None:
         self.url = os.environ.get("FO_URL")
         self.facility_id = os.environ.get("FO_ID")
+        self.local_time = timezone("America/Los_Angeles")
+
 
     def gym_scrape(self) -> json:
         response = requests.get(self.url)
@@ -27,12 +30,8 @@ class Scraper:
 
         # extract static occupancy count for East Gym
         occupancy_count = facility.find("p", class_="occupancy-count").strong.text.strip()
-        current_datetime = datetime.now() # current date
+        current_datetime = datetime.now(self.local_time) # current date
         timestamp = current_datetime.strftime("%Y-%m-%d %H:%M:%S") # timestamp
-        # res = {}
-        # res['hour'] = current_datetime.hour
-        # res['occupancy_count'] = int(occupancy_count)
-        # res['timestamp'] = timestamp
 
         return json.dumps({
             'hour': current_datetime.hour,

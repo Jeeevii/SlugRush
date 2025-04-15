@@ -59,13 +59,9 @@ def get_daily() -> Dict:
 
 # GET endpoint - queries database and returns all of previous weeks (1-7) crowd_count - NEEDED FOR GRAPHING WEEKLY VIEW
 @app.get("/get/weekly")
-def get_weekly() -> JSONResponse:
-
-    return JSONResponse(content={
-        "status": "success",
-        "message": "GET weekly route currently under development",
-        "data": []
-    })
+def get_weekly() -> list:
+    msg = db.get_weekly_query()
+    return msg
 
 
 
