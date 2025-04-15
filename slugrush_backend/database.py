@@ -108,16 +108,15 @@ class Database():
         return self.cursor.fetchall()
     
     # helper for deleting rows from given table and range
-    def delete_by_id(self, table: str, start: int, end: int) -> None: # delete rows based on ID from days_count table
+    def delete_by_id(self, table: str, id: int) -> None: # delete rows based on ID from days_count table
         if table not in ALLOWED: # prevents prompt injection 
             return 
         
         delete_query = f"""
             DELETE FROM {table} WHERE id = %s; 
         """
-        for i in range(start, end + 1):
-            db_logger.info(f"DATABASE Deleting {i} from {table}")
-            self.send_query(delete_query, i)
+        db_logger.info(f"DATABASE Deleting {id} from {table}")
+        self.send_query(delete_query, id)
         return
 
     # helper for checking if given id exist in days_count table
@@ -343,12 +342,12 @@ if __name__ == "__main__":
 
     
     # PLEASE DOUBLE CHECK BEFORE DELETING ITEMS
-    #db.delete_by_id(DAY_TABLE, 4, 4)
-    #db.update_status(13)
+    #db.delete_by_id(DAY_TABLE, 2)
+    #db.update_status(1)
     
     #db.send_new_day()
-    data = scrape.gym_scrape()
-    crowd_data = json.loads(data)
+    # data = scrape.gym_scrape()
+    # crowd_data = json.loads(data)
     #print(crowd_data)
     #db.send_hourly_count(crowd_data)
     
