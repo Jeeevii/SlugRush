@@ -29,10 +29,10 @@ load_dotenv()
 
 # supa db creds
 HOST = os.environ.get("HOST")
-DB = os.environ.get("DBNAME")
+DB = os.environ.get("DB_NAME")
 USER = os.environ.get("USER")
 PASS = os.environ.get("PASSWORD")
-PORT = os.environ.get("PORT")
+PORT = os.environ.get("DB_PORT")
 
 class Database():
     # basic constructer starting database connection with psycopgg
@@ -345,15 +345,14 @@ if __name__ == "__main__":
     #db.delete_by_id(DAY_TABLE, 2)
     #db.update_status(1)
     
-    #db.send_new_day()
     # data = scrape.gym_scrape()
     # crowd_data = json.loads(data)
-    #print(crowd_data)
-    #db.send_hourly_count(crowd_data)
+    # print(crowd_data)
+    # db.send_hourly_count(crowd_data)
     
 
-    day_data = db.get_daily_query()
-    print(day_data)
+    # day_data = db.get_daily_query()
+    # print(day_data)
     # for hour in day_data['hourly_data']:
     #     print(hour['crowd_count'])
 
