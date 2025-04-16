@@ -156,6 +156,15 @@ class Database():
         self.send_query(update_query, id)
         return
 
+    """
+    1. Assuming IDs 1-7 AND 8-14 exist, DELETE entries 1-7 FROM days_count AND hourly_count
+    2. Once deleted, REPLACE/MODIFY IDs 8-14 from days_count AND hourly_count into IDs 1-7
+    Preferred but optional, BEFORE doing #1, do a get_weekly_query() call, and write all contents into a local file
+    Depending on space limitations in the database, could potentially implement a get_monthly_query() AND/OR reference that for the weekly view 
+    """
+    def replace_db_entries(self) -> None:
+            db_logger.warning("Deleting and Replacing old entries in Database!")
+
     # sends a SQL query to days_count table - SHOULD BE DONE EVERY DAY 
     def send_new_day(self) -> None:
         curr_day = self.get_curr_day()
@@ -173,6 +182,7 @@ class Database():
         # when both ids exist for monday, delete first week and update with second week - TO DO TASK
         if self.check_id(new_id):
             db_logger.info(f"{new_id} also exist in database, deleting and swapping")
+            self.replace_db_entries()
             return 
         
         # when sending new day query, edit previous day's status to 0 (not collecting anymore)
