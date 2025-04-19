@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import requests
 from dotenv import load_dotenv
@@ -11,7 +12,14 @@ BACKEND_URL = os.getenv('BACKEND_URL')
 
 app = FastAPI()
 
-
+# 👇 This is where the magic happens
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # or ["*"] for wild west (not prod safe)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 @app.get("/")
 def root():
     return {
@@ -43,8 +51,10 @@ def proxy_request(endpoint: str):
     try:
         res = requests.get(f"{BACKEND_URL}{endpoint}")
         res.raise_for_status()
+        print(f"[PROXY] GET {endpoint} → {res.status_code}")
         return res.json()
     except Exception as e:
+        print(f"[PROXY] GET {endpoint} → {res.status_code}")
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
 
