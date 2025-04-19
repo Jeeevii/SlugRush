@@ -1,68 +1,17 @@
-// src/lib/api.ts
+const BACKEND_URL = "http://localhost:8000/get/daily";
 
-const API_BASE_URL = 'https://slugrush-backend.onrender.com';
-
-export interface HourlyDataEntry {
-  day_id: number;
-  hour: number;
-  minute: number;
-  crowd_count: number;
-  timestamp: string;
-}
-
-export interface DailyResponse {
-  id: number;
-  date: string;
-  status: number;
-  day_of_week: string;
-  hourly_data: HourlyDataEntry[];
-}
-
-// Fetches the latest daily gym data
-export async function fetchDaily(): Promise<HourlyDataEntry[]> {
+export const fetchData = async <T = any>(): Promise<T> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/get/daily`);
+    const response = await fetch(BACKEND_URL);
+
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Error fetching /get/daily:', response.status, errorText);
-      throw new Error('Failed to fetch daily gym data');
+      throw new Error(`Failed to fetch: ${response.statusText}`);
     }
-    const data: DailyResponse = await response.json();
-    return data.hourly_data || [];
+
+    const data: T = await response.json(); // now returns typed data
+    return data;
   } catch (error) {
-    console.error('Error in fetchDaily:', error);
-    return [];
+    console.error('Error fetching data:', error);
+    throw error; // propagate the error so calling code knows it failed
   }
-}
-
-// // Process hourly data for charting (averaged and grouped by hour)
-// export function processHourlyData(data: HourlyDataEntry[]): { time: string; crowdLevel: number }[] {
-//   if (!data || data.length === 0) return [];
-
-//   const hourlyBuckets: Record<string, { total: number; count: number }> = {};
-
-//   data.forEach(entry => {
-//     const formattedHour = `${entry.hour % 12 || 12}${entry.hour < 12 ? 'AM' : 'PM'}`;
-
-//     if (!hourlyBuckets[formattedHour]) {
-//       hourlyBuckets[formattedHour] = { total: 0, count: 0 };
-//     }
-
-//     hourlyBuckets[formattedHour].total += entry.crowd_count;
-//     hourlyBuckets[formattedHour].count += 1;
-//   });
-
-//   return Object.entries(hourlyBuckets)
-//     .map(([time, { total, count }]) => ({
-//       time,
-//       crowdLevel: Math.round((total / count) * 100 / 150), // crowd % of max capacity
-//     }))
-//     .sort((a, b) => {
-//       const parseHour = (t: string) => {
-//         const num = parseInt(t);
-//         const isAM = t.includes('AM');
-//         return (isAM ? 0 : 12) + (num % 12);
-//       };
-//       return parseHour(a.time) - parseHour(b.time);
-//     });
-// }
+};
