@@ -1,75 +1,54 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
-from typing import Dict
-from web_scraper import Scraper
-from scheduler import Scheduler
-from database import Database
+import requests
 from dotenv import load_dotenv
 
-import uvicorn
 import os
-import json
 load_dotenv()
-PORT = int(os.environ.get("PORT", 5000))
 
-# MOCK_DB_PATH = "mock_database/crowd_week_data.json"
-
-class Crowd(BaseModel):
-    crowd_count: int
+# Constants
+BACKEND_URL = os.getenv('BACKEND_URL')
 
 app = FastAPI()
-scheduler = Scheduler() # runs background scheduler seperate thread
-db = Database()
 
-# runs when backend server is started 
-@app.on_event("startup")  
-async def startup_event():
-    scheduler.start_jobs()
 
-# runs when backend server shuts down (manual ctrl + c)
-@app.on_event("shutdown") 
-async def shutdown_event():
-    scheduler.stop_jobs()
-
-# route 
 @app.get("/")
-async def root():
+def root():
     return {
-        "message": "SlugRush | Backend running on FastAPI on PORT 8000",
+        "message": "SlugRush Proxy Server Running",
         "routes": {
-            "/docs": "FastAPI's docs with clear and visual examples",
-            "/get/count": "GETS formatted count of Fitness Center",
-            "/get/daily": "GETS all daily counts currently getting collected",
-            "/get/weekly": "GETS previous week's counts",
+            "/get/count": "Proxy to hosted /get/count",
+            "/get/daily": "Proxy to hosted /get/daily",
+            "/get/weekly": "Proxy to hosted /get/weekly",
         }
     }
 
 
-# GET endpoint - scrapes gym page when called and returns jsonified dict
 @app.get("/get/count")
-def get_count() -> Dict:
-    scraper = Scraper()
-    try:
-        data = scraper.gym_scrape()
-        return json.loads(data)
-    except Exception as e:
-        return JSONResponse({"error": str(e)}, status_code=500)
-    
-# GET endpoint - queries database and returns all rows with current day crowd_counts - NEEDED FOR GRAPHING DAILY VIEW
+def proxy_get_count():
+    return proxy_request("/get/count")
+
+
 @app.get("/get/daily")
-def get_daily() -> Dict:
-    msg = db.get_daily_query()
-    return msg
+def proxy_get_daily():
+    return proxy_request("/get/daily")
 
-# GET endpoint - queries database and returns all of previous weeks (1-7) crowd_count - NEEDED FOR GRAPHING WEEKLY VIEW
+
 @app.get("/get/weekly")
-def get_weekly() -> list:
-    msg = db.get_weekly_query()
-    return msg
+def proxy_get_weekly():
+    return proxy_request("/get/weekly")
 
 
+def proxy_request(endpoint: str):
+    try:
+        res = requests.get(f"{BACKEND_URL}{endpoint}")
+        res.raise_for_status()
+        return res.json()
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
 
-# internal start up
+
 if __name__ == "__main__":
+    import uvicorn
+    PORT = int(os.environ.get("PORT", 8000))
     uvicorn.run("server:app", host="0.0.0.0", port=PORT, reload=True)
