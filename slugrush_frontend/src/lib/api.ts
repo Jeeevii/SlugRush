@@ -1,64 +1,68 @@
-// handing backend fetching and parsing for Daily and Weekly view
+// src/lib/api.ts
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE_URL = 'https://slugrush-backend.onrender.com';
 
-export interface GymDataEntry {
-  id: number;
-  day_of_week: string;
+export interface HourlyDataEntry {
+  day_id: number;
   hour: number;
-  occupancy_count: number;
+  minute: number;
+  crowd_count: number;
   timestamp: string;
 }
 
-export async function fetchGymData(): Promise<GymDataEntry[]> {
+export interface DailyResponse {
+  id: number;
+  date: string;
+  status: number;
+  day_of_week: string;
+  hourly_data: HourlyDataEntry[];
+}
+
+// Fetches the latest daily gym data
+export async function fetchDaily(): Promise<HourlyDataEntry[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/gym/crowd`);
+    const response = await fetch(`${API_BASE_URL}/get/daily`);
     if (!response.ok) {
-      throw new Error('Failed to fetch gym data');
+      const errorText = await response.text();
+      console.error('Error fetching /get/daily:', response.status, errorText);
+      throw new Error('Failed to fetch daily gym data');
     }
-    const data = await response.json();
-    return data.gym_data || [];
-  } 
-  catch (error) {
-    console.error('Error fetching gym data:', error);
+    const data: DailyResponse = await response.json();
+    return data.hourly_data || [];
+  } catch (error) {
+    console.error('Error in fetchDaily:', error);
     return [];
   }
 }
 
-// export function processDailyData(data: GymDataEntry[]): { time: string; crowdLevel: number }[] {
+// // Process hourly data for charting (averaged and grouped by hour)
+// export function processHourlyData(data: HourlyDataEntry[]): { time: string; crowdLevel: number }[] {
 //   if (!data || data.length === 0) return [];
-  
-//   // Group by hour
-//   const hourlyData: Record<string, { total: number; count: number }> = {};
-  
-//   // Fixed syntax error here - removed 'const' before 'entry'
+
+//   const hourlyBuckets: Record<string, { total: number; count: number }> = {};
+
 //   data.forEach(entry => {
-//     // Extract hour from timestamp
-//     const hour = entry.timestamp.split(':')[0];
-//     const formattedHour = `${parseInt(hour) % 12 || 12}${parseInt(hour) < 12 ? 'AM' : 'PM'}`;
-    
-//     if (!hourlyData[formattedHour]) {
-//       hourlyData[formattedHour] = { total: 0, count: 0 };
+//     const formattedHour = `${entry.hour % 12 || 12}${entry.hour < 12 ? 'AM' : 'PM'}`;
+
+//     if (!hourlyBuckets[formattedHour]) {
+//       hourlyBuckets[formattedHour] = { total: 0, count: 0 };
 //     }
-    
-//     hourlyData[formattedHour].total += entry.crowd_count;
-//     hourlyData[formattedHour].count += 1;
+
+//     hourlyBuckets[formattedHour].total += entry.crowd_count;
+//     hourlyBuckets[formattedHour].count += 1;
 //   });
-  
-//   // Convert to array format needed for chart
-//   return Object.entries(hourlyData).map(([time, { total, count }]) => ({
-//     time,
-//     crowdLevel: Math.round((total / count) * 100 / 150) // Assuming max capacity is 150
-//   })).sort((a, b) => {
-//     // Sort by AM/PM then by hour
-//     const aIsAM = a.time.includes('AM');
-//     const bIsAM = b.time.includes('AM');
-    
-//     if (aIsAM && !bIsAM) return -1;
-//     if (!aIsAM && bIsAM) return 1;
-    
-//     const aHour = parseInt(a.time);
-//     const bHour = parseInt(b.time);
-//     return aHour - bHour;
-//   });
-//}
+
+//   return Object.entries(hourlyBuckets)
+//     .map(([time, { total, count }]) => ({
+//       time,
+//       crowdLevel: Math.round((total / count) * 100 / 150), // crowd % of max capacity
+//     }))
+//     .sort((a, b) => {
+//       const parseHour = (t: string) => {
+//         const num = parseInt(t);
+//         const isAM = t.includes('AM');
+//         return (isAM ? 0 : 12) + (num % 12);
+//       };
+//       return parseHour(a.time) - parseHour(b.time);
+//     });
+// }
