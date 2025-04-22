@@ -1,12 +1,18 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-import json
 from typing import Dict
-
 from web_scraper import Scraper
 from scheduler import Scheduler
 from database import Database
+from dotenv import load_dotenv
+
+import json
+import uvicorn
+import os
+import json
+load_dotenv()
+PORT = int(os.environ.get("PORT", 5000))
 
 # MOCK_DB_PATH = "mock_database/crowd_week_data.json"
 
@@ -65,7 +71,6 @@ def get_weekly() -> list:
 
 
 
-# internal testing - CAN NOT FOR FAST API, need httpx 
-# if __name__ == "__main__":
-#     #app.run(debug=True)
-
+# internal start up
+if __name__ == "__main__":
+    uvicorn.run("server:app", host="0.0.0.0", port=PORT, reload=True)

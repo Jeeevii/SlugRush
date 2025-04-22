@@ -25,12 +25,13 @@ The backend is built with **FastAPI** and now runs with a real PostgreSQL databa
 
 3. **Install Dependencies**
 
-   ```bash
-   pip install fastapi uvicorn psycopg2 requests bs4 apscheduler dotenv
-   ```
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-   > 💡 `psycopg2` is the PostgreSQL adapter for Python.
-
+4. **Import Environmental Variables**
+    - Make a **.env**:
+      Ask Product Owner for creds
 ---
 
 ### 2. 🐘 PostgreSQL Database (via Docker)

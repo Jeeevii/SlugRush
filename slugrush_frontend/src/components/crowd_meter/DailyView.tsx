@@ -1,10 +1,15 @@
-// components/crowd-meter/DailyView.tsx
-"use client"
+'use client';
+import { useEffect } from 'react';
+import { fetchDaily } from '@/src/lib/api';
 
-export default function DailyView() {
-    return (
-      <div className="h-[300px] flex items-center justify-center bg-gray-50 rounded-lg">
-        <p className="text-gray-500">Daily view coming soon!</p>
-      </div>
-    )
-  }
+export default function RawGymDataViewer() {
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await fetchDaily();
+      console.log('💾 Raw hourly gym data:', data);
+    };
+    loadData();
+  }, []);
+
+  return <div>Check the console for raw gym data 🧠📊</div>;
+}
