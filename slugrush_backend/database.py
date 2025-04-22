@@ -28,11 +28,11 @@ ALLOWED = {DAY_TABLE, HOUR_TABLE}
 load_dotenv()
 
 # supa db creds
-HOST = os.environ.get("HOST")
-DB = os.environ.get("DB_NAME")
-USER = os.environ.get("USER")
-PASS = os.environ.get("PASSWORD")
-PORT = os.environ.get("DB_PORT")
+HOST = os.environ.get("TEST_HOST")
+DB = os.environ.get("TEST_DBNAME")
+USER = os.environ.get("TEST_USER")
+PASS = os.environ.get("TEST_PASSWORD")
+PORT = os.environ.get("TEST_PORT")
 
 class Database():
     # basic constructer starting database connection with psycopgg
@@ -93,11 +93,14 @@ class Database():
     # helper for sending queries
     def send_query(self, query: str, id=None) -> None:
         # using %s for modifying queries prevents prompt injection
-        if id is not None:
-            self.cursor.execute(query, (id,)) # if id is given, add it while sending
-        else:
-            self.cursor.execute(query)
-        self.connection.commit()
+        try:
+            if id is not None:
+                self.cursor.execute(query, (id,)) # if id is given, add it while sending
+            else:
+                self.cursor.execute(query)
+            self.connection.commit()
+        except Exception as error:
+            db_logger.warning(f"Error sending query to database: {error}")
 
     # helper for reading 1 row from response O(1)
     def read_one(self) -> tuple:
@@ -132,17 +135,17 @@ class Database():
     
     # helper for getting current date, day_id, and day of week 
     def get_curr_day(self) -> None: 
-        current_datetime = datetime.now(self.local_time)
-        date_dict = {"Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4, "Friday": 5, "Saturday": 6, "Sunday": 7} 
+        current_datetime = datetime.now(self.local_time) # manuel set up for PST time
+        #date_dict = {"Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4, "Friday": 5, "Saturday": 6, "Sunday": 7} 
         
         day_of_week = current_datetime.strftime("%A")
         date = current_datetime.strftime("%Y-%m-%d")
-        day_id = date_dict[day_of_week]
+        live_id = self.get_live()
 
         db_logger.info("Getting current day data!")
         return {
             'date': date, 
-            'day_id': day_id, 
+            'live_id': live_id, 
             'day_of_week': day_of_week
         }
     
@@ -161,30 +164,24 @@ class Database():
         curr_day = self.get_curr_day()
         date = curr_day['date']
         day_of_week = curr_day['day_of_week']
-        id = curr_day['day_id']
-        
-        new_id = id 
-        if self.check_id(id): # if ID exist, add for next week
-            db_logger.info(f"{id} exists, adding for next week")
-            new_id = id + NEXT_WEEK
-        else: # if ID doesnt exist, its current week 
-            db_logger.info(f"{id} doesnt exist, adding to table")
+        prev_id = curr_day['live_id']
+        day_id = prev_id + 1
 
-        # when both ids exist for monday, delete first week and update with second week - TO DO TASK
-        if self.check_id(new_id):
-            db_logger.info(f"{new_id} also exist in database, deleting and swapping")
-            return 
+        # # when both ids exist for monday, delete first week and update with second week - TO DO TASK
+        # if self.check_id(new_id):
+        #     db_logger.info(f"{new_id} also exist in database, deleting and swapping")
+        #     return 
         
         # when sending new day query, edit previous day's status to 0 (not collecting anymore)
-        if new_id != 1: 
-            self.update_status(new_id - 1) # prev day id ASSUMING IT EXIST
+        if prev_id != 1: 
+            self.update_status(prev_id) # prev day id ASSUMING IT EXIST
 
         add_day_query = """
             INSERT INTO days_count(id, date, status, day_of_week)
             VALUES (%s, %s, %s, %s)
         """
         db_logger.info("Sending new day to Database!")
-        self.cursor.execute(add_day_query, (new_id, date, LIVE, day_of_week))
+        self.cursor.execute(add_day_query, (day_id, date, LIVE, day_of_week))
         self.connection.commit()
         return
     
@@ -194,11 +191,18 @@ class Database():
             return 0
         return 30
     
+    # function should return id from days_count table that has status = 1, ACTIVE DAY
+    def get_live(self) -> int:
+        get_live_query = """
+            select id from days_count WHERE status = 1
+        """
+        self.send_query(get_live_query)
+        id = self.read_one()
+        return id[0]
+    
     # sends query to add crowd count into hourly_count table
     def send_hourly_count(self, crowd_data: dict[str, int | str]) -> None: # sending hourly count 
-        day_data = self.get_curr_day()
-        day_id = day_data['day_id']
-
+        day_id = self.get_curr_day()['live_id']
         hour = crowd_data['hour'] 
         minute = crowd_data['minute']
         crowd_count = crowd_data['crowd_count']   
@@ -271,7 +275,7 @@ class Database():
         }
 
     # get all previous weeks data to graph (same logic as get_daily but with all 7 days)
-    def get_weekly_query(self) -> dict:
+    def get_weekly_query(self) -> list:
         weekly_query = """
             select dc.id, dc.date, dc.status, dc.day_of_week, 
             hc.day_id, hc.hour, hc.minute, hc.crowd_count, hc.timestamp
@@ -315,7 +319,7 @@ class Database():
 
 
 # TESTING 
-# ------------------------------------------------------------------
+# -----------------------------------------------------------------------------------
 get_developers_query = """
     SELECT * FROM developers
 """
@@ -333,8 +337,10 @@ join_query = """
 if __name__ == "__main__":
     db = Database()
     scrape = Scraper()
+    # id = db.get_live()
+    # print(id)
     # db.start()
-    #db.close()
+    # db.close()
     # db.send_query(get_developers_query)
     # dev_data = db.read_all()
     # for row in dev_data:
@@ -345,10 +351,12 @@ if __name__ == "__main__":
     #db.delete_by_id(DAY_TABLE, 2)
     #db.update_status(1)
     
-    # data = scrape.gym_scrape()
-    # crowd_data = json.loads(data)
-    # print(crowd_data)
-    # db.send_hourly_count(crowd_data)
+    db.send_new_day()
+
+    data = scrape.gym_scrape()
+    crowd_data = json.loads(data)
+    print(crowd_data)
+    db.send_hourly_count(crowd_data)
     
 
     # day_data = db.get_daily_query()
@@ -362,14 +370,14 @@ if __name__ == "__main__":
     #     for hour in row['hourly_data']:
     #         print(hour)
 
-    # # checking days table
-    # print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
-    # db.send_query(get_day_query)
-    # print(db.read_all())
+    # checking days table
+    print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
+    db.send_query(get_day_query)
+    print(db.read_all())
 
-    # # checking hours table
-    # print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
-    # db.send_query(get_hour_query)
-    # print(db.read_all())
+    # checking hours table
+    print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
+    db.send_query(get_hour_query)
+    print(db.read_all())
 
     db.exit()

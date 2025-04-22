@@ -10,16 +10,13 @@ from web_scraper import Scraper
 
 local_time = timezone("America/Los_Angeles") # render has different time zone
 
-# logging
+# scheduler logging 
 scheduler_logger = logging.getLogger("scheduler")
 scheduler_logger.setLevel(logging.INFO)
-
 file_handler = logging.FileHandler("scheduler.log")
 file_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
-
 console_handler = logging.StreamHandler()
 console_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
-
 scheduler_logger.addHandler(file_handler)
 scheduler_logger.addHandler(console_handler)
 

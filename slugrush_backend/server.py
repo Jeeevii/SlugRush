@@ -7,6 +7,7 @@ from scheduler import Scheduler
 from database import Database
 from dotenv import load_dotenv
 
+import json
 import uvicorn
 import os
 
