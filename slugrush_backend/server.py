@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 import json
 import uvicorn
 import os
-
+import json
 load_dotenv()
 PORT = int(os.environ.get("PORT", 5000))
 
