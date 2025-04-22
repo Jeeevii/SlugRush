@@ -353,10 +353,10 @@ if __name__ == "__main__":
     
     # db.send_new_day()
 
-    data = scrape.gym_scrape()
-    crowd_data = json.loads(data)
-    print(crowd_data)
-    db.send_hourly_count(crowd_data)
+    # data = scrape.gym_scrape()
+    # crowd_data = json.loads(data)
+    # print(crowd_data)
+    # db.send_hourly_count(crowd_data)
     
 
     # day_data = db.get_daily_query()
