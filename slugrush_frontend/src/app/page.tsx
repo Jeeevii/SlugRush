@@ -1,11 +1,16 @@
 // app/page.js
 import CrowdMeterContainer from '../components/crowd_meter/CrowdMeterContainer'
+import GymHours from '../components/crowd_meter/GymHours'
+import Header from '../components/crowd_meter/Header'
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <h1 className="text-2xl font-bold text-center text-[#003c6c] mb-6">UCSC Gym Crowd Meter</h1>
-      <CrowdMeterContainer />
+    <div className="min-h-screen bg-[#f5f5f5]">
+      <Header />
+      <div className="max-w-4xl mx-auto p-3 sm:p-4 md:p-6">
+        <GymHours />
+        <CrowdMeterContainer />
+      </div>
     </div>
   )
 }

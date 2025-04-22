@@ -12,12 +12,11 @@ export default function WeeklyView() {
   const [loading, setLoading] = useState(true)
   const [viewType, setViewType] = useState<"bar" | "heatmap">("bar")
 
-  // Fetch data on component mount
   useEffect(() => {
     loadData()
   }, [])
 
-  // Function to load data
+  // load data
   const loadData = async () => {
     setLoading(true)
     try {
@@ -49,7 +48,7 @@ export default function WeeklyView() {
   const isWeekend = selectedDay === "SAT" || selectedDay === "SUN"
   const hoursText = isWeekend ? "8am - 8pm" : "6am - 11pm"
 
-  // Prepare data for charts
+  // parse data for charts
   const chartData = selectedDayData.data.map((level, index) => {
     const hour = index + (isWeekend ? 8 : 6)
     const hourFormatted = `${hour % 12 || 12}${hour < 12 ? "am" : "pm"}`
@@ -60,7 +59,7 @@ export default function WeeklyView() {
     }
   })
 
-  // Get color for heatmap cell
+  // format colors for heatmap cell - simplifed view
   const getHeatmapColor = (level: number) => {
     if (level < 30) return "bg-green-100 text-green-800"
     if (level < 50) return "bg-green-200 text-green-800"
@@ -69,14 +68,14 @@ export default function WeeklyView() {
     return "bg-red-100 text-red-800"
   }
 
-  // Get text for heatmap cell
+  // get text for heatmap cell
   const getHeatmapText = (level: number) => {
     if (level < 30) return "Low"
     if (level < 70) return "Med"
     return "High"
   }
 
-  // Custom bar chart tooltip
+  // tooltip/legend
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -93,8 +92,8 @@ export default function WeeklyView() {
 
   return (
     <div>
-      {/* Day selector - more mobile friendly with equal width buttons */}
-      <div className="grid grid-cols-7 mb-4 border-b overflow-hidden">
+      {/* day selector */}
+      <div className="grid grid-cols-7 mb-4 border-b overflow-hidden ">
         {weeklyData.map((day) => (
           <button
             key={day.day}
@@ -103,8 +102,8 @@ export default function WeeklyView() {
               selectedDay === day.day
                 ? "text-[#003C6B] font-bold border-b-2 border-[#FEC700]"
                 : day.day === currentDay
-                  ? "text-gray-700 font-medium"
-                  : "text-gray-500"
+                  ? "text-gray-700 font-medium cursor-pointer"
+                  : "text-gray-500 cursor-pointer"
             }`}
           >
             {day.day}
@@ -112,12 +111,12 @@ export default function WeeklyView() {
         ))}
       </div>
 
-      {/* View type selector */}
+      {/* type selector */}
       <div className="flex mb-4 border rounded-md overflow-hidden">
         <button
           onClick={() => setViewType("bar")}
           className={`flex-1 py-1.5 text-xs font-medium flex justify-center items-center gap-1 ${
-            viewType === "bar" ? "bg-[#003C6B] text-white" : "bg-gray-50 text-gray-700"
+            viewType === "bar" ? "bg-[#003C6B] text-white" : "bg-gray-50 text-gray-700 cursor-pointer"
           }`}
         >
           <BarChart3 className="h-3 w-3" />
@@ -126,7 +125,7 @@ export default function WeeklyView() {
         <button
           onClick={() => setViewType("heatmap")}
           className={`flex-1 py-1.5 text-xs font-medium flex justify-center items-center gap-1 ${
-            viewType === "heatmap" ? "bg-[#003C6B] text-white" : "bg-gray-50 text-gray-700"
+            viewType === "heatmap" ? "bg-[#003C6B] text-white" : "bg-gray-50 text-gray-700 cursor-pointer"
           }`}
         >
           <Grid className="h-3 w-3" />
@@ -134,14 +133,14 @@ export default function WeeklyView() {
         </button>
       </div>
 
-      {/* Hours indicator */}
+      {/* hours legend */}
       <div className="flex justify-end mb-2">
         <span className="text-xs text-gray-500">{hoursText}</span>
       </div>
 
       {/* Bar Chart View */}
       {viewType === "bar" && (
-        <div className="bg-white rounded-lg p-3 h-[280px]">
+        <div className="bg-white rounded-lg p-3 h-[280px] text-gray-400">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barCategoryGap={2}>
               <XAxis

@@ -13,7 +13,7 @@ export default function CrowdMeterContainer() {
         <h2 className="text-xl font-bold">CROWD HISTORY</h2>
       </div>
 
-      <div className="flex border-b">
+      <div className="flex border-b ">
         {["daily", "weekly"].map((view) => (
           <button
             key={view}
@@ -21,7 +21,7 @@ export default function CrowdMeterContainer() {
             className={`flex-1 py-3 text-center transition-colors ${
               activeView === view
                 ? "bg-white text-[#003C6B] font-semibold border-b-2 border-[#FEC700]"
-                : "bg-gray-50 text-gray-600 hover:bg-gray-100"
+                : "bg-gray-50 text-gray-600 hover:bg-gray-100 cursor-pointer"
             }`}
           >
             {view === "daily" ? "Today" : "This Week"}

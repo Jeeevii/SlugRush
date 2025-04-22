@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import LiveIndicator from "./LiveIndicator"
+import LiveIndicator from "./ui/LiveIndicator"
 import { Menu } from "lucide-react"
 
 export default function Header() {
@@ -32,15 +32,16 @@ export default function Header() {
 
           <div className="flex items-center gap-3">
             <LiveIndicator />
-            <button className="md:hidden p-1.5 rounded hover:bg-[#002a4d] transition-colors">
+            <button className="p-1.5 rounded hover:bg-[#002a4d] transition-colors cursor-pointer">
               <Menu className="h-5 w-5" />
             </button>
+            {/* Add a About/Contact/Whatever page when menu is clicked? */}
           </div>
         </div>
 
         <div className="mt-2 flex flex-wrap items-center justify-between">
-          <p className="text-sm text-gray-200">{greeting}, Slugs!</p>
-          <span className="text-sm text-[#FEC700]">UCSC Gym Crowd Tracker</span>
+          <p className="text-sm text-gray-200 font-bold">{greeting}, Slugs!</p>
+          <span className="text-sm text-[#FEC700]">UCSC Fitness Center's Crowd Meter</span>
         </div>
       </div>
     </header>
