@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import requests
 from dotenv import load_dotenv
+import uvicorn
 
 import os
 load_dotenv()
@@ -59,6 +60,5 @@ def proxy_request(endpoint: str):
 
 
 if __name__ == "__main__":
-    import uvicorn
     PORT = int(os.environ.get("PORT", 8000))
-    uvicorn.run("server:app", host="0.0.0.0", port=PORT, reload=True)
+    uvicorn.run("server:app", host="localhost", port=PORT, reload=True)
