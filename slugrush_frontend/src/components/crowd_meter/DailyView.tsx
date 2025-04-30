@@ -149,12 +149,12 @@ export default function DailyView() {
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
-        <div className="text-sm text-gray-500 font-medium px-2">Today's Crowd Levels</div>
+        <div className="text-sm text-gray-500 font-bold px-2">Today's Crowd Levels</div>
         <div className="flex items-center gap-2">
           <span className="text-xs text-gray-500">{hoursText}</span>
           <button
             onClick={handleRefresh}
-            className="flex items-center gap-1 text-xs text-[#003C6B] px-2 py-1 rounded hover:bg-gray-100"
+            className="flex items-center gap-1 text-xs text-[#003C6B] px-2 py-1 rounded hover:bg-gray-100 cursor-pointer"
           >
             <ArrowDownToLine className={`h-3 w-3 ${refreshing ? "animate-bounce" : ""}`} />
             <span>Refresh</span>
@@ -167,7 +167,7 @@ export default function DailyView() {
         <button
           onClick={() => setViewType("bar")}
           className={`flex-1 py-1.5 text-xs font-medium flex justify-center items-center gap-1 ${
-            viewType === "bar" ? "bg-[#003C6B] text-white" : "bg-gray-50 text-gray-700"
+            viewType === "bar" ? "bg-[#003C6B] text-white" : "bg-gray-50 text-gray-700 cursor-pointer"
           }`}
         >
           <BarChart3 className="h-3 w-3" />
@@ -176,7 +176,7 @@ export default function DailyView() {
         <button
           onClick={() => setViewType("simplified")}
           className={`flex-1 py-1.5 text-xs font-medium flex justify-center items-center gap-1 ${
-            viewType === "simplified" ? "bg-[#003C6B] text-white" : "bg-gray-50 text-gray-700"
+            viewType === "simplified" ? "bg-[#003C6B] text-white " : "bg-gray-50 text-gray-700 cursor-pointer"
           }`}
         >
           <LayoutGrid className="h-3 w-3" />
@@ -186,7 +186,7 @@ export default function DailyView() {
 
       {/* Bar Chart View */}
       {viewType === "bar" && (
-        <div className="bg-white rounded-lg p-3 h-[280px]">
+        <div className="bg-white text-gray-400 rounded-lg p-3 h-[280px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barCategoryGap={2}>
               <XAxis
@@ -228,7 +228,8 @@ export default function DailyView() {
                   index === currentBlock ? "border-2 border-[#FEC700] bg-[#FEC700]/10" : "border border-gray-200"
                 }`}
               >
-                <div className="text-xs font-medium mb-1">{block.name}</div>
+                <div className="text-xs font-bold text-black mb-1">{block.name}</div>
+
                 <div className="text-xs text-gray-500 mb-2">{block.range}</div>
                 <div
                   className={`text-lg font-bold ${
