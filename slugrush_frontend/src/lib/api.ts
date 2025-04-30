@@ -138,7 +138,7 @@ export async function fetchCurrentStatus(): Promise<StatusData> {
 /**
  * Fetch data for daily view
  * In production, this would call your actual API
- */
+ 
 export async function fetchDailyData(): Promise<ProcessedDailyData[]> {
   // PRODUCTION IMPLEMENTATION:
   // return await fetch("/api/gym/daily").then(res => res.json())
@@ -154,6 +154,24 @@ export async function fetchDailyData(): Promise<ProcessedDailyData[]> {
     }, 800) // 800ms delay to simulate network request
   })
 }
+
+*/
+import { FetchFormattedDailyData } from "./daily_api" 
+
+export async function fetchDailyData(): Promise<ProcessedDailyData[]> {
+  try {
+    const formattedData = await FetchFormattedDailyData()
+    return formattedData
+  } catch (error) {
+    console.error("Failed to fetch daily data from backend. Falling back to sample data.", error)
+
+    // Optional: Fallback to sample data if needed
+    const today = new Date().getDay()
+    const isWeekend = today === 0 || today === 6
+    return isWeekend ? sampleDailyDataWeekend : sampleDailyDataWeekday
+  }
+}
+
 
 /**
  * Fetch weekly data
