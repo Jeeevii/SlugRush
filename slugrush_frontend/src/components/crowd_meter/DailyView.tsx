@@ -12,13 +12,16 @@ export default function DailyView() {
   const [refreshing, setRefreshing] = useState(false)
   const [viewType, setViewType] = useState<"bar" | "simplified">("bar")
   const currentHour = new Date().getHours()
+  const today = new Date().getDay()
+  const isWeekend = today === 0 || today === 6
+  const hoursText = isWeekend ? "8am - 8pm" : "6am - 11pm"
+  const startHour = isWeekend ? 8 : 6
+  const endHour = isWeekend ? 20 : 23
 
-  // on component mount
   useEffect(() => {
     loadData()
   }, [])
 
-  // fetch and load data
   const loadData = async () => {
     setLoading(true)
     try {
@@ -32,50 +35,53 @@ export default function DailyView() {
     }
   }
 
-  // manuel refresh button, add a load every page refresh? or 30 mins (updated)
   const handleRefresh = async () => {
     setRefreshing(true)
     await loadData()
   }
 
-  if (loading) {
-    return (
-      <div className="h-[300px] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#003C6B]"></div>
-      </div>
-    )
+  // Create list of all expected hours for today
+  const allHours = []
+  for (let hour = startHour; hour <= endHour; hour++) {
+    const isPM = hour >= 12
+    const formattedHour =
+      hour === 0 ? "12am" : hour === 12 ? "12pm" : `${hour % 12}${isPM ? "pm" : "am"}`
+    allHours.push({ hour, time: formattedHour })
   }
 
-  // parse for time
-  const currentTimeIndex = data.findIndex((item) => {
-    const hour = Number.parseInt(item.time)
-    const isPM = item.time.includes("pm")
-    const itemHour = (hour === 12 ? 12 : hour) + (isPM && hour !== 12 ? 12 : 0)
-    return itemHour === currentHour
+  // Create map of actual data
+  const dataMap = new Map(
+    data.map((item) => {
+      const hour = Number.parseInt(item.time)
+      const isPM = item.time.includes("pm")
+      const itemHour = (hour === 12 ? 12 : hour) + (isPM && hour !== 12 ? 12 : 0)
+      return [itemHour, item]
+    })
+  )
+
+  const chartData = allHours.map(({ hour, time }) => {
+    const fetched = dataMap.get(hour)
+    const isCurrent = hour === currentHour
+    const isFuture = hour > currentHour
+    const crowdLevel = isFuture ? 0 : fetched?.crowdLevel ?? 0
+
+    return {
+      time,
+      crowdLevel,
+      isCurrent,
+      fill: isCurrent
+        ? "#FEC700"
+        : crowdLevel > 70
+        ? "#003C6B"
+        : crowdLevel > 30
+        ? "#006AAD"
+        : "#12A5DC",
+    }
   })
 
-  // current occ hours
-  const today = new Date().getDay() // 0 = Sunday, 6 = Saturday
-  const isWeekend = today === 0 || today === 6
-  const hoursText = isWeekend ? "8am - 8pm" : "6am - 11pm"
+  const currentTimeIndex = chartData.findIndex((item) => item.isCurrent)
 
-  // colored bars based on crowd_count
-  const chartData = data.map((item, index) => ({
-    ...item,
-    time: item.time,
-    crowdLevel: item.crowdLevel,
-    isCurrent: index === currentTimeIndex,
-    fill:
-      index === currentTimeIndex
-        ? "#FEC700"
-        : item.crowdLevel > 70
-          ? "#003C6B"
-          : item.crowdLevel > 30
-            ? "#006AAD"
-            : "#12A5DC",
-  }))
-
-  // Group data format for simplified view
+  // Simplified time blocks
   const timeBlocks = [
     { name: "Early Morning", range: "6-9am", level: 0, count: 0 },
     { name: "Morning", range: "9am-12pm", level: 0, count: 0 },
@@ -85,53 +91,33 @@ export default function DailyView() {
     { name: "Night", range: "9-11pm", level: 0, count: 0 },
   ]
 
-  // calculating averages for each time block
   data.forEach((item) => {
     const hour = Number.parseInt(item.time)
     const isPM = item.time.includes("pm")
     const hourNum = (hour === 12 ? 12 : hour) + (isPM && hour !== 12 ? 12 : 0)
 
-    if (hourNum >= 6 && hourNum < 9) {
-      timeBlocks[0].level += item.crowdLevel
-      timeBlocks[0].count++
-    } else if (hourNum >= 9 && hourNum < 12) {
-      timeBlocks[1].level += item.crowdLevel
-      timeBlocks[1].count++
-    } else if (hourNum >= 12 && hourNum < 15) {
-      timeBlocks[2].level += item.crowdLevel
-      timeBlocks[2].count++
-    } else if (hourNum >= 15 && hourNum < 18) {
-      timeBlocks[3].level += item.crowdLevel
-      timeBlocks[3].count++
-    } else if (hourNum >= 18 && hourNum < 21) {
-      timeBlocks[4].level += item.crowdLevel
-      timeBlocks[4].count++
-    } else if (hourNum >= 21 && hourNum < 24) {
-      timeBlocks[5].level += item.crowdLevel
-      timeBlocks[5].count++
-    }
+    if (hourNum >= 6 && hourNum < 9) timeBlocks[0].level += item.crowdLevel, timeBlocks[0].count++
+    else if (hourNum >= 9 && hourNum < 12) timeBlocks[1].level += item.crowdLevel, timeBlocks[1].count++
+    else if (hourNum >= 12 && hourNum < 15) timeBlocks[2].level += item.crowdLevel, timeBlocks[2].count++
+    else if (hourNum >= 15 && hourNum < 18) timeBlocks[3].level += item.crowdLevel, timeBlocks[3].count++
+    else if (hourNum >= 18 && hourNum < 21) timeBlocks[4].level += item.crowdLevel, timeBlocks[4].count++
+    else if (hourNum >= 21 && hourNum < 24) timeBlocks[5].level += item.crowdLevel, timeBlocks[5].count++
   })
 
-  // averages
   timeBlocks.forEach((block) => {
-    if (block.count > 0) {
-      block.level = Math.round(block.level / block.count)
-    }
+    if (block.count > 0) block.level = Math.round(block.level / block.count)
   })
 
-  // current time block
-  const currentBlock = timeBlocks.findIndex((block, index) => {
-    const hour = new Date().getHours()
-    if (hour >= 6 && hour < 9) return index === 0
-    if (hour >= 9 && hour < 12) return index === 1
-    if (hour >= 12 && hour < 15) return index === 2
-    if (hour >= 15 && hour < 18) return index === 3
-    if (hour >= 18 && hour < 21) return index === 4
-    if (hour >= 21 && hour < 24) return index === 5
+  const currentBlock = timeBlocks.findIndex((_, index) => {
+    if (currentHour >= 6 && currentHour < 9) return index === 0
+    if (currentHour >= 9 && currentHour < 12) return index === 1
+    if (currentHour >= 12 && currentHour < 15) return index === 2
+    if (currentHour >= 15 && currentHour < 18) return index === 3
+    if (currentHour >= 18 && currentHour < 21) return index === 4
+    if (currentHour >= 21 && currentHour < 24) return index === 5
     return false
   })
 
-  // Custom bar chart tooltip
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -144,6 +130,14 @@ export default function DailyView() {
       )
     }
     return null
+  }
+
+  if (loading) {
+    return (
+      <div className="h-[300px] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#003C6B]"></div>
+      </div>
+    )
   }
 
   return (
@@ -162,7 +156,7 @@ export default function DailyView() {
         </div>
       </div>
 
-      {/* type selector for bar and simplied view*/}
+      {/* View Type Selector */}
       <div className="flex mb-4 border rounded-md overflow-hidden">
         <button
           onClick={() => setViewType("bar")}
@@ -189,29 +183,10 @@ export default function DailyView() {
         <div className="bg-white text-gray-400 rounded-lg p-3 h-[280px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barCategoryGap={2}>
-              <XAxis
-                dataKey="time"
-                tick={{ fontSize: 10 }}
-                tickLine={false}
-                axisLine={false}
-                interval="preserveStartEnd"
-              />
-              <YAxis
-                domain={[0, 100]}
-                tick={{ fontSize: 10 }}
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={(value) => `${value}%`}
-              />
+              <XAxis dataKey="time" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} interval="preserveStartEnd" />
+              <YAxis domain={[0, 100]} tick={{ fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={(v) => `${v}%`} />
               <Tooltip content={<CustomTooltip />} />
-              <Bar
-                dataKey="crowdLevel"
-                radius={[2, 2, 0, 0]}
-                // Use the fill property from the data
-                fill="#003C6B"
-                // Override with a function to determine color
-                fillOpacity={0.9}
-              />
+              <Bar dataKey="crowdLevel" radius={[2, 2, 0, 0]} fillOpacity={0.9} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -229,7 +204,6 @@ export default function DailyView() {
                 }`}
               >
                 <div className="text-xs font-bold text-black mb-1">{block.name}</div>
-
                 <div className="text-xs text-gray-500 mb-2">{block.range}</div>
                 <div
                   className={`text-lg font-bold ${
