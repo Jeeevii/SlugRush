@@ -126,5 +126,3 @@ Still available for quick testing:
 - File: `mock_database/crowd_data.json`
 - Endpoint: [http://localhost:8000/gym/crowd](http://localhost:8000/gym/crowd)
 ```
-
-Let me know if you want this styled with emojis, badges, or split up by environments (like dev vs prod). Happy to help you glow this up even more ✨

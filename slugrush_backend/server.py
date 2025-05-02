@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
 from typing import Dict
 from web_scraper import Scraper
 from scheduler import Scheduler
@@ -12,13 +11,9 @@ import uvicorn
 import os
 import json
 load_dotenv()
-PORT = int(os.environ.get("PORT", 5000))
+PORT = int(os.environ.get("BACKEND_PORT", 8000))
 
 # MOCK_DB_PATH = "mock_database/crowd_week_data.json"
-
-class Crowd(BaseModel):
-    crowd_count: int
-
 app = FastAPI()
 scheduler = Scheduler() # runs background scheduler seperate thread
 db = Database()
@@ -73,4 +68,4 @@ def get_weekly() -> list:
 
 # internal start up
 if __name__ == "__main__":
-    uvicorn.run("server:app", host="0.0.0.0", port=PORT, reload=True)
+    uvicorn.run("server:app", host="localhost", port=PORT, reload=True)

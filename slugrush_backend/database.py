@@ -30,9 +30,9 @@ load_dotenv()
 # supa db creds
 HOST = os.environ.get("HOST")
 DB = os.environ.get("DBNAME")
-USER = os.environ.get("USER")
+USER = os.environ.get("DBUSER")
 PASS = os.environ.get("PASSWORD")
-PORT = os.environ.get("DB_PORT")
+PORT = os.environ.get("PORT")
 
 class Database():
     # basic constructer starting database connection with psycopgg
@@ -57,7 +57,7 @@ class Database():
     def start(self) -> None:
         days_table_query = """
             CREATE TABLE IF NOT EXISTS days_count (
-                id INT PRIMARY KEY,  -- 1–14 rotation
+                id INT PRIMARY KEY,
                 date DATE NOT NULL,
                 status SMALLINT NOT NULL CHECK (status IN (0, 1)),  -- 0 = Old, 1 = Live
                 day_of_week VARCHAR(10) NOT NULL
@@ -173,7 +173,7 @@ class Database():
         #     return 
         
         # when sending new day query, edit previous day's status to 0 (not collecting anymore)
-        if prev_id != 1: 
+        if prev_id != 1 and self.check_id(prev_id): 
             self.update_status(prev_id) # prev day id ASSUMING IT EXIST
 
         add_day_query = """
@@ -198,6 +198,8 @@ class Database():
         """
         self.send_query(get_live_query)
         id = self.read_one()
+        if id == None:
+            return 1
         return id[0]
     
     # sends query to add crowd count into hourly_count table
@@ -339,7 +341,7 @@ if __name__ == "__main__":
     scrape = Scraper()
     # id = db.get_live()
     # print(id)
-    # db.start()
+    #db.start()
     # db.close()
     # db.send_query(get_developers_query)
     # dev_data = db.read_all()
@@ -351,12 +353,12 @@ if __name__ == "__main__":
     #db.delete_by_id(DAY_TABLE, 2)
     #db.update_status(1)
     
-    # db.send_new_day()
+    #db.send_new_day()
 
-    data = scrape.gym_scrape()
-    crowd_data = json.loads(data)
-    print(crowd_data)
-    db.send_hourly_count(crowd_data)
+    # data = scrape.gym_scrape()
+    # crowd_data = json.loads(data)
+    # print(crowd_data)
+    # db.send_hourly_count(crowd_data)
     
 
     # day_data = db.get_daily_query()
@@ -376,8 +378,8 @@ if __name__ == "__main__":
     print(db.read_all())
 
     # checking hours table
-    print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
-    db.send_query(get_hour_query)
-    print(db.read_all())
+    # print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
+    # db.send_query(get_hour_query)
+    # print(db.read_all())
 
     db.exit()
