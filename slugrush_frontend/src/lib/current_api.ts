@@ -1,0 +1,41 @@
+const BACKEND_URL = "http://localhost:8000/get/count"
+
+// Return Type
+// {
+//     "hour": 11,
+//     "minute": 18,
+//     "crowd_count": 110,
+//     "timestamp": "2025-05-05 11:18:12"
+// }
+
+export interface StatusData {
+    currentOccupancy: number // Current percentage (0-100)
+    currentCount: number // Current number of people
+    capacity: number // Maximum capacity
+    lastUpdated: string // ISO timestamp of last update
+}
+
+export function getStatusText(occupancy: number): string {
+    if (occupancy < 30) return "Not Busy"
+    if (occupancy < 70) return "Moderately Busy"
+    return "Very Busy"
+}
+
+export async function fetchCurrentStatus(): Promise<StatusData> {
+    const res = await fetch(BACKEND_URL)
+    const data = await res.json()
+  
+    const capacity = 150 // adjust if this varies or make it dynamic
+  
+    const currentCount = data.crowd_count
+    const currentOccupancy = Math.round((currentCount / capacity) * 100)
+    const lastUpdated = new Date(data.timestamp).toISOString()
+  
+    return {
+      currentCount,
+      currentOccupancy,
+      capacity,
+      lastUpdated
+    }
+  }
+  
