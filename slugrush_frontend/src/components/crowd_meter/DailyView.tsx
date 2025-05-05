@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { FetchFormattedDailyData } from "@/src/lib/daily_api"
-import type { ProcessedDailyData } from "@/src/lib/daily_api"
+import type { ProcessedDailyData } from "@/src/lib/types"
 import { ArrowDownToLine, Clock, BarChart3, LayoutGrid } from "lucide-react"
 import { ResponsiveContainer, XAxis, YAxis, Tooltip, Bar, BarChart } from "recharts"
 

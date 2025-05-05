@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { fetchWeeklyData, getCurrentDay, getBestTimesToVisit } from "@/src/lib/weekly_api"
-import type { DayData } from "@/src/lib/weekly_api"
+import type { DayData } from "@/src/lib/types"
 import { Clock, TrendingUp, BarChart3, Grid, Notebook, NotebookIcon, TriangleAlert } from "lucide-react"
 import { ResponsiveContainer, XAxis, YAxis, Tooltip, Bar, BarChart } from "recharts"
 

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Users, RefreshCw } from "lucide-react"
 import { fetchCurrentStatus, getStatusText } from "@/src/lib/current_api"
-import type { StatusData } from "@/src/lib/current_api"
+import type { StatusData } from "@/src/lib/types"
 
 export default function StatusBar() {
   const [statusData, setStatusData] = useState<StatusData | null>(null)
@@ -39,7 +39,7 @@ export default function StatusBar() {
   // Handle manual refresh
   const handleRefresh = async () => {
     setRefreshing(true)
-    await loadData(false) 
+     window.location.reload()
   }
 
   if (loading) {

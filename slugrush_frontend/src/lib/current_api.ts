@@ -1,3 +1,5 @@
+import type { StatusData } from "@/src/lib/types"
+
 const BACKEND_URL = "http://localhost:8000/get/count"
 
 // Return Type
@@ -7,13 +9,6 @@ const BACKEND_URL = "http://localhost:8000/get/count"
 //     "crowd_count": 110,
 //     "timestamp": "2025-05-05 11:18:12"
 // }
-
-export interface StatusData {
-    currentOccupancy: number // Current percentage (0-100)
-    currentCount: number // Current number of people
-    capacity: number // Maximum capacity
-    lastUpdated: string // ISO timestamp of last update
-}
 
 export function getStatusText(occupancy: number): string {
     if (occupancy < 30) return "Not Busy"

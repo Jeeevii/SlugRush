@@ -1,29 +1,7 @@
+import type { GymCrowdEntry, DayData } from "@/src/lib/types"
+
 const BACKEND_URL = "http://localhost:8000/get/weekly"
-
-export interface GymCrowdEntry {
-  timestamp: string // ISO string format (e.g., "2023-05-01T15:30:00Z")
-  crowdCount: number // Raw count of people (e.g., 98)
-  capacity: number // Maximum capacity (e.g., 150)
-}
-export interface ProcessedDailyData {
-  time: string // Formatted time (e.g., "6am", "3pm")
-  crowdLevel: number // Percentage of capacity (0-100)
-}
-
-export interface HourlyEntry {
-  hour: number
-  minute: number
-  crowd_count: number
-  timestamp: string
-}
-export interface DayData {
-  day: string // Three-letter day (e.g., "MON", "TUE")
-  data: number[] // Array of crowd levels throughout the day (percentages 0-100)
-}
-export interface ProcessedWeeklyData {
-  time: string
-  crowdLevel: number
-}
+const MAX_CAPACITY = 150
 
 export async function fetchWeeklyData(): Promise<DayData[]> {
   const res = await fetch(BACKEND_URL)
@@ -47,7 +25,6 @@ export function processRawDataForWeeklyView(apiData: GymCrowdEntry): DayData[] {
     Sunday: "SUN",
   }
 
-  const MAX_CAPACITY = 150
 
   return apiData.map((dayObj) => {
     const hourBuckets: { [hour: number]: number[] } = {}

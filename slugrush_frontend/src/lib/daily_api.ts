@@ -1,16 +1,6 @@
+import type { HourlyEntry, ProcessedDailyData } from "@/src/lib/types"
+
 const BACKEND_URL = "http://localhost:8000/get/daily"
-
-export interface HourlyEntry {
-  hour: number
-  minute: number
-  crowd_count: number
-  timestamp: string
-}
-
-export interface ProcessedDailyData {
-  time: string
-  crowdLevel: number
-}
 
 export const FetchFormattedDailyData = async (): Promise<ProcessedDailyData[]> => {
   try {
