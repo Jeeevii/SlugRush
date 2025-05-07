@@ -32,7 +32,8 @@ export function processRawDataForWeeklyView(apiData: GymCrowdEntry): DayData[] {
   
     dayObj.hourly_data.forEach((entry) => {
       if (!hourBuckets[entry.hour]) hourBuckets[entry.hour] = []
-      hourBuckets[entry.hour].push(Number(entry.crowd_count)) // 👈 Fixed here
+      const clampedCount = Math.min(Number(entry.crowd_count), MAX_CAPACITY)
+      hourBuckets[entry.hour].push(clampedCount)
     })
   
     const isWeekend = dayObj.day_of_week === "Saturday" || dayObj.day_of_week === "Sunday"
