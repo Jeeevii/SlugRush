@@ -4,7 +4,7 @@ import os
 import json
 
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, date
 from pytz import timezone
 from web_scraper import Scraper
 
@@ -334,11 +334,28 @@ get_hour_query = """
 join_query = """
     select * from days_count dc join hourly_count hc on dc.id = hc.day_id
 """
+output_file = "beta/weekly.json"
+def write_to_json(data, file_name=output_file):
+    # Ensure the directory for the file exists if any directory is specified
+    if os.path.dirname(file_name):
+        os.makedirs(os.path.dirname(file_name), exist_ok=True)
 
+    # Write data to the JSON file
+    with open(file_name, 'w') as file:
+        json.dump(data, file, indent=4, cls=DateTimeEncoder)
+
+    print(f"\nData has been written to {file_name} successfully!\n")
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, date):
+            return obj.isoformat()  # Converts to 'YYYY-MM-DD'
+        return super().default(obj)
+    
 # internal testing
 if __name__ == "__main__":
     db = Database()
-    scrape = Scraper()
+    #scrape = Scraper()
     # id = db.get_live()
     # print(id)
     #db.start()
@@ -366,17 +383,13 @@ if __name__ == "__main__":
     # for hour in day_data['hourly_data']:
     #     print(hour['crowd_count'])
 
-    #weeky_data = db.get_weekly_query()
-    # print(weeky_data[1]['hourly_data'][0]['crowd_count'])
-    # for row in weeky_data:
-    #     for hour in row['hourly_data']:
-    #         print(hour)
+    weeky_data = db.get_weekly_query()
+    write_to_json(weeky_data)
 
     # checking days table
-    print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
-    db.send_query(get_day_query)
-    print(db.read_all())
-
+    #print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
+    #db.send_query(get_day_query)
+    #data = db.read_all()
     # checking hours table
     # print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
     # db.send_query(get_hour_query)
