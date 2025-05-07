@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from datetime import datetime, date
 from decimal import Decimal
 from pytz import timezone
-from web_scraper import Scraper
+# from web_scraper import Scraper
 
 # logging for database.log
 db_logger = logging.getLogger("database")
@@ -311,9 +311,9 @@ class Database():
         #print(rows)
         final_data = {}
         for row in rows:
-            day_id = row[0]
-            if day_id not in final_data:
-                final_data[day_id] = {
+            day = row[0]
+            if day not in final_data:
+                final_data[day] = {
                     'day_of_week': row[0],
                     #'date': row[1],
                     #'status': row[2],
@@ -329,7 +329,7 @@ class Database():
                     'crowd_count': row[3],
                     #'timestamp': row[8]
                 }
-                final_data[day_id]['hourly_data'].append(hourly) # adding to query list
+                final_data[day]['hourly_data'].append(hourly) # adding to query list
 
         day_list = list(final_data.values())
         return day_list
@@ -401,9 +401,9 @@ if __name__ == "__main__":
     # for hour in day_data['hourly_data']:
     #     print(hour['crowd_count'])
 
-    weeky_data = db.get_weekly_query()
-    print(weeky_data)
-    write_to_json(weeky_data)
+    # weeky_data = db.get_weekly_query()
+    # print(weeky_data)
+    # write_to_json(weeky_data)
 
     # checking days table
     #print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
