@@ -15,6 +15,7 @@ export async function fetchWeeklyData(): Promise<DayData[]> {
  * Process raw gym data into the format needed for weekly view
  */
 export function processRawDataForWeeklyView(apiData: GymCrowdEntry): DayData[] {
+  // console.log(apiData)
   const dayMap: { [key: string]: string } = {
     Monday: "MON",
     Tuesday: "TUE",
@@ -28,18 +29,18 @@ export function processRawDataForWeeklyView(apiData: GymCrowdEntry): DayData[] {
 
   return apiData.map((dayObj) => {
     const hourBuckets: { [hour: number]: number[] } = {}
-
+  
     dayObj.hourly_data.forEach((entry) => {
       if (!hourBuckets[entry.hour]) hourBuckets[entry.hour] = []
-      hourBuckets[entry.hour].push(entry.crowd_count)
+      hourBuckets[entry.hour].push(Number(entry.crowd_count)) // 👈 Fixed here
     })
-
+  
     const isWeekend = dayObj.day_of_week === "Saturday" || dayObj.day_of_week === "Sunday"
     const startHour = isWeekend ? 8 : 6
     const endHour = isWeekend ? 20 : 23
-
+  
     const data: number[] = []
-
+  
     for (let hour = startHour; hour <= endHour; hour++) {
       const entries = hourBuckets[hour]
       if (entries && entries.length > 0) {
@@ -50,11 +51,12 @@ export function processRawDataForWeeklyView(apiData: GymCrowdEntry): DayData[] {
         data.push(0) // or interpolate later
       }
     }
-
-    return {
+    const dict = {
       day: dayMap[dayObj.day_of_week],
       data,
     }
+    console.log(dict)
+    return dict
   })
 }
 

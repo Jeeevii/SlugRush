@@ -21,6 +21,7 @@ export default function WeeklyView() {
     setLoading(true)
     try {
       const data = await fetchWeeklyData()
+      //console.log(data)
       setWeeklyData(data)
     } catch (error) {
       console.error("Error loading weekly data:", error)

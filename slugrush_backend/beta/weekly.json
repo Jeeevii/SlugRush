@@ -1,1576 +1,1196 @@
 [
     {
-        "id": 1,
-        "date": "2025-04-14",
-        "status": 0,
         "day_of_week": "Monday",
         "hourly_data": [
             {
-                "day_id": 1,
+                "hour": 6,
+                "minute": 0,
+                "crowd_count": 40.0
+            },
+            {
+                "hour": 6,
+                "minute": 30,
+                "crowd_count": 49.0
+            },
+            {
+                "hour": 7,
+                "minute": 0,
+                "crowd_count": 59.0
+            },
+            {
+                "hour": 7,
+                "minute": 30,
+                "crowd_count": 69.0
+            },
+            {
+                "hour": 8,
+                "minute": 0,
+                "crowd_count": 74.0
+            },
+            {
+                "hour": 8,
+                "minute": 30,
+                "crowd_count": 78.0
+            },
+            {
+                "hour": 9,
+                "minute": 0,
+                "crowd_count": 81.0
+            },
+            {
+                "hour": 9,
+                "minute": 30,
+                "crowd_count": 88.0
+            },
+            {
+                "hour": 10,
+                "minute": 0,
+                "crowd_count": 97.0
+            },
+            {
+                "hour": 10,
+                "minute": 30,
+                "crowd_count": 96.0
+            },
+            {
+                "hour": 11,
+                "minute": 0,
+                "crowd_count": 104.0
+            },
+            {
                 "hour": 11,
                 "minute": 30,
-                "crowd_count": 108,
-                "timestamp": "2025-04-14T11:30:12"
+                "crowd_count": 123.0
             },
             {
-                "day_id": 1,
                 "hour": 12,
                 "minute": 0,
-                "crowd_count": 108,
-                "timestamp": "2025-04-14T12:00:17"
+                "crowd_count": 123.0
             },
             {
-                "day_id": 1,
                 "hour": 12,
                 "minute": 30,
-                "crowd_count": 108,
-                "timestamp": "2025-04-14T12:31:06"
+                "crowd_count": 132.0
             },
             {
-                "day_id": 1,
                 "hour": 13,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T13:01:15"
+                "crowd_count": 136.0
             },
             {
-                "day_id": 1,
                 "hour": 13,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T13:30:31"
+                "crowd_count": 139.0
             },
             {
-                "day_id": 1,
                 "hour": 14,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T21:00:00"
+                "crowd_count": 138.0
             },
             {
-                "day_id": 1,
                 "hour": 14,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T21:30:00"
+                "crowd_count": 133.0
             },
             {
-                "day_id": 1,
                 "hour": 15,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T22:00:00"
+                "crowd_count": 137.0
             },
             {
-                "day_id": 1,
                 "hour": 15,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T22:30:01"
+                "crowd_count": 137.0
             },
             {
-                "day_id": 1,
                 "hour": 16,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T23:00:00"
+                "crowd_count": 128.0
             },
             {
-                "day_id": 1,
                 "hour": 16,
                 "minute": 30,
-                "crowd_count": 140,
-                "timestamp": "2025-04-14T23:30:00"
+                "crowd_count": 125.0
             },
             {
-                "day_id": 1,
+                "hour": 17,
+                "minute": 0,
+                "crowd_count": 134.0
+            },
+            {
+                "hour": 17,
+                "minute": 30,
+                "crowd_count": 139.0
+            },
+            {
+                "hour": 18,
+                "minute": 0,
+                "crowd_count": 131.0
+            },
+            {
                 "hour": 18,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T18:23:05"
+                "crowd_count": 147.0
             },
             {
-                "day_id": 1,
+                "hour": 19,
+                "minute": 0,
+                "crowd_count": 150.0
+            },
+            {
                 "hour": 19,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T19:30:20"
+                "crowd_count": 150.0
             },
             {
-                "day_id": 1,
                 "hour": 20,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T20:00:00"
+                "crowd_count": 150.0
             },
             {
-                "day_id": 1,
                 "hour": 20,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T20:30:00"
+                "crowd_count": 150.0
             },
             {
-                "day_id": 1,
                 "hour": 21,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T21:00:00"
+                "crowd_count": 150.0
             },
             {
-                "day_id": 1,
                 "hour": 21,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T21:30:00"
+                "crowd_count": 150.0
             },
             {
-                "day_id": 1,
                 "hour": 22,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T22:00:00"
+                "crowd_count": 150.0
             },
             {
-                "day_id": 1,
                 "hour": 22,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-14T22:30:00"
+                "crowd_count": 129.0
             },
             {
-                "day_id": 1,
                 "hour": 23,
                 "minute": 0,
-                "crowd_count": 0,
-                "timestamp": "2025-04-14T23:00:00"
+                "crowd_count": 30.0
             },
             {
-                "day_id": 1,
                 "hour": 23,
                 "minute": 30,
-                "crowd_count": 0,
-                "timestamp": "2025-04-14T23:30:00"
+                "crowd_count": 30.0
             }
         ]
     },
     {
-        "id": 2,
-        "date": "2025-04-15",
-        "status": 0,
         "day_of_week": "Tuesday",
         "hourly_data": [
             {
-                "day_id": 2,
                 "hour": 6,
                 "minute": 0,
-                "crowd_count": 0,
-                "timestamp": "2025-04-15T06:00:01"
+                "crowd_count": 30.0
             },
             {
-                "day_id": 2,
                 "hour": 6,
                 "minute": 30,
-                "crowd_count": 51,
-                "timestamp": "2025-04-15T06:30:00"
+                "crowd_count": 38.0
             },
             {
-                "day_id": 2,
                 "hour": 7,
                 "minute": 0,
-                "crowd_count": 84,
-                "timestamp": "2025-04-15T07:00:00"
+                "crowd_count": 54.0
             },
             {
-                "day_id": 2,
                 "hour": 7,
                 "minute": 30,
-                "crowd_count": 75,
-                "timestamp": "2025-04-15T07:30:00"
+                "crowd_count": 52.0
             },
             {
-                "day_id": 2,
                 "hour": 8,
                 "minute": 0,
-                "crowd_count": 82,
-                "timestamp": "2025-04-15T08:00:00"
+                "crowd_count": 60.0
             },
             {
-                "day_id": 2,
                 "hour": 8,
                 "minute": 30,
-                "crowd_count": 105,
-                "timestamp": "2025-04-15T08:30:00"
+                "crowd_count": 88.0
             },
             {
-                "day_id": 2,
                 "hour": 9,
                 "minute": 0,
-                "crowd_count": 105,
-                "timestamp": "2025-04-15T09:00:00"
+                "crowd_count": 93.0
             },
             {
-                "day_id": 2,
                 "hour": 9,
                 "minute": 30,
-                "crowd_count": 116,
-                "timestamp": "2025-04-15T09:30:00"
+                "crowd_count": 98.0
             },
             {
-                "day_id": 2,
                 "hour": 10,
                 "minute": 0,
-                "crowd_count": 128,
-                "timestamp": "2025-04-15T10:00:00"
+                "crowd_count": 104.0
             },
             {
-                "day_id": 2,
                 "hour": 10,
                 "minute": 30,
-                "crowd_count": 138,
-                "timestamp": "2025-04-15T10:30:01"
+                "crowd_count": 115.0
             },
             {
-                "day_id": 2,
                 "hour": 11,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T11:00:00"
+                "crowd_count": 128.0
             },
             {
-                "day_id": 2,
                 "hour": 11,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T11:30:00"
+                "crowd_count": 128.0
             },
             {
-                "day_id": 2,
                 "hour": 12,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T12:00:00"
+                "crowd_count": 128.0
             },
             {
-                "day_id": 2,
                 "hour": 12,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T12:30:00"
+                "crowd_count": 137.0
             },
             {
-                "day_id": 2,
                 "hour": 13,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T13:00:00"
+                "crowd_count": 140.0
             },
             {
-                "day_id": 2,
                 "hour": 13,
                 "minute": 30,
-                "crowd_count": 134,
-                "timestamp": "2025-04-15T13:30:00"
+                "crowd_count": 125.0
             },
             {
-                "day_id": 2,
                 "hour": 14,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T14:00:00"
+                "crowd_count": 130.0
             },
             {
-                "day_id": 2,
                 "hour": 14,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T14:30:00"
+                "crowd_count": 141.0
             },
             {
-                "day_id": 2,
                 "hour": 15,
                 "minute": 0,
-                "crowd_count": 129,
-                "timestamp": "2025-04-15T15:00:01"
+                "crowd_count": 133.0
             },
             {
-                "day_id": 2,
                 "hour": 15,
                 "minute": 30,
-                "crowd_count": 137,
-                "timestamp": "2025-04-15T15:30:00"
+                "crowd_count": 126.0
             },
             {
-                "day_id": 2,
                 "hour": 16,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T16:00:00"
+                "crowd_count": 144.0
             },
             {
-                "day_id": 2,
                 "hour": 16,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T16:30:00"
+                "crowd_count": 143.0
             },
             {
-                "day_id": 2,
                 "hour": 17,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T17:00:00"
+                "crowd_count": 144.0
             },
             {
-                "day_id": 2,
                 "hour": 17,
                 "minute": 30,
-                "crowd_count": 140,
-                "timestamp": "2025-04-15T17:30:00"
+                "crowd_count": 147.0
             },
             {
-                "day_id": 2,
                 "hour": 18,
                 "minute": 0,
-                "crowd_count": 140,
-                "timestamp": "2025-04-15T18:00:00"
+                "crowd_count": 146.0
             },
             {
-                "day_id": 2,
                 "hour": 18,
                 "minute": 30,
-                "crowd_count": 140,
-                "timestamp": "2025-04-15T18:30:00"
+                "crowd_count": 146.0
             },
             {
-                "day_id": 2,
                 "hour": 19,
                 "minute": 0,
-                "crowd_count": 140,
-                "timestamp": "2025-04-15T19:00:00"
+                "crowd_count": 142.0
             },
             {
-                "day_id": 2,
                 "hour": 19,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T19:30:00"
+                "crowd_count": 145.0
             },
             {
-                "day_id": 2,
                 "hour": 20,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T20:00:00"
+                "crowd_count": 146.0
             },
             {
-                "day_id": 2,
                 "hour": 20,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T20:30:00"
+                "crowd_count": 150.0
             },
             {
-                "day_id": 2,
                 "hour": 21,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T21:00:00"
+                "crowd_count": 143.0
             },
             {
-                "day_id": 2,
                 "hour": 21,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T21:30:00"
+                "crowd_count": 146.0
             },
             {
-                "day_id": 2,
                 "hour": 22,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T22:00:00"
+                "crowd_count": 146.0
             },
             {
-                "day_id": 2,
                 "hour": 22,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T22:30:00"
+                "crowd_count": 146.0
             },
             {
-                "day_id": 2,
                 "hour": 23,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-15T23:00:00"
+                "crowd_count": 100.0
             },
             {
-                "day_id": 2,
                 "hour": 23,
                 "minute": 30,
-                "crowd_count": 0,
-                "timestamp": "2025-04-15T23:30:01"
+                "crowd_count": 0.0
             }
         ]
     },
     {
-        "id": 3,
-        "date": "2025-04-16",
-        "status": 0,
         "day_of_week": "Wednesday",
         "hourly_data": [
             {
-                "day_id": 3,
                 "hour": 6,
                 "minute": 0,
-                "crowd_count": 0,
-                "timestamp": "2025-04-16T06:00:00"
+                "crowd_count": 0.0
             },
             {
-                "day_id": 3,
                 "hour": 6,
                 "minute": 30,
-                "crowd_count": 0,
-                "timestamp": "2025-04-16T06:30:00"
+                "crowd_count": 17.0
             },
             {
-                "day_id": 3,
                 "hour": 7,
                 "minute": 0,
-                "crowd_count": 0,
-                "timestamp": "2025-04-16T07:00:00"
+                "crowd_count": 32.0
             },
             {
-                "day_id": 3,
                 "hour": 7,
                 "minute": 30,
-                "crowd_count": 83,
-                "timestamp": "2025-04-16T07:30:00"
+                "crowd_count": 81.0
             },
             {
-                "day_id": 3,
                 "hour": 8,
                 "minute": 0,
-                "crowd_count": 83,
-                "timestamp": "2025-04-16T08:00:00"
+                "crowd_count": 81.0
             },
             {
-                "day_id": 3,
                 "hour": 8,
                 "minute": 30,
-                "crowd_count": 95,
-                "timestamp": "2025-04-16T08:30:00"
+                "crowd_count": 91.0
             },
             {
-                "day_id": 3,
                 "hour": 9,
                 "minute": 0,
-                "crowd_count": 95,
-                "timestamp": "2025-04-16T09:00:01"
+                "crowd_count": 95.0
             },
             {
-                "day_id": 3,
                 "hour": 9,
                 "minute": 30,
-                "crowd_count": 104,
-                "timestamp": "2025-04-16T09:30:00"
+                "crowd_count": 97.0
             },
             {
-                "day_id": 3,
                 "hour": 10,
                 "minute": 0,
-                "crowd_count": 118,
-                "timestamp": "2025-04-16T10:00:00"
+                "crowd_count": 111.0
             },
             {
-                "day_id": 3,
                 "hour": 10,
                 "minute": 30,
-                "crowd_count": 146,
-                "timestamp": "2025-04-16T10:30:00"
+                "crowd_count": 118.0
             },
             {
-                "day_id": 3,
                 "hour": 11,
                 "minute": 0,
-                "crowd_count": 133,
-                "timestamp": "2025-04-16T11:00:00"
+                "crowd_count": 135.0
             },
             {
-                "day_id": 3,
                 "hour": 11,
                 "minute": 30,
-                "crowd_count": 133,
-                "timestamp": "2025-04-16T11:30:00"
+                "crowd_count": 140.0
             },
             {
-                "day_id": 3,
                 "hour": 12,
                 "minute": 0,
-                "crowd_count": 133,
-                "timestamp": "2025-04-16T12:00:00"
+                "crowd_count": 133.0
             },
             {
-                "day_id": 3,
                 "hour": 12,
                 "minute": 30,
-                "crowd_count": 133,
-                "timestamp": "2025-04-16T12:30:00"
+                "crowd_count": 137.0
             },
             {
-                "day_id": 3,
                 "hour": 13,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-16T13:00:01"
+                "crowd_count": 142.0
             },
             {
-                "day_id": 3,
                 "hour": 13,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-16T13:30:00"
+                "crowd_count": 124.0
             },
             {
-                "day_id": 3,
                 "hour": 14,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-16T14:00:00"
+                "crowd_count": 127.0
             },
             {
-                "day_id": 3,
                 "hour": 14,
                 "minute": 30,
-                "crowd_count": 140,
-                "timestamp": "2025-04-16T14:30:00"
+                "crowd_count": 133.0
             },
             {
-                "day_id": 3,
                 "hour": 15,
                 "minute": 0,
-                "crowd_count": 141,
-                "timestamp": "2025-04-16T15:00:00"
+                "crowd_count": 133.0
             },
             {
-                "day_id": 3,
                 "hour": 15,
                 "minute": 30,
-                "crowd_count": 122,
-                "timestamp": "2025-04-16T15:30:00"
+                "crowd_count": 130.0
             },
             {
-                "day_id": 3,
                 "hour": 16,
                 "minute": 0,
-                "crowd_count": 122,
-                "timestamp": "2025-04-16T16:00:00"
+                "crowd_count": 131.0
             },
             {
-                "day_id": 3,
                 "hour": 16,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-16T16:30:00"
+                "crowd_count": 123.0
             },
             {
-                "day_id": 3,
                 "hour": 17,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-16T17:00:00"
+                "crowd_count": 126.0
             },
             {
-                "day_id": 3,
                 "hour": 17,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-16T17:30:00"
+                "crowd_count": 128.0
             },
             {
-                "day_id": 3,
                 "hour": 18,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-16T18:00:00"
+                "crowd_count": 138.0
             },
             {
-                "day_id": 3,
                 "hour": 18,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-16T18:30:00"
+                "crowd_count": 137.0
             },
             {
-                "day_id": 3,
                 "hour": 19,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-16T19:00:00"
+                "crowd_count": 128.0
             },
             {
-                "day_id": 3,
                 "hour": 19,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-16T19:30:00"
+                "crowd_count": 133.0
             },
             {
-                "day_id": 3,
                 "hour": 20,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-16T20:00:00"
+                "crowd_count": 139.0
             },
             {
-                "day_id": 3,
                 "hour": 20,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-16T20:30:00"
+                "crowd_count": 143.0
             },
             {
-                "day_id": 3,
                 "hour": 21,
                 "minute": 0,
-                "crowd_count": 140,
-                "timestamp": "2025-04-16T21:00:00"
+                "crowd_count": 140.0
             },
             {
-                "day_id": 3,
                 "hour": 21,
                 "minute": 30,
-                "crowd_count": 147,
-                "timestamp": "2025-04-16T21:30:00"
+                "crowd_count": 140.0
             },
             {
-                "day_id": 3,
                 "hour": 22,
                 "minute": 0,
-                "crowd_count": 147,
-                "timestamp": "2025-04-16T22:00:00"
+                "crowd_count": 140.0
             },
             {
-                "day_id": 3,
                 "hour": 22,
                 "minute": 30,
-                "crowd_count": 147,
-                "timestamp": "2025-04-16T22:30:00"
+                "crowd_count": 134.0
             },
             {
-                "day_id": 3,
                 "hour": 23,
                 "minute": 0,
-                "crowd_count": 0,
-                "timestamp": "2025-04-16T23:00:00"
+                "crowd_count": 85.0
             },
             {
-                "day_id": 3,
                 "hour": 23,
                 "minute": 30,
-                "crowd_count": 0,
-                "timestamp": "2025-04-16T23:30:00"
+                "crowd_count": 42.0
             }
         ]
     },
     {
-        "id": 4,
-        "date": "2025-04-17",
-        "status": 0,
         "day_of_week": "Thursday",
         "hourly_data": [
             {
-                "day_id": 4,
                 "hour": 6,
                 "minute": 0,
-                "crowd_count": 0,
-                "timestamp": "2025-04-17T06:00:00"
+                "crowd_count": 42.0
             },
             {
-                "day_id": 4,
                 "hour": 6,
                 "minute": 30,
-                "crowd_count": 38,
-                "timestamp": "2025-04-17T06:30:00"
+                "crowd_count": 26.0
             },
             {
-                "day_id": 4,
                 "hour": 7,
                 "minute": 0,
-                "crowd_count": 59,
-                "timestamp": "2025-04-17T07:00:00"
+                "crowd_count": 52.0
             },
             {
-                "day_id": 4,
                 "hour": 7,
                 "minute": 30,
-                "crowd_count": 64,
-                "timestamp": "2025-04-17T07:30:00"
+                "crowd_count": 57.0
             },
             {
-                "day_id": 4,
                 "hour": 8,
                 "minute": 0,
-                "crowd_count": 73,
-                "timestamp": "2025-04-17T08:00:00"
+                "crowd_count": 64.0
             },
             {
-                "day_id": 4,
                 "hour": 8,
                 "minute": 30,
-                "crowd_count": 81,
-                "timestamp": "2025-04-17T08:30:00"
+                "crowd_count": 73.0
             },
             {
-                "day_id": 4,
                 "hour": 9,
                 "minute": 0,
-                "crowd_count": 88,
-                "timestamp": "2025-04-17T09:00:00"
+                "crowd_count": 88.0
             },
             {
-                "day_id": 4,
                 "hour": 9,
                 "minute": 30,
-                "crowd_count": 106,
-                "timestamp": "2025-04-17T09:30:00"
+                "crowd_count": 89.0
             },
             {
-                "day_id": 4,
                 "hour": 10,
                 "minute": 0,
-                "crowd_count": 106,
-                "timestamp": "2025-04-17T10:00:00"
+                "crowd_count": 91.0
             },
             {
-                "day_id": 4,
                 "hour": 10,
                 "minute": 30,
-                "crowd_count": 142,
-                "timestamp": "2025-04-17T10:30:00"
+                "crowd_count": 119.0
             },
             {
-                "day_id": 4,
                 "hour": 11,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-17T11:00:00"
+                "crowd_count": 139.0
             },
             {
-                "day_id": 4,
                 "hour": 11,
                 "minute": 30,
-                "crowd_count": 120,
-                "timestamp": "2025-04-17T11:30:00"
+                "crowd_count": 124.0
             },
             {
-                "day_id": 4,
                 "hour": 12,
                 "minute": 0,
-                "crowd_count": 126,
-                "timestamp": "2025-04-17T12:00:00"
+                "crowd_count": 123.0
             },
             {
-                "day_id": 4,
                 "hour": 12,
                 "minute": 30,
-                "crowd_count": 150,
-                "timestamp": "2025-04-17T12:30:00"
+                "crowd_count": 142.0
             },
             {
-                "day_id": 4,
                 "hour": 13,
                 "minute": 0,
-                "crowd_count": 135,
-                "timestamp": "2025-04-17T13:00:00"
+                "crowd_count": 119.0
             },
             {
-                "day_id": 4,
                 "hour": 13,
                 "minute": 30,
-                "crowd_count": 135,
-                "timestamp": "2025-04-17T13:30:00"
+                "crowd_count": 113.0
             },
             {
-                "day_id": 4,
                 "hour": 14,
                 "minute": 0,
-                "crowd_count": 135,
-                "timestamp": "2025-04-17T14:00:00"
+                "crowd_count": 121.0
             },
             {
-                "day_id": 4,
                 "hour": 14,
                 "minute": 30,
-                "crowd_count": 132,
-                "timestamp": "2025-04-17T14:30:00"
+                "crowd_count": 122.0
             },
             {
-                "day_id": 4,
                 "hour": 15,
                 "minute": 0,
-                "crowd_count": 132,
-                "timestamp": "2025-04-17T15:00:00"
+                "crowd_count": 109.0
             },
             {
-                "day_id": 4,
                 "hour": 15,
                 "minute": 30,
-                "crowd_count": 104,
-                "timestamp": "2025-04-17T15:30:01"
+                "crowd_count": 106.0
             },
             {
-                "day_id": 4,
                 "hour": 16,
                 "minute": 0,
-                "crowd_count": 112,
-                "timestamp": "2025-04-17T16:00:00"
+                "crowd_count": 115.0
             },
             {
-                "day_id": 4,
                 "hour": 16,
                 "minute": 30,
-                "crowd_count": 131,
-                "timestamp": "2025-04-17T16:30:00"
+                "crowd_count": 131.0
             },
             {
-                "day_id": 4,
                 "hour": 17,
                 "minute": 0,
-                "crowd_count": 130,
-                "timestamp": "2025-04-17T17:00:00"
+                "crowd_count": 130.0
             },
             {
-                "day_id": 4,
                 "hour": 17,
                 "minute": 30,
-                "crowd_count": 133,
-                "timestamp": "2025-04-17T17:30:00"
+                "crowd_count": 129.0
             },
             {
-                "day_id": 4,
                 "hour": 18,
                 "minute": 0,
-                "crowd_count": 150,
-                "timestamp": "2025-04-17T18:00:00"
+                "crowd_count": 150.0
             },
             {
-                "day_id": 4,
                 "hour": 18,
                 "minute": 30,
-                "crowd_count": 159,
-                "timestamp": "2025-04-17T18:30:00"
+                "crowd_count": 152.0
             },
             {
-                "day_id": 4,
                 "hour": 19,
                 "minute": 0,
-                "crowd_count": 135,
-                "timestamp": "2025-04-17T19:00:00"
+                "crowd_count": 134.0
             },
             {
-                "day_id": 4,
                 "hour": 19,
                 "minute": 30,
-                "crowd_count": 143,
-                "timestamp": "2025-04-17T19:30:00"
+                "crowd_count": 137.0
             },
             {
-                "day_id": 4,
                 "hour": 20,
                 "minute": 0,
-                "crowd_count": 136,
-                "timestamp": "2025-04-17T20:00:01"
+                "crowd_count": 135.0
             },
             {
-                "day_id": 4,
                 "hour": 20,
                 "minute": 30,
-                "crowd_count": 115,
-                "timestamp": "2025-04-17T20:30:00"
+                "crowd_count": 128.0
             },
             {
-                "day_id": 4,
                 "hour": 21,
                 "minute": 0,
-                "crowd_count": 128,
-                "timestamp": "2025-04-17T21:00:00"
+                "crowd_count": 131.0
             },
             {
-                "day_id": 4,
                 "hour": 21,
                 "minute": 30,
-                "crowd_count": 122,
-                "timestamp": "2025-04-17T21:30:00"
+                "crowd_count": 114.0
             },
             {
-                "day_id": 4,
                 "hour": 22,
                 "minute": 0,
-                "crowd_count": 128,
-                "timestamp": "2025-04-17T22:00:00"
+                "crowd_count": 116.0
             },
             {
-                "day_id": 4,
                 "hour": 22,
                 "minute": 30,
-                "crowd_count": 106,
-                "timestamp": "2025-04-17T22:30:00"
+                "crowd_count": 109.0
             },
             {
-                "day_id": 4,
                 "hour": 23,
                 "minute": 0,
-                "crowd_count": 106,
-                "timestamp": "2025-04-17T23:00:00"
+                "crowd_count": 35.0
             },
             {
-                "day_id": 4,
                 "hour": 23,
                 "minute": 30,
-                "crowd_count": 0,
-                "timestamp": "2025-04-17T23:30:00"
+                "crowd_count": 0.0
             }
         ]
     },
     {
-        "id": 5,
-        "date": "2025-04-18",
-        "status": 0,
         "day_of_week": "Friday",
         "hourly_data": [
             {
-                "day_id": 5,
                 "hour": 6,
                 "minute": 0,
-                "crowd_count": 0,
-                "timestamp": "2025-04-18T06:00:00"
+                "crowd_count": 0.0
             },
             {
-                "day_id": 5,
                 "hour": 6,
                 "minute": 30,
-                "crowd_count": 0,
-                "timestamp": "2025-04-18T06:30:00"
+                "crowd_count": 11.0
             },
             {
-                "day_id": 5,
                 "hour": 7,
                 "minute": 0,
-                "crowd_count": 0,
-                "timestamp": "2025-04-18T07:00:00"
+                "crowd_count": 31.0
             },
             {
-                "day_id": 5,
                 "hour": 7,
                 "minute": 30,
-                "crowd_count": 0,
-                "timestamp": "2025-04-18T07:30:00"
+                "crowd_count": 40.0
             },
             {
-                "day_id": 5,
                 "hour": 8,
                 "minute": 0,
-                "crowd_count": 72,
-                "timestamp": "2025-04-18T08:00:00"
+                "crowd_count": 66.0
             },
             {
-                "day_id": 5,
                 "hour": 8,
                 "minute": 30,
-                "crowd_count": 73,
-                "timestamp": "2025-04-18T08:30:00"
+                "crowd_count": 68.0
             },
             {
-                "day_id": 5,
                 "hour": 9,
                 "minute": 0,
-                "crowd_count": 78,
-                "timestamp": "2025-04-18T09:00:00"
+                "crowd_count": 80.0
             },
             {
-                "day_id": 5,
                 "hour": 9,
                 "minute": 30,
-                "crowd_count": 63,
-                "timestamp": "2025-04-18T09:30:01"
+                "crowd_count": 79.0
             },
             {
-                "day_id": 5,
                 "hour": 10,
                 "minute": 0,
-                "crowd_count": 74,
-                "timestamp": "2025-04-18T10:00:00"
+                "crowd_count": 85.0
             },
             {
-                "day_id": 5,
                 "hour": 10,
                 "minute": 30,
-                "crowd_count": 84,
-                "timestamp": "2025-04-18T10:30:00"
+                "crowd_count": 90.0
             },
             {
-                "day_id": 5,
                 "hour": 11,
                 "minute": 0,
-                "crowd_count": 84,
-                "timestamp": "2025-04-18T11:00:00"
+                "crowd_count": 90.0
             },
             {
-                "day_id": 5,
                 "hour": 11,
                 "minute": 30,
-                "crowd_count": 126,
-                "timestamp": "2025-04-18T11:30:00"
+                "crowd_count": 115.0
             },
             {
-                "day_id": 5,
                 "hour": 12,
                 "minute": 0,
-                "crowd_count": 126,
-                "timestamp": "2025-04-18T12:00:00"
+                "crowd_count": 125.0
             },
             {
-                "day_id": 5,
                 "hour": 12,
                 "minute": 30,
-                "crowd_count": 107,
-                "timestamp": "2025-04-18T12:30:00"
+                "crowd_count": 112.0
             },
             {
-                "day_id": 5,
                 "hour": 13,
                 "minute": 0,
-                "crowd_count": 121,
-                "timestamp": "2025-04-18T13:00:00"
+                "crowd_count": 119.0
             },
             {
-                "day_id": 5,
                 "hour": 13,
                 "minute": 30,
-                "crowd_count": 102,
-                "timestamp": "2025-04-18T13:30:01"
+                "crowd_count": 105.0
             },
             {
-                "day_id": 5,
                 "hour": 14,
                 "minute": 0,
-                "crowd_count": 120,
-                "timestamp": "2025-04-18T14:00:00"
+                "crowd_count": 118.0
             },
             {
-                "day_id": 5,
                 "hour": 14,
                 "minute": 30,
-                "crowd_count": 103,
-                "timestamp": "2025-04-18T14:30:00"
+                "crowd_count": 104.0
             },
             {
-                "day_id": 5,
                 "hour": 15,
                 "minute": 0,
-                "crowd_count": 110,
-                "timestamp": "2025-04-18T15:00:00"
+                "crowd_count": 107.0
             },
             {
-                "day_id": 5,
                 "hour": 15,
                 "minute": 30,
-                "crowd_count": 102,
-                "timestamp": "2025-04-18T15:30:00"
+                "crowd_count": 107.0
             },
             {
-                "day_id": 5,
                 "hour": 16,
                 "minute": 0,
-                "crowd_count": 75,
-                "timestamp": "2025-04-18T16:00:00"
+                "crowd_count": 91.0
             },
             {
-                "day_id": 5,
                 "hour": 16,
                 "minute": 30,
-                "crowd_count": 78,
-                "timestamp": "2025-04-18T16:30:00"
+                "crowd_count": 103.0
             },
             {
-                "day_id": 5,
                 "hour": 17,
                 "minute": 0,
-                "crowd_count": 95,
-                "timestamp": "2025-04-18T17:00:00"
+                "crowd_count": 105.0
             },
             {
-                "day_id": 5,
                 "hour": 17,
                 "minute": 30,
-                "crowd_count": 85,
-                "timestamp": "2025-04-18T17:30:00"
+                "crowd_count": 107.0
             },
             {
-                "day_id": 5,
                 "hour": 18,
                 "minute": 0,
-                "crowd_count": 109,
-                "timestamp": "2025-04-18T18:00:01"
+                "crowd_count": 129.0
             },
             {
-                "day_id": 5,
                 "hour": 18,
                 "minute": 30,
-                "crowd_count": 129,
-                "timestamp": "2025-04-18T18:30:00"
+                "crowd_count": 134.0
             },
             {
-                "day_id": 5,
                 "hour": 19,
                 "minute": 0,
-                "crowd_count": 85,
-                "timestamp": "2025-04-18T19:00:00"
+                "crowd_count": 114.0
             },
             {
-                "day_id": 5,
                 "hour": 19,
                 "minute": 30,
-                "crowd_count": 97,
-                "timestamp": "2025-04-18T19:30:00"
+                "crowd_count": 88.0
             },
             {
-                "day_id": 5,
                 "hour": 20,
                 "minute": 0,
-                "crowd_count": 107,
-                "timestamp": "2025-04-18T20:00:00"
+                "crowd_count": 89.0
             },
             {
-                "day_id": 5,
                 "hour": 20,
                 "minute": 30,
-                "crowd_count": 80,
-                "timestamp": "2025-04-18T20:30:00"
+                "crowd_count": 74.0
             },
             {
-                "day_id": 5,
                 "hour": 21,
                 "minute": 0,
-                "crowd_count": 87,
-                "timestamp": "2025-04-18T21:00:00"
+                "crowd_count": 75.0
             },
             {
-                "day_id": 5,
                 "hour": 21,
                 "minute": 30,
-                "crowd_count": 64,
-                "timestamp": "2025-04-18T21:30:00"
+                "crowd_count": 55.0
             },
             {
-                "day_id": 5,
                 "hour": 22,
                 "minute": 0,
-                "crowd_count": 64,
-                "timestamp": "2025-04-18T22:00:00"
+                "crowd_count": 52.0
             },
             {
-                "day_id": 5,
                 "hour": 22,
                 "minute": 30,
-                "crowd_count": 64,
-                "timestamp": "2025-04-18T22:30:01"
+                "crowd_count": 45.0
             },
             {
-                "day_id": 5,
                 "hour": 23,
                 "minute": 0,
-                "crowd_count": 0,
-                "timestamp": "2025-04-18T23:00:00"
+                "crowd_count": 23.0
             },
             {
-                "day_id": 5,
                 "hour": 23,
                 "minute": 30,
-                "crowd_count": 0,
-                "timestamp": "2025-04-18T23:30:00"
+                "crowd_count": 0.0
             }
         ]
     },
     {
-        "id": 6,
-        "date": "2025-04-19",
-        "status": 0,
         "day_of_week": "Saturday",
         "hourly_data": [
             {
-                "day_id": 6,
                 "hour": 8,
                 "minute": 0,
-                "crowd_count": 0,
-                "timestamp": "2025-04-19T08:00:00"
+                "crowd_count": 0.0
             },
             {
-                "day_id": 6,
                 "hour": 8,
                 "minute": 30,
-                "crowd_count": 22,
-                "timestamp": "2025-04-19T08:30:00"
+                "crowd_count": 33.0
             },
             {
-                "day_id": 6,
                 "hour": 9,
                 "minute": 0,
-                "crowd_count": 41,
-                "timestamp": "2025-04-19T09:00:01"
+                "crowd_count": 45.0
             },
             {
-                "day_id": 6,
                 "hour": 9,
                 "minute": 30,
-                "crowd_count": 39,
-                "timestamp": "2025-04-19T09:30:00"
+                "crowd_count": 49.0
             },
             {
-                "day_id": 6,
                 "hour": 10,
                 "minute": 0,
-                "crowd_count": 40,
-                "timestamp": "2025-04-19T10:00:00"
+                "crowd_count": 50.0
             },
             {
-                "day_id": 6,
                 "hour": 10,
                 "minute": 30,
-                "crowd_count": 48,
-                "timestamp": "2025-04-19T10:30:00"
+                "crowd_count": 66.0
             },
             {
-                "day_id": 6,
                 "hour": 11,
                 "minute": 0,
-                "crowd_count": 77,
-                "timestamp": "2025-04-19T11:00:00"
+                "crowd_count": 72.0
             },
             {
-                "day_id": 6,
                 "hour": 11,
                 "minute": 30,
-                "crowd_count": 77,
-                "timestamp": "2025-04-19T11:30:00"
+                "crowd_count": 71.0
             },
             {
-                "day_id": 6,
                 "hour": 12,
                 "minute": 0,
-                "crowd_count": 84,
-                "timestamp": "2025-04-19T12:00:00"
+                "crowd_count": 78.0
             },
             {
-                "day_id": 6,
                 "hour": 12,
                 "minute": 30,
-                "crowd_count": 74,
-                "timestamp": "2025-04-19T12:30:00"
+                "crowd_count": 76.0
             },
             {
-                "day_id": 6,
                 "hour": 13,
                 "minute": 0,
-                "crowd_count": 74,
-                "timestamp": "2025-04-19T13:00:00"
+                "crowd_count": 78.0
             },
             {
-                "day_id": 6,
                 "hour": 13,
                 "minute": 30,
-                "crowd_count": 78,
-                "timestamp": "2025-04-19T13:30:01"
+                "crowd_count": 79.0
             },
             {
-                "day_id": 6,
                 "hour": 14,
                 "minute": 0,
-                "crowd_count": 78,
-                "timestamp": "2025-04-19T14:00:00"
+                "crowd_count": 82.0
             },
             {
-                "day_id": 6,
                 "hour": 14,
                 "minute": 30,
-                "crowd_count": 62,
-                "timestamp": "2025-04-19T14:30:00"
+                "crowd_count": 70.0
             },
             {
-                "day_id": 6,
                 "hour": 15,
                 "minute": 0,
-                "crowd_count": 62,
-                "timestamp": "2025-04-19T15:00:00"
+                "crowd_count": 69.0
             },
             {
-                "day_id": 6,
                 "hour": 15,
                 "minute": 30,
-                "crowd_count": 62,
-                "timestamp": "2025-04-19T15:30:00"
+                "crowd_count": 70.0
             },
             {
-                "day_id": 6,
                 "hour": 16,
                 "minute": 0,
-                "crowd_count": 76,
-                "timestamp": "2025-04-19T16:00:00"
+                "crowd_count": 71.0
             },
             {
-                "day_id": 6,
                 "hour": 16,
                 "minute": 30,
-                "crowd_count": 71,
-                "timestamp": "2025-04-19T16:30:00"
+                "crowd_count": 82.0
             },
             {
-                "day_id": 6,
                 "hour": 17,
                 "minute": 0,
-                "crowd_count": 71,
-                "timestamp": "2025-04-19T17:00:01"
+                "crowd_count": 81.0
             },
             {
-                "day_id": 6,
                 "hour": 17,
                 "minute": 30,
-                "crowd_count": 79,
-                "timestamp": "2025-04-19T17:30:00"
+                "crowd_count": 86.0
             },
             {
-                "day_id": 6,
                 "hour": 18,
                 "minute": 0,
-                "crowd_count": 76,
-                "timestamp": "2025-04-19T18:00:00"
+                "crowd_count": 87.0
             },
             {
-                "day_id": 6,
                 "hour": 18,
                 "minute": 30,
-                "crowd_count": 76,
-                "timestamp": "2025-04-19T18:30:00"
+                "crowd_count": 85.0
             },
             {
-                "day_id": 6,
                 "hour": 19,
                 "minute": 0,
-                "crowd_count": 76,
-                "timestamp": "2025-04-19T19:00:00"
+                "crowd_count": 91.0
             },
             {
-                "day_id": 6,
                 "hour": 19,
                 "minute": 30,
-                "crowd_count": 101,
-                "timestamp": "2025-04-19T19:30:00"
+                "crowd_count": 99.0
             },
             {
-                "day_id": 6,
                 "hour": 20,
                 "minute": 0,
-                "crowd_count": 101,
-                "timestamp": "2025-04-19T20:00:00"
+                "crowd_count": 99.0
             },
             {
-                "day_id": 6,
                 "hour": 20,
                 "minute": 30,
-                "crowd_count": 101,
-                "timestamp": "2025-04-19T20:30:00"
+                "crowd_count": 71.0
             }
         ]
     },
     {
-        "id": 7,
-        "date": "2025-04-20",
-        "status": 0,
         "day_of_week": "Sunday",
         "hourly_data": [
             {
-                "day_id": 7,
                 "hour": 8,
                 "minute": 0,
-                "crowd_count": 101,
-                "timestamp": "2025-04-20T08:00:00"
+                "crowd_count": 71.0
             },
             {
-                "day_id": 7,
                 "hour": 8,
                 "minute": 30,
-                "crowd_count": 19,
-                "timestamp": "2025-04-20T08:30:00"
+                "crowd_count": 56.0
             },
             {
-                "day_id": 7,
                 "hour": 9,
                 "minute": 0,
-                "crowd_count": 30,
-                "timestamp": "2025-04-20T09:00:00"
+                "crowd_count": 63.0
             },
             {
-                "day_id": 7,
                 "hour": 9,
                 "minute": 30,
-                "crowd_count": 43,
-                "timestamp": "2025-04-20T09:30:00"
+                "crowd_count": 73.0
             },
             {
-                "day_id": 7,
                 "hour": 10,
                 "minute": 0,
-                "crowd_count": 51,
-                "timestamp": "2025-04-20T10:00:00"
+                "crowd_count": 73.0
             },
             {
-                "day_id": 7,
                 "hour": 10,
                 "minute": 30,
-                "crowd_count": 50,
-                "timestamp": "2025-04-20T10:30:00"
+                "crowd_count": 51.0
             },
             {
-                "day_id": 7,
                 "hour": 11,
                 "minute": 0,
-                "crowd_count": 61,
-                "timestamp": "2025-04-20T11:00:00"
+                "crowd_count": 56.0
             },
             {
-                "day_id": 7,
                 "hour": 11,
                 "minute": 30,
-                "crowd_count": 47,
-                "timestamp": "2025-04-20T11:30:00"
+                "crowd_count": 54.0
             },
             {
-                "day_id": 7,
                 "hour": 12,
                 "minute": 0,
-                "crowd_count": 41,
-                "timestamp": "2025-04-20T12:00:00"
+                "crowd_count": 57.0
             },
             {
-                "day_id": 7,
                 "hour": 12,
                 "minute": 30,
-                "crowd_count": 53,
-                "timestamp": "2025-04-20T12:30:00"
+                "crowd_count": 62.0
             },
             {
-                "day_id": 7,
                 "hour": 13,
                 "minute": 0,
-                "crowd_count": 53,
-                "timestamp": "2025-04-20T13:00:00"
+                "crowd_count": 59.0
             },
             {
-                "day_id": 7,
                 "hour": 13,
                 "minute": 30,
-                "crowd_count": 57,
-                "timestamp": "2025-04-20T13:30:00"
+                "crowd_count": 61.0
             },
             {
-                "day_id": 7,
                 "hour": 14,
                 "minute": 0,
-                "crowd_count": 43,
-                "timestamp": "2025-04-20T14:00:00"
+                "crowd_count": 61.0
             },
             {
-                "day_id": 7,
                 "hour": 14,
                 "minute": 30,
-                "crowd_count": 44,
-                "timestamp": "2025-04-20T14:30:00"
+                "crowd_count": 61.0
             },
             {
-                "day_id": 7,
                 "hour": 15,
                 "minute": 0,
-                "crowd_count": 44,
-                "timestamp": "2025-04-20T15:00:00"
+                "crowd_count": 57.0
             },
             {
-                "day_id": 7,
                 "hour": 15,
                 "minute": 30,
-                "crowd_count": 44,
-                "timestamp": "2025-04-20T15:30:00"
+                "crowd_count": 62.0
             },
             {
-                "day_id": 7,
                 "hour": 16,
                 "minute": 0,
-                "crowd_count": 44,
-                "timestamp": "2025-04-20T16:00:00"
+                "crowd_count": 62.0
             },
             {
-                "day_id": 7,
                 "hour": 16,
                 "minute": 30,
-                "crowd_count": 30,
-                "timestamp": "2025-04-20T16:30:00"
+                "crowd_count": 57.0
             },
             {
-                "day_id": 7,
                 "hour": 17,
                 "minute": 0,
-                "crowd_count": 30,
-                "timestamp": "2025-04-20T17:00:00"
+                "crowd_count": 57.0
             },
             {
-                "day_id": 7,
                 "hour": 17,
                 "minute": 30,
-                "crowd_count": 28,
-                "timestamp": "2025-04-20T17:30:00"
+                "crowd_count": 59.0
             },
             {
-                "day_id": 7,
                 "hour": 18,
                 "minute": 0,
-                "crowd_count": 28,
-                "timestamp": "2025-04-20T18:00:00"
+                "crowd_count": 59.0
             },
             {
-                "day_id": 7,
                 "hour": 18,
                 "minute": 30,
-                "crowd_count": 28,
-                "timestamp": "2025-04-20T18:30:00"
+                "crowd_count": 74.0
             },
             {
-                "day_id": 7,
                 "hour": 19,
                 "minute": 0,
-                "crowd_count": 28,
-                "timestamp": "2025-04-20T19:00:01"
+                "crowd_count": 74.0
             },
             {
-                "day_id": 7,
                 "hour": 19,
                 "minute": 30,
-                "crowd_count": 49,
-                "timestamp": "2025-04-20T19:30:00"
+                "crowd_count": 76.0
             },
             {
-                "day_id": 7,
                 "hour": 20,
                 "minute": 0,
-                "crowd_count": 49,
-                "timestamp": "2025-04-20T20:00:00"
+                "crowd_count": 65.0
             },
             {
-                "day_id": 7,
                 "hour": 20,
                 "minute": 30,
-                "crowd_count": 49,
-                "timestamp": "2025-04-20T20:30:00"
+                "crowd_count": 40.0
             }
         ]
     }

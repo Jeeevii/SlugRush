@@ -5,6 +5,7 @@ import json
 
 from dotenv import load_dotenv
 from datetime import datetime, date
+from decimal import Decimal
 from pytz import timezone
 from web_scraper import Scraper
 
@@ -279,12 +280,26 @@ class Database():
     # get all previous weeks data to graph (same logic as get_daily but with all 7 days)
     def get_weekly_query(self) -> list:
         weekly_query = """
-            select dc.id, dc.date, dc.status, dc.day_of_week, 
-            hc.day_id, hc.hour, hc.minute, hc.crowd_count, hc.timestamp
-            from days_count dc
-            left join hourly_count hc on dc.id = hc.day_id
-            where dc.id <= 7
-            ORDER BY dc.id, hc.hour, hc.minute
+            SELECT 
+                dc.day_of_week, 
+                hc.hour, 
+                hc.minute, 
+                ROUND(AVG(hc.crowd_count)) AS total_crowd
+            FROM hourly_count hc
+            JOIN days_count dc ON hc.day_id = dc.id
+            GROUP BY dc.day_of_week, hc.hour, hc.minute
+            ORDER BY 
+                CASE 
+                    WHEN dc.day_of_week = 'Monday' THEN 1
+                    WHEN dc.day_of_week = 'Tuesday' THEN 2
+                    WHEN dc.day_of_week = 'Wednesday' THEN 3
+                    WHEN dc.day_of_week = 'Thursday' THEN 4
+                    WHEN dc.day_of_week = 'Friday' THEN 5
+                    WHEN dc.day_of_week = 'Saturday' THEN 6
+                    WHEN dc.day_of_week = 'Sunday' THEN 7
+                END,
+                hc.hour, 
+                hc.minute;
         """
         try:    
             db_logger.warning("Sent get_weekly_query to Database!")
@@ -292,26 +307,27 @@ class Database():
         except Exception as e:
             db_logger.warning("Error sending get_weekly_query to Database: ", e)
         rows = self.read_all()
+        # write_to_json(rows)
         #print(rows)
         final_data = {}
         for row in rows:
             day_id = row[0]
             if day_id not in final_data:
                 final_data[day_id] = {
-                    'id': row[0],
-                    'date': row[1],
-                    'status': row[2],
-                    'day_of_week': row[3],
+                    'day_of_week': row[0],
+                    #'date': row[1],
+                    #'status': row[2],
+                    #'day_of_week': row[3],
                     'hourly_data': []
                 }
             
-            if row[4] is not None:
+            if row[1] is not None:
                 hourly = {
-                    'day_id': row[4],
-                    'hour': row[5],
-                    'minute': row[6],
-                    'crowd_count': row[7],
-                    'timestamp': row[8]
+                    #'day_id': row[4],
+                    'hour': row[1],
+                    'minute': row[2],
+                    'crowd_count': row[3],
+                    #'timestamp': row[8]
                 }
                 final_data[day_id]['hourly_data'].append(hourly) # adding to query list
 
@@ -349,7 +365,9 @@ def write_to_json(data, file_name=output_file):
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, date):
-            return obj.isoformat()  # Converts to 'YYYY-MM-DD'
+            return obj.isoformat()
+        elif isinstance(obj, Decimal):
+            return float(obj)  # Converts Decimal to float for serialization
         return super().default(obj)
     
 # internal testing
@@ -384,6 +402,7 @@ if __name__ == "__main__":
     #     print(hour['crowd_count'])
 
     weeky_data = db.get_weekly_query()
+    print(weeky_data)
     write_to_json(weeky_data)
 
     # checking days table

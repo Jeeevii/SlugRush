@@ -146,13 +146,13 @@ export default function DailyView() {
         <div className="text-sm text-gray-500 font-bold px-2">Today's Crowd Levels</div>
         <div className="flex items-center gap-2">
           <span className="text-xs text-gray-500">{hoursText}</span>
-          <button
+          {/* <button
             onClick={handleRefresh}
             className="flex items-center gap-1 text-xs text-[#003C6B] px-2 py-1 rounded hover:bg-gray-100 cursor-pointer"
           >
             <ArrowDownToLine className={`h-3 w-3 ${refreshing ? "animate-bounce" : ""}`} />
             <span>Refresh</span>
-          </button>
+          </button> */}
         </div>
       </div>
 

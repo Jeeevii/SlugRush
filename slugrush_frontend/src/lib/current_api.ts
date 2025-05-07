@@ -13,7 +13,8 @@ const BACKEND_URL = "http://localhost:8000/get/count"
 export function getStatusText(occupancy: number): string {
     if (occupancy < 30) return "Not Busy"
     if (occupancy < 70) return "Moderately Busy"
-    return "Very Busy"
+    if (occupancy < 95) return "Very Busy"
+    return "Max Capacity"
 }
 
 export async function fetchCurrentStatus(): Promise<StatusData> {
