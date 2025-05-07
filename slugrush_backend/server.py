@@ -15,6 +15,13 @@ PORT = int(os.environ.get("BACKEND_PORT", 8000))
 
 # MOCK_DB_PATH = "mock_database/crowd_week_data.json"
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # or ["*"] for wild west (not prod safe)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 scheduler = Scheduler() # runs background scheduler seperate thread
 db = Database()
 
