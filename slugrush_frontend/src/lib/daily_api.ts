@@ -1,6 +1,7 @@
 import type { HourlyEntry, ProcessedDailyData } from "@/src/lib/types"
 
 const BACKEND_URL = "http://localhost:8000/get/daily"
+const MAX_CAPACITY = 150
 
 export const FetchFormattedDailyData = async (): Promise<ProcessedDailyData[]> => {
   try {
@@ -21,7 +22,8 @@ export const FetchFormattedDailyData = async (): Promise<ProcessedDailyData[]> =
       if (!hourGroups[hour]) {
         hourGroups[hour] = []
       }
-      hourGroups[hour].push(entry.crowd_count)
+      const clampedCount = Math.min(Number(entry.crowd_count), MAX_CAPACITY)
+      hourGroups[hour].push(clampedCount)
     }
 
     // Process into formatted structure
