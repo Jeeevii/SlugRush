@@ -23,18 +23,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# scheduler = Scheduler() # runs background scheduler seperate thread
-# db = Database()
+scheduler = Scheduler() # runs background scheduler seperate thread
+db = Database()
 
-# # runs when backend server is started 
-# @app.on_event("startup")  
-# async def startup_event():
-#     scheduler.start_jobs()
+# runs when backend server is started 
+@app.on_event("startup")  
+async def startup_event():
+    scheduler.start_jobs()
 
-# # runs when backend server shuts down (manual ctrl + c)
-# @app.on_event("shutdown") 
-# async def shutdown_event():
-#     scheduler.stop_jobs()
+# runs when backend server shuts down (manual ctrl + c)
+@app.on_event("shutdown") 
+async def shutdown_event():
+    scheduler.stop_jobs()
 
 # route 
 @app.get("/")
@@ -71,8 +71,6 @@ def get_daily() -> Dict:
 def get_weekly() -> list:
     msg = db.get_weekly_query()
     return msg
-
-
 
 # internal start up
 if __name__ == "__main__":
