@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 export default function LiveIndicator() {
   const [isVisible, setIsVisible] = useState(true)
 
-  // Create flashing effect
+  // create flashing effect
   useEffect(() => {
     const interval = setInterval(() => {
       setIsVisible((prev) => !prev)

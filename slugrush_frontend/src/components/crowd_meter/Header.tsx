@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react"
 import LiveIndicator from "./ui/LiveIndicator"
-import { Menu } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import Link from "next/link"
 
 export default function Header() {
   const [greeting, setGreeting] = useState("")
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   // Set time-based greeting
   useEffect(() => {
@@ -37,15 +38,42 @@ export default function Header() {
             </Link>
 
           <div className="flex items-center gap-3">
-            <nav className="flex gap-3 text-sm font-medium">
-              <Link href="/about" className="hover:text-[#FEC700] transition-colors">About Us</Link>
-              <Link href="/contact" className="hover:text-[#FEC700] transition-colors">Contact</Link>
-            </nav>
-            {/* <button className="p-1.5 rounded hover:bg-[#002a4d] transition-colors cursor-pointer">
-              <Menu className="h-5 w-5" />
-            </button> */}
+            <div className="hidden md:flex items-center gap-2">
+              <Link href="/about" className="px-3 py-1.5 text-sm rounded hover:bg-[#002a4d] transition-colors">
+                About Us
+              </Link>
+              <Link href="/contact" className="px-3 py-1.5 text-sm rounded hover:bg-[#002a4d] transition-colors">
+                Contact
+              </Link>
+            </div>
+            <button
+              className="md:hidden p-1.5 rounded hover:bg-[#002a4d] transition-colors"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile menu */}
+        {isMenuOpen &&  (
+          <div className="md:hidden mt-2 pt-2 border-t border-[#004d8a]">
+            <Link
+              href="/about"
+              className="block w-full text-left px-2 py-2 hover:bg-[#002a4d] rounded transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              About Us
+            </Link>
+            <Link
+              href="/contact"
+              className="block w-full text-left px-2 py-2 hover:bg-[#002a4d] rounded transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Contact
+            </Link>
+          </div>
+        )}
 
         <div className="mt-2 flex flex-wrap items-center justify-between">
           <p className="text-sm text-gray-200 font-bold">{greeting}, Slugs!</p>
