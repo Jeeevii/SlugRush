@@ -160,6 +160,19 @@ class Database():
         self.send_query(update_query, id)
         return
 
+    def check_count(self) -> bool:
+        count_query = """
+            select COUNT(id)
+            from days_count
+            where day_of_week = 'Monday'
+        """
+        self.send_query(count_query)
+        count = self.read_one()[0]
+        if int(count) >= 15:
+            return True
+        return False
+
+
     # sends a SQL query to days_count table - SHOULD BE DONE EVERY DAY 
     def send_new_day(self) -> None:
         curr_day = self.get_curr_day()
@@ -388,7 +401,7 @@ if __name__ == "__main__":
     #db.delete_by_id(DAY_TABLE, 2)
     #db.update_status(1)
     
-    #db.send_new_day()
+    # db.send_new_day()
 
     # data = scrape.gym_scrape()
     # crowd_data = json.loads(data)
@@ -405,13 +418,17 @@ if __name__ == "__main__":
     # print(weeky_data)
     # write_to_json(weeky_data)
 
+    # print(db.check_count())
+
     # checking days table
-    #print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
-    #db.send_query(get_day_query)
-    #data = db.read_all()
-    # checking hours table
+    print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
+    db.send_query(get_day_query)
+    data = db.read_all()
+    print(data)
+    # # checking hours table
     # print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
     # db.send_query(get_hour_query)
     # print(db.read_all())
+
 
     db.exit()
