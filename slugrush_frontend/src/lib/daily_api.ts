@@ -55,7 +55,7 @@ export const FetchFormattedDailyData = async (): Promise<ProcessedDailyData[]> =
       }
     }
 
-    console.log("Formatted Daily Data:", formatted)
+    // console.log("Formatted Daily Data:", formatted)
     return formatted
   } catch (error) {
     console.error("Error fetching and formatting daily data:", error)
