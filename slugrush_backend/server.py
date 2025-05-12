@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 from typing import Dict
 from web_scraper import Scraper
 from scheduler import Scheduler
@@ -15,18 +17,24 @@ PORT = int(os.environ.get("BACKEND_PORT", 8000))
 
 # MOCK_DB_PATH = "mock_database/crowd_week_data.json"
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # or ["*"] for wild west (not prod safe)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 scheduler = Scheduler() # runs background scheduler seperate thread
 db = Database()
 
-# runs when backend server is started 
-@app.on_event("startup")  
-async def startup_event():
+# updated startup and shutdown with FastAPI lifespan
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     scheduler.start_jobs()
-
-# runs when backend server shuts down (manual ctrl + c)
-@app.on_event("shutdown") 
-async def shutdown_event():
+    yield # when server shutdowns down (manual ctrl + c)
     scheduler.stop_jobs()
+
+app.router.lifespan_context = lifespan
 
 # route 
 @app.get("/")
@@ -64,8 +72,7 @@ def get_weekly() -> list:
     msg = db.get_weekly_query()
     return msg
 
-
-
 # internal start up
 if __name__ == "__main__":
     uvicorn.run("server:app", host="localhost", port=PORT, reload=True)
+

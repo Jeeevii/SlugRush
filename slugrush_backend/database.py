@@ -4,9 +4,10 @@ import os
 import json
 
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, date
+from decimal import Decimal
 from pytz import timezone
-from web_scraper import Scraper
+# from web_scraper import Scraper
 
 # logging for database.log
 db_logger = logging.getLogger("database")
@@ -159,6 +160,55 @@ class Database():
         self.send_query(update_query, id)
         return
 
+    # helper for deleting oldest week of data from days_count and hourly_count tables
+    def delete_oldest(self) -> None:
+        try:
+            # Find the oldest 7 days (1 week) based on the `id` in `days_count`
+            oldest_days_query = """
+                SELECT id FROM days_count
+                ORDER BY date ASC
+                LIMIT 7
+            """
+            self.send_query(oldest_days_query)
+            oldest_ids = [row[0] for row in self.read_all()]
+
+            if not oldest_ids:
+                db_logger.info("No data to delete.")
+                return
+
+            # Delete corresponding rows from `hourly_count` for the oldest days
+            delete_hourly_query = """
+                DELETE FROM hourly_count
+                WHERE day_id = ANY(%s)
+            """
+            self.cursor.execute(delete_hourly_query, (oldest_ids,))
+            db_logger.info(f"Deleted hourly data for day_ids: {oldest_ids}")
+
+            # Delete the oldest days from `days_count`
+            delete_days_query = """
+                DELETE FROM days_count
+                WHERE id = ANY(%s)
+            """
+            self.cursor.execute(delete_days_query, (oldest_ids,))
+            db_logger.info(f"Deleted oldest days from days_count with ids: {oldest_ids}")
+
+            self.connection.commit()
+        except Exception as e:
+            db_logger.warning(f"Failed to delete oldest week of data: {e}")
+    
+    # helper for checking if there are more than 15 "Monday" in days_count table
+    def check_count(self) -> bool:
+        count_query = """
+            select COUNT(id)
+            from days_count
+            where day_of_week = 'Monday'
+        """
+        self.send_query(count_query)
+        count = self.read_one()[0]
+        if int(count) >= 15:
+            return True
+        return False
+
     # sends a SQL query to days_count table - SHOULD BE DONE EVERY DAY 
     def send_new_day(self) -> None:
         curr_day = self.get_curr_day()
@@ -167,10 +217,11 @@ class Database():
         prev_id = curr_day['live_id']
         day_id = prev_id + 1
 
-        # # when both ids exist for monday, delete first week and update with second week - TO DO TASK
-        # if self.check_id(new_id):
-        #     db_logger.info(f"{new_id} also exist in database, deleting and swapping")
-        #     return 
+        # if more than 15 "Monday" (4 months present), delete oldest week - TO DO TASK
+        if self.check_count():
+            db_logger.info(f"Deleting oldest week of data in database!")
+            self.delete_oldest()
+            return 
         
         # when sending new day query, edit previous day's status to 0 (not collecting anymore)
         if prev_id != 1 and self.check_id(prev_id): 
@@ -279,12 +330,26 @@ class Database():
     # get all previous weeks data to graph (same logic as get_daily but with all 7 days)
     def get_weekly_query(self) -> list:
         weekly_query = """
-            select dc.id, dc.date, dc.status, dc.day_of_week, 
-            hc.day_id, hc.hour, hc.minute, hc.crowd_count, hc.timestamp
-            from days_count dc
-            left join hourly_count hc on dc.id = hc.day_id
-            where dc.id <= 7
-            ORDER BY dc.id, hc.hour, hc.minute
+            SELECT 
+                dc.day_of_week, 
+                hc.hour, 
+                hc.minute, 
+                ROUND(AVG(hc.crowd_count)) AS total_crowd
+            FROM hourly_count hc
+            JOIN days_count dc ON hc.day_id = dc.id
+            GROUP BY dc.day_of_week, hc.hour, hc.minute
+            ORDER BY 
+                CASE 
+                    WHEN dc.day_of_week = 'Monday' THEN 1
+                    WHEN dc.day_of_week = 'Tuesday' THEN 2
+                    WHEN dc.day_of_week = 'Wednesday' THEN 3
+                    WHEN dc.day_of_week = 'Thursday' THEN 4
+                    WHEN dc.day_of_week = 'Friday' THEN 5
+                    WHEN dc.day_of_week = 'Saturday' THEN 6
+                    WHEN dc.day_of_week = 'Sunday' THEN 7
+                END,
+                hc.hour, 
+                hc.minute;
         """
         try:    
             db_logger.warning("Sent get_weekly_query to Database!")
@@ -292,28 +357,29 @@ class Database():
         except Exception as e:
             db_logger.warning("Error sending get_weekly_query to Database: ", e)
         rows = self.read_all()
+        # write_to_json(rows)
         #print(rows)
         final_data = {}
         for row in rows:
-            day_id = row[0]
-            if day_id not in final_data:
-                final_data[day_id] = {
-                    'id': row[0],
-                    'date': row[1],
-                    'status': row[2],
-                    'day_of_week': row[3],
+            day = row[0]
+            if day not in final_data:
+                final_data[day] = {
+                    'day_of_week': row[0],
+                    #'date': row[1],
+                    #'status': row[2],
+                    #'day_of_week': row[3],
                     'hourly_data': []
                 }
             
-            if row[4] is not None:
+            if row[1] is not None:
                 hourly = {
-                    'day_id': row[4],
-                    'hour': row[5],
-                    'minute': row[6],
-                    'crowd_count': row[7],
-                    'timestamp': row[8]
+                    #'day_id': row[4],
+                    'hour': row[1],
+                    'minute': row[2],
+                    'crowd_count': row[3],
+                    #'timestamp': row[8]
                 }
-                final_data[day_id]['hourly_data'].append(hourly) # adding to query list
+                final_data[day]['hourly_data'].append(hourly) # adding to query list
 
         day_list = list(final_data.values())
         return day_list
@@ -334,11 +400,30 @@ get_hour_query = """
 join_query = """
     select * from days_count dc join hourly_count hc on dc.id = hc.day_id
 """
+output_file = "beta/weekly.json"
+def write_to_json(data, file_name=output_file):
+    # Ensure the directory for the file exists if any directory is specified
+    if os.path.dirname(file_name):
+        os.makedirs(os.path.dirname(file_name), exist_ok=True)
 
+    # Write data to the JSON file
+    with open(file_name, 'w') as file:
+        json.dump(data, file, indent=4, cls=DateTimeEncoder)
+
+    print(f"\nData has been written to {file_name} successfully!\n")
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, date):
+            return obj.isoformat()
+        elif isinstance(obj, Decimal):
+            return float(obj)  # Converts Decimal to float for serialization
+        return super().default(obj)
+    
 # internal testing
 if __name__ == "__main__":
     db = Database()
-    scrape = Scraper()
+    #scrape = Scraper()
     # id = db.get_live()
     # print(id)
     #db.start()
@@ -353,7 +438,7 @@ if __name__ == "__main__":
     #db.delete_by_id(DAY_TABLE, 2)
     #db.update_status(1)
     
-    #db.send_new_day()
+    # db.send_new_day()
 
     # data = scrape.gym_scrape()
     # crowd_data = json.loads(data)
@@ -366,20 +451,21 @@ if __name__ == "__main__":
     # for hour in day_data['hourly_data']:
     #     print(hour['crowd_count'])
 
-    #weeky_data = db.get_weekly_query()
-    # print(weeky_data[1]['hourly_data'][0]['crowd_count'])
-    # for row in weeky_data:
-    #     for hour in row['hourly_data']:
-    #         print(hour)
+    # weeky_data = db.get_weekly_query()
+    # print(weeky_data)
+    # write_to_json(weeky_data)
+
+    # print(db.check_count())
 
     # checking days table
     print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
     db.send_query(get_day_query)
-    print(db.read_all())
-
-    # checking hours table
+    data = db.read_all()
+    print(data)
+    # # checking hours table
     # print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
     # db.send_query(get_hour_query)
     # print(db.read_all())
+
 
     db.exit()
