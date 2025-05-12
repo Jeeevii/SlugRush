@@ -27,15 +27,15 @@ export const metadata: Metadata = {
       url: "https://www.linkedin.com/in/hanlin-huang-6aa4131ba/", 
     },],
     icons: {
-      icon: "icons/web-app-manifest-192x192.png", // Favicon for most browsers
-      apple: "icons/apple-touch-icon.png", // Apple touch icon for iOS
+      icon: "/icons/web-app-manifest-192x192.png", // Favicon for most browsers
+      apple: "/icons/apple-touch-icon.png", // Apple touch icon for iOS
       other: [
-        { url: "icons/web-app-manifest-192x192.png", sizes: "192x192", type: "image/png" },
-        { url: "icons/favicon.svg", sizes: "any", type: "image/svg+xml" },
-        { url: "icons/favicon.ico", sizes: "any", type: "image/x-icon" },
+        { url: "/icons/web-app-manifest-192x192.png", sizes: "192x192", type: "image/png" },
+        { url: "/icons/favicon.svg", sizes: "any", type: "image/svg+xml" },
+        { url: "/icons/favicon.ico", sizes: "any", type: "image/x-icon" },
       ],
     },
-    manifest: "icons/site.webmanifest", // Web app manifest for PWA
+    manifest: "/icons/site.webmanifest", // Web app manifest for PWA
   };
 
 export default function RootLayout({
