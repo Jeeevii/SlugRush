@@ -104,7 +104,7 @@ export default function WeeklyView() {
             onClick={() => setSelectedDay(day.day)}
             className={`py-2 text-center ${
               selectedDay === day.day
-                ? "text-[#003C6B] font-bold border-b-2 border-[#FEC700]"
+                ? "text-[#003C6B] font-bold border-b-2 border-[#FDC700]"
                 : day.day === currentDay
                   ? "text-gray-700 font-medium cursor-pointer"
                   : "text-gray-500 cursor-pointer"

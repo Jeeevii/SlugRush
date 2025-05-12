@@ -70,7 +70,7 @@ export default function DailyView() {
       crowdLevel,
       isCurrent,
       fill: isCurrent
-        ? "#FEC700"
+        ? "#FDC700"
         : crowdLevel > 80
         ? "#003C6B"
         : crowdLevel > 45
@@ -200,7 +200,7 @@ export default function DailyView() {
               <div
                 key={index}
                 className={`p-3 rounded-lg ${
-                  index === currentBlock ? "border-2 border-[#FEC700] bg-[#FEC700]/10" : "border border-gray-200"
+                  index === currentBlock ? "border-2 border-[#FDC700] bg-[#FEC700]/10" : "border border-gray-200"
                 }`}
               >
                 <div className="text-xs font-bold text-black mb-1">{block.name}</div>
@@ -246,7 +246,7 @@ export default function DailyView() {
           <span className="text-xs sm:text-sm text-gray-700">Very Busy (&gt;80%)</span>
         </div>
         <div className="flex items-center">
-          <div className="w-4 h-4 bg-[#FEC700] rounded-sm mr-2"></div>
+          <div className="w-4 h-4 bg-[#FDC700] rounded-sm mr-2"></div>
           <span className="text-xs sm:text-sm text-gray-700">Current</span>
         </div>
       </div>

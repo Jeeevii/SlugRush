@@ -26,7 +26,7 @@ export default function Header() {
       <div className="max-w-4xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-[#FEC700] rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-[#FDC700] rounded-full flex items-center justify-center">
                 <img src="/icons/web-app-manifest-192x192.png" alt="Logo" className="w-10 h-10" />
                 {/* <span className="text-[#003C6B] text-xl font-bold">🐌</span> */}
               </div>
@@ -39,11 +39,11 @@ export default function Header() {
             </Link>
 
           <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-2">
-              <Link href="/about" className="px-3 py-1.5 text-sm rounded hover:bg-[#002a4d] transition-colors">
+            <div className="hidden md:flex items-center gap-1">
+              <Link href="/about" className="px-2 py-1.5 text-sm rounded hover:bg-[#002a4d] transition-colors">
                 About Us
               </Link>
-              <Link href="/contact" className="px-3 py-1.5 text-sm rounded hover:bg-[#002a4d] transition-colors">
+              <Link href="/contact" className="px-2 py-1.5 text-sm rounded hover:bg-[#002a4d] transition-colors">
                 Contact
               </Link>
             </div>
@@ -78,7 +78,7 @@ export default function Header() {
 
         <div className="mt-2 flex flex-wrap items-center justify-between">
           <p className="text-sm text-gray-200 font-bold">{greeting}, Slugs!</p>
-          <span className="text-sm text-[#FEC700]">UCSC Fitness Center's Crowd Meter</span>
+          <span className="text-sm text-[#FEC700]">UCSC Facility Occupancy Counts</span>
         </div>
       </div>
     </header>
