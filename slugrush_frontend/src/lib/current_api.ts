@@ -2,10 +2,9 @@ import type { StatusData } from "@/src/lib/types";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL 
-    ? `${process.env.BACKEND_URL}/get/count` 
-    : "http://localhost:8000/get/count";
-    
+const BACKEND_URL = "https://slugrush-backend.onrender.com/get/count";
+console.log("Backend URL:", BACKEND_URL);
+
 // Return Type
 // {
 //     "hour": 11,
