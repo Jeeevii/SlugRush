@@ -1,6 +1,11 @@
 import type { HourlyEntry, ProcessedDailyData } from "@/src/lib/types"
+import * as dotenv from "dotenv";
+dotenv.config();
 
-const BACKEND_URL = "http://localhost:8000/get/daily"
+const BACKEND_URL = process.env.BACKEND_URL 
+    ? `${process.env.BACKEND_URL}/get/daily` 
+    : "http://localhost:8000/get/daily";
+   
 const MAX_CAPACITY = 150
 
 export const FetchFormattedDailyData = async (): Promise<ProcessedDailyData[]> => {

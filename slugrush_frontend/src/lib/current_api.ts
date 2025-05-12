@@ -1,7 +1,11 @@
-import type { StatusData } from "@/src/lib/types"
+import type { StatusData } from "@/src/lib/types";
+import * as dotenv from "dotenv";
+dotenv.config();
 
-const BACKEND_URL = "http://localhost:8000/get/count"
-
+const BACKEND_URL = process.env.BACKEND_URL 
+    ? `${process.env.BACKEND_URL}/get/count` 
+    : "http://localhost:8000/get/count";
+    
 // Return Type
 // {
 //     "hour": 11,

@@ -1,6 +1,11 @@
 import type { GymCrowdEntry, DayData } from "@/src/lib/types"
+import * as dotenv from "dotenv";
+dotenv.config();
 
-const BACKEND_URL = "http://localhost:8000/get/weekly"
+const BACKEND_URL = process.env.BACKEND_URL 
+    ? `${process.env.BACKEND_URL}/get/weekly` 
+    : "http://localhost:8000/get/weekly";
+   
 const MAX_CAPACITY = 150
 
 export async function fetchWeeklyData(): Promise<DayData[]> {
