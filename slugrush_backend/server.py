@@ -13,8 +13,9 @@ import uvicorn
 import os
 import json
 load_dotenv()
-FRONTEND_URL = os.environ.get("FRONTEND_URL")
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
 BACKEND_PORT = int(os.environ.get("BACKEND_PORT", 8000))
+print(f"Allowed Origin: {FRONTEND_URL}")
 
 # MOCK_DB_PATH = "mock_database/crowd_week_data.json"
 app = FastAPI()
