@@ -25,27 +25,12 @@ export default function GymHours() {
   const [isExpanded, setIsExpanded] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  // Beta version - manual, would be fetch function in future (or from api.ts)
   useEffect(() => {
     const fetchSchedule = async () => {
       setLoading(true)
       try {
-        // const response = await fetch('/api/gym/schedule');
-        // const data = await response.json();
-        // setSchedule(data);
-
-        // for now, simulate a delay and use the default schedule
         await new Promise((resolve) => setTimeout(resolve, 500))
-
-        // Simulate a special note for today
-        // const today = new Date().getDay() // 0 = Sunday, 6 = Saturday
-        const updatedSchedule = [...defaultSchedule]
-        // // notes in case of updates
-        // if (today === 2) {
-        //   // Tuesday
-        //   updatedSchedule[today].note = "Closes early at 10:00 PM for maintenance"
-        // }
-        setSchedule(updatedSchedule)
+        setSchedule(defaultSchedule)
       } catch (error) {
         console.error("Error fetching gym schedule:", error)
       } finally {
@@ -56,14 +41,27 @@ export default function GymHours() {
     fetchSchedule()
   }, [])
 
-  // Get today's day name
   const getDayName = () => {
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     return days[new Date().getDay()]
   }
 
-  // Find today's schedule
   const todaySchedule = schedule.find((day) => day.day === getDayName())
+
+  // Helper function to check if the gym is open
+  const isGymOpen = () => {
+    if (!todaySchedule) return false
+    const [openTime, closeTime] = todaySchedule.hours.split(" - ")
+    
+    const now = new Date()
+    const [openHour, openMinute] = openTime.split(":").map(Number)
+    const [closeHour, closeMinute] = closeTime.split(":").map(Number)
+    
+    const openDate = new Date(now.setHours(openHour, openMinute, 0, 0))
+    const closeDate = new Date(now.setHours(closeHour, closeMinute, 0, 0))
+
+    return now >= openDate && now <= closeDate
+  }
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden mt-4">
@@ -72,7 +70,6 @@ export default function GymHours() {
         className="w-full flex items-center justify-between p-3 bg-[#003C6B] text-white cursor-pointer"
       >
         <div className="flex items-center gap-2">
-          
           <Clock className="h-5 w-5" />
           <h2 className="text-lg font-semibold">Gym Hours</h2>
         </div>
@@ -89,7 +86,13 @@ export default function GymHours() {
           {loading ? (
             <div className="animate-pulse h-4 w-16 bg-gray-200 rounded"></div>
           ) : (
-            <span className="text-xs px-2 py-0.5 bg-green-100 text-green-800 rounded-full">Open Now</span>
+            <span
+              className={`text-xs px-2 py-0.5 rounded-full ${
+                isGymOpen() ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+              }`}
+            >
+              {isGymOpen() ? "Open Now" : "Closed Now"}
+            </span>
           )}
         </div>
         {todaySchedule?.note && <p className="text-xs text-amber-600 mt-1">{todaySchedule.note}</p>}
@@ -107,8 +110,7 @@ export default function GymHours() {
             ))}
           </div>
           <p className="text-xs text-gray-500 mt-3 text-center">
-            Automatic schedule updates coming soon. 
-            {/* Last updated: {new Date().toLocaleDateString()} */}
+            Automatic schedule updates coming soon.
           </p>
         </div>
       )}
