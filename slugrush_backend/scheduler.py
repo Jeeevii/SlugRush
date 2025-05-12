@@ -1,5 +1,7 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from pytz import timezone
+import os
+from dotenv import load_dotenv
 import json
 import time
 import logging
@@ -7,7 +9,9 @@ import requests
 
 from database import Database
 from web_scraper import Scraper
+load_dotenv()
 
+BACKEND_URL = os.environ.get("BACKEND_URL")
 local_time = timezone("America/Los_Angeles") # render has different time zone
 
 # scheduler logging 
@@ -69,7 +73,7 @@ class Scheduler:
     def ping_backend(self) -> None:
         try:
             scheduler_logger.warning("Executing PING_BACKEND Task!")
-            response = requests.get("https://slugrush-backend.onrender.com/")
+            response = requests.get(BACKEND_URL)
             if response.status_code == 200:
                 scheduler_logger.warning("Ping successful: Backend is alive")
             else:

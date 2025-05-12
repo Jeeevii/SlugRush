@@ -2,7 +2,7 @@ import type { HourlyEntry, ProcessedDailyData } from "@/src/lib/types"
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const BACKEND_URL = process.env.BACKEND_URL 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL 
     ? `${process.env.BACKEND_URL}/get/daily` 
     : "http://localhost:8000/get/daily";
    
