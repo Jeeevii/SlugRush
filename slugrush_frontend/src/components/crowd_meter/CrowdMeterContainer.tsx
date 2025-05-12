@@ -10,7 +10,7 @@ export default function CrowdMeterContainer() {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden mt-4">
       <div className="bg-[#003C6B] text-white p-4">
-        <h2 className="text-xl font-bold">CROWD HISTORY</h2>
+        <h2 className="text-xl font-bold">OCCUPANCY TRENDS</h2>
       </div>
 
       <div className="flex border-b ">

@@ -48,19 +48,39 @@ export default function GymHours() {
 
   const todaySchedule = schedule.find((day) => day.day === getDayName())
 
-  // Helper function to check if the gym is open
+  // monkey brain ahh hardcoded logic - SWAP THIS OUT ONCE WE HAVE A REAL API
   const isGymOpen = () => {
-    if (!todaySchedule) return false
-    const [openTime, closeTime] = todaySchedule.hours.split(" - ")
-    
     const now = new Date()
-    const [openHour, openMinute] = openTime.split(":").map(Number)
-    const [closeHour, closeMinute] = closeTime.split(":").map(Number)
     
-    const openDate = new Date(now.setHours(openHour, openMinute, 0, 0))
-    const closeDate = new Date(now.setHours(closeHour, closeMinute, 0, 0))
+    // Get current time in Santa Cruz timezone
+    const nowInSantaCruz = new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Los_Angeles",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).format(now)
 
-    return now >= openDate && now <= closeDate
+    const [currentHour, currentMinute] = nowInSantaCruz.split(":").map(Number)
+
+    // 0-6 = Sunday-Saturday
+    const currentDay = now.getDay()
+
+    // weekend check, else default to weekdays
+    const isWeekend = currentDay === 0 || currentDay === 6
+
+    // weekdays: 6:00 AM - 11:00 PM
+    if (!isWeekend) {
+      return (
+        (currentHour > 6 || (currentHour === 6 && currentMinute >= 0)) &&
+        (currentHour < 23 || (currentHour === 23 && currentMinute === 0))
+      )
+    }
+
+    // weekends: 8:00 AM - 8:00 PM
+    return (
+      (currentHour > 8 || (currentHour === 8 && currentMinute >= 0)) &&
+      (currentHour < 20 || (currentHour === 20 && currentMinute === 0))
+    )
   }
 
   return (
@@ -76,7 +96,6 @@ export default function GymHours() {
         {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
       </button>
 
-      {/* Highlight current day's hours*/}
       <div className="p-3 border-b font-bold text-black border-gray-200">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-1">
@@ -98,7 +117,6 @@ export default function GymHours() {
         {todaySchedule?.note && <p className="text-xs text-amber-600 mt-1">{todaySchedule.note}</p>}
       </div>
 
-      {/* Expandable full schedule */}
       {isExpanded && (
         <div className="p-3 font-bold text-gray-600">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

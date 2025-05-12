@@ -44,7 +44,7 @@ export default function StatusBar() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-4 mb-4 border-l-4 border-[#FEC700] animate-pulse">
+      <div className="bg-white rounded-lg shadow-md p-4 mb-4 border-l-4 border-[#FDC700] animate-pulse">
         <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
         <div className="h-6 bg-gray-200 rounded-full w-full"></div>
       </div>
@@ -60,7 +60,7 @@ export default function StatusBar() {
   })
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-4 border-l-4 border-[#FEC700]">
+    <div className="bg-white rounded-lg shadow-md p-4 mb-4 border-l-4 border-[#FDC700]">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
         <div className="flex items-center">
           <Users className="h-6 w-6 text-[#003C6B]" />
