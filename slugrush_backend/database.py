@@ -160,6 +160,43 @@ class Database():
         self.send_query(update_query, id)
         return
 
+    # helper for deleting oldest week of data from days_count and hourly_count tables
+    def delete_oldest(self) -> None:
+        try:
+            # Find the oldest 7 days (1 week) based on the `id` in `days_count`
+            oldest_days_query = """
+                SELECT id FROM days_count
+                ORDER BY date ASC
+                LIMIT 7
+            """
+            self.send_query(oldest_days_query)
+            oldest_ids = [row[0] for row in self.read_all()]
+
+            if not oldest_ids:
+                db_logger.info("No data to delete.")
+                return
+
+            # Delete corresponding rows from `hourly_count` for the oldest days
+            delete_hourly_query = """
+                DELETE FROM hourly_count
+                WHERE day_id = ANY(%s)
+            """
+            self.cursor.execute(delete_hourly_query, (oldest_ids,))
+            db_logger.info(f"Deleted hourly data for day_ids: {oldest_ids}")
+
+            # Delete the oldest days from `days_count`
+            delete_days_query = """
+                DELETE FROM days_count
+                WHERE id = ANY(%s)
+            """
+            self.cursor.execute(delete_days_query, (oldest_ids,))
+            db_logger.info(f"Deleted oldest days from days_count with ids: {oldest_ids}")
+
+            self.connection.commit()
+        except Exception as e:
+            db_logger.warning(f"Failed to delete oldest week of data: {e}")
+    
+    # helper for checking if there are more than 15 "Monday" in days_count table
     def check_count(self) -> bool:
         count_query = """
             select COUNT(id)
@@ -172,7 +209,6 @@ class Database():
             return True
         return False
 
-
     # sends a SQL query to days_count table - SHOULD BE DONE EVERY DAY 
     def send_new_day(self) -> None:
         curr_day = self.get_curr_day()
@@ -181,10 +217,11 @@ class Database():
         prev_id = curr_day['live_id']
         day_id = prev_id + 1
 
-        # # when both ids exist for monday, delete first week and update with second week - TO DO TASK
-        # if self.check_id(new_id):
-        #     db_logger.info(f"{new_id} also exist in database, deleting and swapping")
-        #     return 
+        # if more than 15 "Monday" (4 months present), delete oldest week - TO DO TASK
+        if self.check_count():
+            db_logger.info(f"Deleting oldest week of data in database!")
+            self.delete_oldest()
+            return 
         
         # when sending new day query, edit previous day's status to 0 (not collecting anymore)
         if prev_id != 1 and self.check_id(prev_id): 

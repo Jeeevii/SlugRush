@@ -1,128 +1,143 @@
-## 🛠️ Backend Setup (FastAPI + PostgreSQL via Docker)
+# SlugRush Backend
 
-The backend is built with **FastAPI** and now runs with a real PostgreSQL database using Docker.
+SlugRush is a web application designed to track and visualize gym occupancy data. This repository contains the backend implementation, built with **FastAPI**, **PostgreSQL (Supabase)**, and **Render** for hosting.
 
 ---
 
-### 1. 🐍 Set Up Python Environment (Windows) - IF NEEDED/MANAGING MUTIPLE PROJECTS
+## Features
 
-1. **Create a Virtual Environment**
+- **Gym Occupancy Tracking**: Scrapes live gym occupancy data and stores it in a database.
+- **Daily and Weekly Data Visualization**: Provides APIs to fetch daily and weekly crowd data for graphing.
+- **Automated Data Management**: Automatically deletes the oldest week's data when 4 months of data is reached.
+- **Scheduler**: Automates daily and hourly tasks using `APScheduler`.
+- **Ping Prevention**: Keeps the backend alive on Render's free tier by sending periodic pings.
 
-   Navigate to the `slugrush_backend` folder:
+---
 
+## Tech Stack
+
+- **Backend Framework**: FastAPI
+- **Database**: PostgreSQL (hosted on Supabase)
+- **Scheduler**: APScheduler
+- **Web Scraping**: BeautifulSoup
+- **Hosting**: Render (backend) and Supabase (database)
+
+---
+
+## Installation
+
+1. Clone the repository:
    ```bash
-   cd ../slugrush_backend
-   python -m venv .venv
+   git clone https://github.com/yourusername/SlugRush.git
+   cd SlugRush
    ```
 
-2. **Activate the Virtual Environment**
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-   - For **Command Prompt**:
+3. Set up environment variables:
+   Create a `.env` file in the root directory with the following:
+   ```env
+   HOST=<your_supabase_host>
+   DBNAME=<your_database_name>
+   DBUSER=<your_database_user>
+   PASSWORD=<your_database_password>
+   PORT=<your_database_port>
+   FO_URL=<gym_occupancy_url>
+   FO_ID=<gym_facility_id>
+   BACKEND_PORT=8000
+   ```
 
-     ```bash
-     .venv\Scripts\activate
-     ```
-
-3. **Install Dependencies**
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4. **Import Environmental Variables**
-    - Make a **.env**:
-      Ask Product Owner for creds
----
-
-### 2. 🐘 PostgreSQL Database (via Docker)
-
-We're using Docker to spin up a local PostgreSQL instance for development and testing. Here’s the setup:
-
-#### 🚀 Start the Database
-
-Launch the database container:
-
-```bash
-docker-compose up -d
-```
-
-Check if it’s running:
-
-```bash
-docker ps
-```
-
-You should see a `slugrush` container running on port **5432**.
+4. Start the backend server:
+   ```bash
+   python server.py
+   ```
 
 ---
 
-### 3. 🔌 Connect to the Database
+## API Endpoints
 
-#### 🖥️ GUI Access (Install PostgreSQL or DBeaver)
+### Root
+- **GET** `/`
+  - Returns a welcome message and available routes.
 
-Use the following credentials:
+### Get Current Count
+- **GET** `/get/count`
+  - Scrapes live gym occupancy data and returns it as JSON.
 
-- **Host**: `localhost`
-- **Port**: `5432`
-- **User**: `homies`
-- **Password**: `banana`
-- **Database**: `crowd_data`
+### Get Daily Data
+- **GET** `/get/daily`
+  - Fetches all crowd counts for the current day.
 
----
-
-#### Alternatively, CLI Access
-
-To enter the psql shell:
-
-```bash
-docker exec -it slugrush psql -U homies -d crowd_data
-```
-
-### 4. 🚀 Run the Backend Locally
-
-Start the FastAPI server:
-
-```bash
-python -m uvicorn server:app --reload
-```
-
-- **Base URL**: [http://localhost:8000](http://localhost:8000)
-- **Sample Endpoint**: [http://localhost:8000/gym/crowd](http://localhost:8000/gym/crowd)
+### Get Weekly Data
+- **GET** `/get/weekly`
+  - Fetches aggregated crowd counts for the past week.
 
 ---
 
-### 5. 🐳 Useful Docker Commands
+## Scheduler Tasks
 
-- 🔄 Restart DB container:
-
-  ```bash
-  docker-compose restart
-  ```
-
-- 📋 See logs:
-
-  ```bash
-  docker logs slugrush
-  ```
-
-- 🛑 Stop all containers:
-
-  ```bash
-  docker-compose down
-  ```
-
-- 💣 Remove volumes (reset the DB):
-
-  ```bash
-  docker-compose down -v
-  ```
+- **Add New Day**: Adds a new row to the `days_count` table daily at midnight.
+- **Add Hourly Count**: Scrapes and stores gym occupancy data every 30 minutes during gym hours.
+- **Ping Backend**: Sends a ping to the backend every 5 minutes to prevent idle timeout on Render.
 
 ---
 
-### 6. 📦 Legacy Mock DB (Optional)
+## Database Schema
 
-Still available for quick testing:
+### `days_count`
+| Column      | Type       | Description                          |
+|-------------|------------|--------------------------------------|
+| `id`        | INT        | Primary key (unique day identifier). |
+| `date`      | DATE       | Date of the record.                  |
+| `status`    | SMALLINT   | 1 = Live, 0 = Old.                   |
+| `day_of_week` | VARCHAR(10) | Day of the week (e.g., Monday).     |
 
-- File: `mock_database/crowd_data.json`
-- Endpoint: [http://localhost:8000/gym/crowd](http://localhost:8000/gym/crowd)
-```
+### `hourly_count`
+| Column       | Type       | Description                          |
+|--------------|------------|--------------------------------------|
+| `id`         | SERIAL     | Primary key (auto-increment).        |
+| `day_id`     | INT        | Foreign key referencing `days_count`.|
+| `hour`       | SMALLINT   | Hour of the record (0-23).           |
+| `minute`     | SMALLINT   | Minute of the record (0 or 30).      |
+| `crowd_count`| SMALLINT   | Number of people in the gym.         |
+| `timestamp`  | TIMESTAMP  | Time the data was collected.         |
+
+---
+
+## Deployment
+
+1. **Backend**: Deploy the backend on [Render](https://render.com/).
+   - Use the free tier for hosting.
+   - Set environment variables in the Render dashboard.
+
+2. **Database**: Host the PostgreSQL database on [Supabase](https://supabase.com/).
+   - Use the free tier for up to 4 months of data.
+
+3. **Frontend**: Deploy the React frontend on a platform like [Vercel](https://vercel.com/) or [Netlify](https://www.netlify.com/).
+
+---
+
+## Future Improvements
+
+- Add user authentication for secure access.
+- Implement rate limiting to prevent abuse.
+- Optimize database queries for better performance.
+- Add unit tests for all backend components.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+---
+
+## Contact
+
+For questions or feedback, feel free to reach out:
+
+- **Email**: your-email@example.com
+- **GitHub**: [yourusername](https://github.com/yourusername)
