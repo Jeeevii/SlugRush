@@ -13,8 +13,8 @@ import uvicorn
 import os
 import json
 load_dotenv()
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
-PORT = int(os.environ.get("BACKEND_PORT", 8000))
+FRONTEND_URL = os.environ.get("FRONTEND_URL")
+BACKEND_PORT = int(os.environ.get("BACKEND_PORT", 8000))
 
 # MOCK_DB_PATH = "mock_database/crowd_week_data.json"
 app = FastAPI()
@@ -75,5 +75,5 @@ def get_weekly() -> list:
 
 # internal start up
 if __name__ == "__main__":
-    uvicorn.run("server:app", host="localhost", port=PORT, reload=True)
+    uvicorn.run("server:app", host="localhost", port=BACKEND_PORT, reload=True)
 
