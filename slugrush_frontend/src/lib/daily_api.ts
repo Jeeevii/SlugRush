@@ -11,13 +11,21 @@ const MAX_CAPACITY = 150
 
 export const FetchFormattedDailyData = async (): Promise<ProcessedDailyData[]> => {
   try {
-    const response = await fetch(BACKEND_URL)
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.statusText}`)
+    const res = await fetch(BACKEND_URL,
+      {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.NEXT_PUBLIC_SLUGRUSH_API_KEY || "",
+            
+        },
+      }
+    )
+    if (!res.ok) {
+      console.error("Failed to fetch data:", res.status, res.statusText);
+      throw new Error(`Failed to fetch data: ${res.statusText}`);
     }
-
-    const raw = await response.json()
+    const raw = await res.json();
     const hourlyData: HourlyEntry[] = raw.hourly_data
 
     const hourGroups: { [hour: number]: number[] } = {}

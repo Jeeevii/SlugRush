@@ -10,10 +10,21 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 const MAX_CAPACITY = 150
 
 export async function fetchWeeklyData(): Promise<DayData[]> {
-  const res = await fetch(BACKEND_URL)
-  if (!res.ok) throw new Error("Failed to fetch weekly data")
-
-  const apiData = await res.json()
+  const res = await fetch(BACKEND_URL,
+    {
+      method: "GET",
+      headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.NEXT_PUBLIC_SLUGRUSH_API_KEY || "",
+          
+      },
+    }
+  )
+  if (!res.ok) {
+    console.error("Failed to fetch data:", res.status, res.statusText);
+    throw new Error(`Failed to fetch data: ${res.statusText}`);
+  }
+  const apiData = await res.json();
   return processRawDataForWeeklyView(apiData)
 }
 

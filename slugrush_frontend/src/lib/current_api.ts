@@ -24,10 +24,23 @@ export function getStatusText(occupancy: number): string {
 }
 
 export async function fetchCurrentStatus(): Promise<StatusData> {
-    const res = await fetch(BACKEND_URL)
-    const data = await res.json()
+    const res = await fetch(BACKEND_URL,
+      {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.NEXT_PUBLIC_SLUGRUSH_API_KEY || "",
+            
+        },
+      }
+    )
+    if (!res.ok) {
+      console.error("Failed to fetch data:", res.status, res.statusText);
+      throw new Error(`Failed to fetch data: ${res.statusText}`);
+    }
+    const data = await res.json();
   
-    const capacity = 150 // adjust if this varies or make it dynamic
+    const capacity = 150
   
     const currentCount = data.crowd_count
     const currentOccupancy = Math.round((currentCount / capacity) * 100)
