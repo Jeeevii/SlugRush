@@ -13,13 +13,14 @@ import uvicorn
 import os
 import json
 load_dotenv()
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
 PORT = int(os.environ.get("BACKEND_PORT", 8000))
 
 # MOCK_DB_PATH = "mock_database/crowd_week_data.json"
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # or ["*"] for wild west (not prod safe)
+    allow_origins=[FRONTEND_URL],  # or ["*"] for wild west (not prod safe)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
