@@ -29,7 +29,7 @@ export default function ContactPage() {
               <h1 className="text-xl sm:text-2xl font-bold">Contact Information</h1>
             </div>
             <p className="text-gray-200 text-sm sm:text-base">
-              Get in touch with us or the UCSC gym
+              Get in touch with SlugRush or the UCSC Gym
             </p>
           </div>
 
@@ -48,8 +48,10 @@ export default function ContactPage() {
               <div className="bg-[#FEC700]/10 border border-[#FEC700]/20 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <span className="font-medium text-[#003C6B]">slugrushedu@gmail.com</span>
                 <a
-                  href="mailto:slugrushedu@gmail.com"
+                  href="https://mail.google.com/mail/u/0/?fs=1&to=slugrushedu@gmail.com&tf=cm"
                   className="bg-[#003C6B] text-white px-4 py-2 rounded text-sm hover:bg-[#002a4d] transition-colors text-center"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Email Us
                 </a>
@@ -80,8 +82,10 @@ export default function ContactPage() {
                     Email
                   </h3>
                   <a
-                    href="mailto:opers@ucsc.edu"
+                    href="https://mail.google.com/mail/u/0/?fs=1&to=campusrec@ucsc.edu&tf=cm"
                     className="text-blue-600 hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     campusrec@ucsc.edu
                   </a>
