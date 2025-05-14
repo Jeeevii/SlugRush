@@ -37,7 +37,7 @@ export default function Header() {
                 </div>
               </div>
             </Link>
-
+          {/* default menu */}
           <div className="flex items-center gap-3">
             <div className="hidden md:flex items-center gap-1">
               <Link href="/about" className="px-2 py-1.5 text-sm rounded hover:bg-[#002a4d] transition-colors">
@@ -61,14 +61,14 @@ export default function Header() {
           <div className="md:hidden mt-2 pt-2 border-t border-[#004d8a]">
             <Link
               href="/about"
-              className="block w-full text-left px-2 py-2 hover:bg-[#002a4d] rounded transition-colors"
+              className="block w-full text-right px-2 py-2 hover:bg-[#002a4d] rounded transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               About Us
             </Link>
             <Link
               href="/contact"
-              className="block w-full text-left px-2 py-2 hover:bg-[#002a4d] rounded transition-colors"
+              className="block w-full text-right px-2 py-2 hover:bg-[#002a4d] rounded transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Contact
@@ -78,8 +78,9 @@ export default function Header() {
 
         <div className="mt-2 flex flex-wrap items-center justify-between">
           <p className="text-sm text-gray-200 font-bold">{greeting}, Slugs!</p>
-          <span className="text-sm text-[#FEC700]">UCSC Facility Occupancy Counts</span>
+          
         </div>
+        <span className="text-sm text-[#FEC700]">UCSC Facility Occupancy Counts</span>
       </div>
     </header>
   )

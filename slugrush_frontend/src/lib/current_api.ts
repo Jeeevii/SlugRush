@@ -2,11 +2,14 @@ import type { StatusData } from "@/src/lib/types";
 import dotenv from "dotenv";
 dotenv.config();
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL 
-    ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/get/count` 
-    : "http://localhost:8000/get/count";
+// const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL 
+//     ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/get/count` 
+//     : "http://localhost:8000/get/count";
 
-// console.log("Using Backend URL:", BACKEND_URL);
+const BACKEND_URL = "https://localhost:8000/get/count"
+
+
+console.log("Using Backend URL:", BACKEND_URL);
 
 // Return Type
 // {

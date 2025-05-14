@@ -2,10 +2,10 @@ import type { HourlyEntry, ProcessedDailyData } from "@/src/lib/types"
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL 
-    ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/get/daily` 
-    : "http://localhost:8000/get/daily";
-
+// const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL 
+//     ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/get/daily` 
+//     : "http://localhost:8000/get/daily";
+const BACKEND_URL = "https://localhost:8000/get/daily"
    
 const MAX_CAPACITY = 150
 
