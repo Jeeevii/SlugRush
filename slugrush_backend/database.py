@@ -29,12 +29,12 @@ ALLOWED = {DAY_TABLE, HOUR_TABLE}
 load_dotenv()
 
 # supa db creds
-HOST = os.environ.get("DBHOST")
-DB = os.environ.get("DBNAME")
-USER = os.environ.get("DBUSER")
-PASS = os.environ.get("DBPASSWORD")
-PORT = os.environ.get("DBPORT")
-
+HOST = os.environ.get("TEST_DBHOST")
+DB = os.environ.get("TEST_DBNAME")
+USER = os.environ.get("TEST_DBUSER")
+PASS = os.environ.get("TEST_DBPASSWORD")
+PORT = os.environ.get("TEST_DBPORT")
+print(f"Connecting to Database: {DB} on {HOST}:{PORT} with user {USER}")
 class Database():
     # basic constructer starting database connection with psycopgg
     def __init__(self) -> None:

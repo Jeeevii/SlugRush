@@ -1,0 +1,20 @@
+TODO: 
+    - make separate db table for storing averages of all weeks (use this for populating weekly view)
+    - delete weekly view entries once average of day is calculated and stored(?) - will increase data storage limits exponentially
+    - cache weekly view for 1 day, to avoid component re ping every visit
+    - modify ap scheduler for pings only during operation hours (limit backend hosting hours used)
+    - understand render slow start to optimize calls
+    - lazy load weekly view(? unless it’s already lazy loaded) 
+
+extras/good practice:
+    - mess with redis caching for backend (weekly endpoint, daily endpoint, status bar)
+    - local storage/or ??? caching for frontend
+    - cache weekly view locally for 5 hours
+    - cache daily view for 30 minutes (update if backend changes)
+    - cache status bar view for 5 minutes (or update if backend changes)
+
+
+
+docker cp supabase_dump.backup slugrush:/supabase_dump.backup 
+
+
