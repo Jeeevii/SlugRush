@@ -43,18 +43,6 @@ export default function MaintenanceNotice() {
                 </button>
               </div>
             </div>
-
-            <div className="mt-2 text-xs sm:text-sm text-[#003C6B]/80">
-              Thanks for your patience! In the meantime, you can check out the{" "}
-              <a
-                href="https://github.com/Jeeevii/SlugRush/tree/main?tab=readme-ov-file"
-                className="text-[#003C6B] underline hover:text-[#002a4d]"
-                rel="noopener noreferrer"
-              >
-                GitHub repo
-              </a>{" "}
-              for live updates on development.
-            </div>
           </div>
         </div>
       </div>
