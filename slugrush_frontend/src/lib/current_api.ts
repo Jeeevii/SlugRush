@@ -2,10 +2,6 @@ import type { StatusData } from "@/src/lib/types";
 import dotenv from "dotenv";
 dotenv.config();
 
-// const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL 
-//     ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/get/count` 
-//     : "http://localhost:8000/get/count";
-
 const BACKEND_URL = process.env.NEXT_PUBLIC_TEST_BACKEND_URL + "/get/count" || "";
 const API_KEY = process.env.NEXT_PUBLIC_SLUGRUSH_API_KEY || "";
 
@@ -34,7 +30,6 @@ export async function fetchCurrentStatus(): Promise<StatusData> {
         headers: {
             "Content-Type": "application/json",
             "x-api-key": API_KEY,
-            
         },
       }
     )

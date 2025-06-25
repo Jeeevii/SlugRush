@@ -9,10 +9,11 @@ Weekly Count Table:
 
 ## Overall Project Tasks
 SlugRush Full Release:
-    [] Make separate DB table for storing averages of all weeks (used for populating weekly view)
+    [x] Make separate DB table for storing averages of all weeks (used for populating weekly view)
     [] Delete weekly view entries after weekly average is calculated (storage concerns)
     [] Cache weekly view for 1 day to avoid re-ping on every visit
     [x] Modify APScheduler to only ping during gym operation hours (saves hosting hours)
+    [] Modify APScheduler to update weekly_counts table for averages of current day (collected)
     [] Understand Render slow start & optimize cold start calls
     [x] Lazy load weekly view (confirm it's working)
 

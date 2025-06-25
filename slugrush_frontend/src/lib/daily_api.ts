@@ -2,10 +2,7 @@ import type { HourlyEntry, ProcessedDailyData } from "@/src/lib/types"
 import * as dotenv from "dotenv";
 dotenv.config();
 
-// const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL 
-//     ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/get/daily` 
-//     : "http://localhost:8000/get/daily";
-const BACKEND_URL = process.env.NEXT_PUBLIC_TEST_BACKEND_URL + "/get/count" || "";
+const BACKEND_URL = process.env.NEXT_PUBLIC_TEST_BACKEND_URL + "/get/daily" || "";
 const API_KEY = process.env.NEXT_PUBLIC_SLUGRUSH_API_KEY || "";
 
 const MAX_CAPACITY = 150
@@ -17,8 +14,7 @@ export const FetchFormattedDailyData = async (): Promise<ProcessedDailyData[]> =
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "x-api-key": process.env.NEXT_PUBLIC_SLUGRUSH_API_KEY || "",
-            
+            "x-api-key": API_KEY,
         },
       }
     )
@@ -27,6 +23,7 @@ export const FetchFormattedDailyData = async (): Promise<ProcessedDailyData[]> =
       throw new Error(`Failed to fetch data: ${res.statusText}`);
     }
     const raw = await res.json();
+    console.log("fetched data from get/count endpoint", raw)
     const hourlyData: HourlyEntry[] = raw.hourly_data
 
     const hourGroups: { [hour: number]: number[] } = {}
