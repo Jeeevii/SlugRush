@@ -1,20 +1,26 @@
-TODO: 
-    - make separate db table for storing averages of all weeks (use this for populating weekly view)
-    - delete weekly view entries once average of day is calculated and stored(?) - will increase data storage limits exponentially
-    - cache weekly view for 1 day, to avoid component re ping every visit
-    - modify ap scheduler for pings only during operation hours (limit backend hosting hours used)
-    - understand render slow start to optimize calls
-    - lazy load weekly view(? unless it’s already lazy loaded) 
-
-extras/good practice:
-    - mess with redis caching for backend (weekly endpoint, daily endpoint, status bar)
-    - local storage/or ??? caching for frontend
-    - cache weekly view locally for 5 hours
-    - cache daily view for 30 minutes (update if backend changes)
-    - cache status bar view for 5 minutes (or update if backend changes)
+# TODO List for SlugRush Project
+## Current Tasks
+Weekly Count Table:
+    [x] Create new table for storing calculated weekly averages
+    [x] Create new task/job for updating weekly averages (once a week)
+    [] Modify `get_weekly_query` to return weekly averages from new table
+    [] Modify weekly endpoint logic for fetching weekly averages from new table
 
 
+## Overall Project Tasks
+SlugRush Full Release:
+    [] Make separate DB table for storing averages of all weeks (used for populating weekly view)
+    [] Delete weekly view entries after weekly average is calculated (storage concerns)
+    [] Cache weekly view for 1 day to avoid re-ping on every visit
+    [x] Modify APScheduler to only ping during gym operation hours (saves hosting hours)
+    [] Understand Render slow start & optimize cold start calls
+    [x] Lazy load weekly view (confirm it's working)
 
-docker cp supabase_dump.backup slugrush:/supabase_dump.backup 
 
-
+## Good Practices/New to Implement
+Extras/Stretch Goals:
+    [] Redis caching for backend: weekly, daily, and status endpoints
+    [] Frontend caching (localStorage or other)
+    [] Cache weekly view locally for 5 hours
+    [] Cache daily view for 30 minutes (update on backend change)
+    [] Cache status bar view for 5 minutes (or update on backend change)

@@ -22,20 +22,22 @@ print(f"Allowed Origin: {FRONTEND_URL}")
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_URL],  # or ["*"] for wild west (not prod safe)
+    allow_origins=[FRONTEND_URL], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-scheduler = Scheduler() # runs background scheduler seperate thread
+#scheduler = Scheduler() # runs background scheduler seperate thread
 db = Database()
 
 # updated startup and shutdown with FastAPI lifespan
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    scheduler.start_jobs()
+    db.start()
+    #scheduler.start_jobs()
     yield # when server shutdowns down (manual ctrl + c)
-    scheduler.stop_jobs()
+    db.exit()
+    #scheduler.stop_jobs()
 
 app.router.lifespan_context = lifespan
 
@@ -43,13 +45,7 @@ app.router.lifespan_context = lifespan
 @app.get("/")
 async def root():
     return {
-        "message": "SlugRush | Backend running on FastAPI on PORT 8000",
-        "routes": {
-            "/docs": "FastAPI's docs with clear and visual examples",
-            "/get/count": "GETS formatted count of Fitness Center",
-            "/get/daily": "GETS all daily counts currently getting collected",
-            "/get/weekly": "GETS previous week's counts",
-        }
+        "message": "Backend is healthy",
     }
 
 

@@ -29,11 +29,11 @@ ALLOWED = {DAY_TABLE, HOUR_TABLE}
 load_dotenv()
 
 # supa db creds
-HOST = os.environ.get("TEST_DBHOST")
-DB = os.environ.get("TEST_DBNAME")
-USER = os.environ.get("TEST_DBUSER")
-PASS = os.environ.get("TEST_DBPASSWORD")
-PORT = os.environ.get("TEST_DBPORT")
+HOST = os.environ.get("DBHOST")
+DB = os.environ.get("DBNAME")
+USER = os.environ.get("DBUSER")
+PASS = os.environ.get("DBPASSWORD")
+PORT = os.environ.get("DBPORT")
 print(f"Connecting to Database: {DB} on {HOST}:{PORT} with user {USER}")
 class Database():
     # basic constructer starting database connection with psycopgg
@@ -63,7 +63,7 @@ class Database():
                 status SMALLINT NOT NULL CHECK (status IN (0, 1)),  -- 0 = Old, 1 = Live
                 day_of_week VARCHAR(10) NOT NULL
             );
-        """
+        """ 
         hourly_table_query = """
             CREATE TABLE IF NOT EXISTS hourly_count (
                 id SERIAL PRIMARY KEY,  -- auto-increment
@@ -74,10 +74,23 @@ class Database():
                 timestamp TIMESTAMP NOT NULL
             );
         """
+        weekly_table_query = """
+            CREATE TABLE IF NOT EXISTS weekly_count (
+                id SERIAL PRIMARY KEY,
+                day_of_week TEXT NOT NULL CHECK (
+                    day_of_week IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')   
+                ),
+                hour INTEGER NOT NULL CHECK (hour BETWEEN 0 AND 23),
+                minute INTEGER NOT NULL CHECK (minute IN (0, 30)),
+                average_crowd_count FLOAT NOT NULL,
+                last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        """
         try:
             db_logger.info("Sent days, and hourly table to Database!")
             self.send_query(days_table_query)
             self.send_query(hourly_table_query)
+            self.send_query(weekly_table_query)
         except Exception as e:
             db_logger.info("Failed to send Tables to Database: ", e)
         return
@@ -326,58 +339,57 @@ class Database():
             'day_of_week': day_of_week,
             'hourly_data': hourly_data
         }
-
+    
+    # function should update weekly table once a day with new data from hourly table
+    def update_weekly_query(self) -> None:
+        # get current day, 
+        # use day's day_of_week to only insert/update table entries with that day_of_week
+        # get all entries from hourly_count table with that day_of_week
+        # get averages from hourly_count table for each hour and minute
+        # add/update the current averages with the overall overage onto top  
+        pass # TO DO TASK - update weekly_count table with new data from hourly_count table
+    
     # get all previous weeks data to graph (same logic as get_daily but with all 7 days)
     def get_weekly_query(self) -> list:
         weekly_query = """
-            SELECT 
-                dc.day_of_week, 
-                hc.hour, 
-                hc.minute, 
-                ROUND(AVG(hc.crowd_count)) AS total_crowd
-            FROM hourly_count hc
-            JOIN days_count dc ON hc.day_id = dc.id
-            GROUP BY dc.day_of_week, hc.hour, hc.minute
-            ORDER BY 
-                CASE 
-                    WHEN dc.day_of_week = 'Monday' THEN 1
-                    WHEN dc.day_of_week = 'Tuesday' THEN 2
-                    WHEN dc.day_of_week = 'Wednesday' THEN 3
-                    WHEN dc.day_of_week = 'Thursday' THEN 4
-                    WHEN dc.day_of_week = 'Friday' THEN 5
-                    WHEN dc.day_of_week = 'Saturday' THEN 6
-                    WHEN dc.day_of_week = 'Sunday' THEN 7
-                END,
-                hc.hour, 
-                hc.minute;
+            SELECT * FROM weekly_count
+            ORDER BY
+            CASE day_of_week
+                WHEN 'Monday' THEN 1
+                WHEN 'Tuesday' THEN 2
+                WHEN 'Wednesday' THEN 3
+                WHEN 'Thursday' THEN 4
+                WHEN 'Friday' THEN 5
+                WHEN 'Saturday' THEN 6
+                WHEN 'Sunday' THEN 7
+            END,
+            hour,
+            minute;
         """
+
         try:    
             db_logger.warning("Sent get_weekly_query to Database!")
             self.send_query(weekly_query)
         except Exception as e:
             db_logger.warning("Error sending get_weekly_query to Database: ", e)
-        rows = self.read_all()
+        weekly_data = self.read_all()
         # write_to_json(rows)
         #print(rows)
         final_data = {}
-        for row in rows:
-            day = row[0]
+        for row in weekly_data:
+            day = row[1] # day_of_week
+            #print(day)
             if day not in final_data:
                 final_data[day] = {
-                    'day_of_week': row[0],
-                    #'date': row[1],
-                    #'status': row[2],
-                    #'day_of_week': row[3],
+                    'day_of_week': day,
                     'hourly_data': []
                 }
             
-            if row[1] is not None:
+            if day is not None:
                 hourly = {
-                    #'day_id': row[4],
-                    'hour': row[1],
-                    'minute': row[2],
-                    'crowd_count': row[3],
-                    #'timestamp': row[8]
+                    'hour': row[2],
+                    'minute': row[3],
+                    'crowd_count': row[4],
                 }
                 final_data[day]['hourly_data'].append(hourly) # adding to query list
 
@@ -396,6 +408,9 @@ get_day_query = """
 """
 get_hour_query = """
     SELECT * FROM hourly_count
+"""
+get_weekly_query = """
+    SELECT * FROM weekly_count
 """
 join_query = """
     select * from days_count dc join hourly_count hc on dc.id = hc.day_id
@@ -452,16 +467,21 @@ if __name__ == "__main__":
     #     print(hour['crowd_count'])
 
     # weeky_data = db.get_weekly_query()
-    # print(weeky_data)
     # write_to_json(weeky_data)
-
     # print(db.check_count())
+    # db.initialize_weekly_table() # initialize weekly table with data from hourly_count table
 
+    # checking weekly table
+    # print("\nCHECKING ALL CONTENT IN WEEKLY_COUNT TABLE\n")
+    # db.send_query(get_weekly_query)
+    # weekly_data = db.read_all()
+    # write_to_json(weekly_data, "beta/new_weekly.json")
     # checking days table
-    print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
-    db.send_query(get_day_query)
-    data = db.read_all()
-    print(data)
+    # print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
+    # db.send_query(get_day_query)
+    # data = db.read_all()
+    # print(data)
+
     # # checking hours table
     # print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
     # db.send_query(get_hour_query)

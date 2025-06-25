@@ -5,8 +5,9 @@ dotenv.config();
 // const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL 
 //     ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/get/daily` 
 //     : "http://localhost:8000/get/daily";
-const BACKEND_URL = "https://localhost:8000/get/daily"
-   
+const BACKEND_URL = process.env.NEXT_PUBLIC_TEST_BACKEND_URL + "/get/count" || "";
+const API_KEY = process.env.NEXT_PUBLIC_SLUGRUSH_API_KEY || "";
+
 const MAX_CAPACITY = 150
 
 export const FetchFormattedDailyData = async (): Promise<ProcessedDailyData[]> => {

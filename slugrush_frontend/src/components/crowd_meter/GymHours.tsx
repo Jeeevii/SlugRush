@@ -128,7 +128,7 @@ export default function GymHours() {
             ))}
           </div>
           <p className="text-xs text-gray-500 mt-3 text-center">
-            Automatic schedule updates coming soon.
+            Gym Schedules are subject to change. Please check with official sources for live updates.
           </p>
         </div>
       )}
