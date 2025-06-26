@@ -1,0 +1,45 @@
+# ✅ SlugRush Project TODO
+
+## 🔄 Current Work
+Weekly Count System:
+    [x] Create new table for storing calculated weekly averages  
+    [x] Create new task/job for updating weekly averages (once a week)  
+    [] Modify `get_weekly_query` to return weekly averages from new table  
+    [] Modify `/weekly` endpoint logic to fetch data from new table  
+    [] Modify APScheduler to update `weekly_counts` with daily averages  
+    [] Cache weekly view data for 1 day to prevent re-pings on every visit  
+
+## 🚀 SlugRush Full Release Prep
+
+Backend Tasks:
+    [x] APScheduler only runs during gym hours (saves hosting time)  
+    [] Delete old weekly view entries after average is stored (storage concerns)  
+    [] Optimize APScheduler cold start performance (Render slow start)  
+
+Frontend Tasks:
+    [x] Lazy load weekly view (confirmed working)  
+    [] Add frontend caching (e.g., localStorage) for:  
+        [] Weekly view (5 hrs?)  
+        [] Daily view (30 mins?)  
+        [] Status bar (5 mins?)  
+    [] Maybe add subtle UI/UX animations for key features  
+
+Design Refresh (New Branding):
+    [] Update app icon with new project logo (all devices)  
+    [] Replace background image (ensure it scales cleanly)  
+    [] Replace project logo on all pages  
+    [] Update title  
+    [] Update description  
+    [] Update favicon  
+    [] Update color scheme  
+    [] Update font  
+    [] Update layout  
+
+
+## 🧼 Nice-to-Haves / Extras
+Stretch Goals/ Good Practices:
+    [] Redis backend caching for:  
+        [] Weekly endpoint  
+        [] Daily endpoint  
+        [] Status bar  
+    [] Add toggle or setting for enabling/disabling local caching (UX bonus)  

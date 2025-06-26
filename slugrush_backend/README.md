@@ -134,10 +134,3 @@ SlugRush is a web application designed to track and visualize gym occupancy data
 This project is licensed under the MIT License. See the `LICENSE` file for details.
 
 ---
-
-## Contact
-
-For questions or feedback, feel free to reach out:
-
-- **Email**: your-email@example.com
-- **GitHub**: [yourusername](https://github.com/yourusername)

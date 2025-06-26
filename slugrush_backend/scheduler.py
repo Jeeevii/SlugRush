@@ -34,12 +34,28 @@ class Scheduler:
         self.database.start()
         # Daily at 12:00 AM
         self.scheduler.add_job(self.add_new_day, 'cron', hour=0, minute=0)
+    
         # Weekdays: 6 AM to 11 PM every 30 min
         self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week="0-4", hour="6-23", minute="*/30")
+        # Weekdays: 6 AM to 11 PM
+        self.scheduler.add_job(
+            self.ping_backend,
+            'cron',
+            day_of_week='0-4',
+            hour='6-22',
+            minute='0,14,28,42,56'
+        )
+        
         # Weekends: 8 AM to 8 PM every 30 min
         self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week="5-6", hour="8-20", minute="*/30")
-        # Ping the main backend every 10 minutes to prevent idle timeout (15 minutes)
-        self.scheduler.add_job(self.ping_backend, 'interval', minutes=5)
+        # Weekends: 8 AM to 8 PM
+        self.scheduler.add_job(
+            self.ping_backend,
+            'cron',
+            day_of_week='5-6',
+            hour='8-19',
+            minute='0,14,28,42,56'
+        )
         
         self.scheduler.start()
         scheduler_logger.info("Scheduler started...")

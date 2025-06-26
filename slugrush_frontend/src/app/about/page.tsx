@@ -47,7 +47,7 @@ export default function AboutPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div className="w-20 h-20 rounded-full overflow-hidden">
                     <img
-                      src="https://media.licdn.com/dms/image/v2/D5603AQEnNKCUyZM_jQ/profile-displayphoto-shrink_200_200/B56ZZ.Fx0vHgAY-/0/1745872167430?e=1752105600&v=beta&t=G2t1QMjB07zVnKsrmsPyNl_4F6LnqyQU8ypxwweGW5k"
+                      src="https://media.licdn.com/dms/image/v2/D5603AQFksHvcur7nVw/profile-displayphoto-shrink_400_400/B56Zb1LQfyH0A4-/0/1747870092246?e=1753315200&v=beta&t=lRy5xlJzpc_F5iFF-oJr4V1OkEZNrBuTQc9RBPuITIU"
                       alt="Linkedin Pic - Jeevithan"
                       className="w-full h-full object-cover"
                     />

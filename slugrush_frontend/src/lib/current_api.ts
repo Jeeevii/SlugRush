@@ -2,14 +2,11 @@ import type { StatusData } from "@/src/lib/types";
 import dotenv from "dotenv";
 dotenv.config();
 
-// const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL 
-//     ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/get/count` 
-//     : "http://localhost:8000/get/count";
+const BACKEND_URL = process.env.NEXT_PUBLIC_TEST_BACKEND_URL + "/get/count" || "";
+const API_KEY = process.env.NEXT_PUBLIC_SLUGRUSH_API_KEY || "";
 
-const BACKEND_URL = "https://localhost:8000/get/count"
-
-
-console.log("Using Backend URL:", BACKEND_URL);
+// console.log("Using SlugRush API Key:", API_KEY);
+// console.log("Using Backend URL:", BACKEND_URL);
 
 // Return Type
 // {
@@ -32,8 +29,7 @@ export async function fetchCurrentStatus(): Promise<StatusData> {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "x-api-key": process.env.NEXT_PUBLIC_SLUGRUSH_API_KEY || "",
-            
+            "x-api-key": API_KEY,
         },
       }
     )

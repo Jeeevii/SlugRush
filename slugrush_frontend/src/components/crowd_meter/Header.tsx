@@ -78,9 +78,8 @@ export default function Header() {
 
         <div className="mt-2 flex flex-wrap items-center justify-between">
           <p className="text-sm text-gray-200 font-bold">{greeting}, Slugs!</p>
-          
+          <span className="text-sm text-[#FEC700]">UCSC Facility Occupancy Counts</span>
         </div>
-        <span className="text-sm text-[#FEC700]">UCSC Facility Occupancy Counts</span>
       </div>
     </header>
   )

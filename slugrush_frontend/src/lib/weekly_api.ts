@@ -2,10 +2,8 @@ import type { GymCrowdEntry, DayData } from "@/src/lib/types"
 import * as dotenv from "dotenv";
 dotenv.config();
 
-// const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL 
-//     ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/get/weekly` 
-//     : "http://localhost:8000/get/weekly";
-const BACKEND_URL = "https://localhost:8000/get/weekly"
+const BACKEND_URL = process.env.NEXT_PUBLIC_TEST_BACKEND_URL + "/get/weekly" || "";
+const API_KEY = process.env.NEXT_PUBLIC_SLUGRUSH_API_KEY || "";
 
 const MAX_CAPACITY = 150
 
@@ -15,8 +13,7 @@ export async function fetchWeeklyData(): Promise<DayData[]> {
       method: "GET",
       headers: {
           "Content-Type": "application/json",
-          "x-api-key": process.env.NEXT_PUBLIC_SLUGRUSH_API_KEY || "",
-          
+          "x-api-key": API_KEY,
       },
     }
   )
