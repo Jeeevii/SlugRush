@@ -4,7 +4,7 @@
 Weekly Count System:
     [x] Create new table for storing calculated weekly averages  
     [x] Create new task/job for updating weekly averages (once a week)  
-    [] Modify `get_weekly_query` to return weekly averages from new table  
+    [x] Modify `get_weekly_query` to return weekly averages from new table  
     [] Modify `/weekly` endpoint logic to fetch data from new table  
     [] Modify APScheduler to update `weekly_counts` with daily averages  
     [] Cache weekly view data for 1 day to prevent re-pings on every visit  

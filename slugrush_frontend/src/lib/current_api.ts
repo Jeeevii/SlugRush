@@ -5,8 +5,8 @@ dotenv.config();
 const BACKEND_URL = process.env.NEXT_PUBLIC_TEST_BACKEND_URL + "/get/count" || "";
 const API_KEY = process.env.NEXT_PUBLIC_SLUGRUSH_API_KEY || "";
 
-// console.log("Using SlugRush API Key:", API_KEY);
-// console.log("Using Backend URL:", BACKEND_URL);
+console.log("Using SlugRush API Key:", API_KEY);
+console.log("Using Backend URL:", BACKEND_URL);
 
 // Return Type
 // {
