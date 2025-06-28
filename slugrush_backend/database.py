@@ -176,7 +176,7 @@ class Database():
     # helper for deleting oldest week of data from days_count and hourly_count tables
     def delete_oldest(self) -> None:
         try:
-            # Find the oldest 7 days (1 week) based on the `id` in `days_count`
+            # find the oldest 7 days (1 week) based on the `id` in `days_count`
             oldest_days_query = """
                 SELECT id FROM days_count
                 ORDER BY date ASC
@@ -189,7 +189,7 @@ class Database():
                 db_logger.info("No data to delete.")
                 return
 
-            # Delete corresponding rows from `hourly_count` for the oldest days
+            # delete corresponding rows from `hourly_count` for the oldest days
             delete_hourly_query = """
                 DELETE FROM hourly_count
                 WHERE day_id = ANY(%s)
@@ -197,7 +197,7 @@ class Database():
             self.cursor.execute(delete_hourly_query, (oldest_ids,))
             db_logger.info(f"Deleted hourly data for day_ids: {oldest_ids}")
 
-            # Delete the oldest days from `days_count`
+            # delete the oldest days from `days_count`
             delete_days_query = """
                 DELETE FROM days_count
                 WHERE id = ANY(%s)
@@ -342,11 +342,14 @@ class Database():
     
     # function should update weekly table once a day with new data from hourly table
     def update_weekly_query(self) -> None:
-        try: 
+        try:
+            gym_capacity = 150
+            n = 7  # Total data points we assume for the average (1 per weekday, weekly average)
+            
             curr_day_data = self.get_daily_query()
             day_of_week = curr_day_data['day_of_week']
             hourly_data = curr_day_data['hourly_data']
-            # print(f"Updating weekly_count table for {day_of_week}:")
+
             db_logger.info(f"Updating weekly_count table for {day_of_week}")
 
             previous_average_query = """ 
@@ -357,24 +360,44 @@ class Database():
             """
             self.send_query(previous_average_query, (day_of_week,))
             previous_averages = self.read_all()
-            # print(f"Previous averages for {day_of_week}:")
-            for hour_data in hourly_data: # TO DO - ITERATE WITH INDEX, add data from current and previous averages - NOTE 
-                cur_hour = hour_data['hour']
-                cur_minute = hour_data['minute']
-                cur_count = hour_data['crowd_count']
 
-                # print(f"Hour: {cur_hour}, Minute: {cur_minute}, Crowd Count: {cur_count}")
-            #for row in previous_averages:
-                #print(f"Hour: {row[0]}, Minute: {row[1]}, Average Crowd Count: {row[2]}")   
-        
-            # use day's day_of_week to only insert/update table entries with that day_of_week
-            # get all entries from hourly_count table with that day_of_week
-            # get averages from hourly_count table for each hour and minute
-            # add/update the current averages with the overall overage onto top  
-            pass # TO DO TASK - update weekly_count table with new data from hourly_count table
+            # loop by index to combine current data with previous averages
+            for i, hour_data in enumerate(hourly_data):
+                hour = hour_data['hour']
+                minute = hour_data['minute']
+                raw_count = hour_data['crowd_count']
+
+                # normalize based on max capacity (stored as %)
+                normalized_count = round((raw_count / gym_capacity) * 100, 2)
+
+                if i < len(previous_averages):
+                    prev_hour, prev_minute, prev_avg = previous_averages[i]
+
+                    # calculate rolling average
+                    updated_avg = round(((prev_avg * (n - 1)) + normalized_count) / n, 2)
+
+                    update_query = """
+                        UPDATE weekly_count
+                        SET average_crowd_count = %s, last_updated = CURRENT_TIMESTAMP
+                        WHERE day_of_week = %s AND hour = %s AND minute = %s;
+                    """
+                    self.cursor.execute(update_query, (updated_avg, day_of_week, hour, minute))
+                    self.connection.commit() 
+                    db_logger.info(f"Updated {day_of_week} {hour}:{minute} -> {updated_avg}%")
+                else:
+                    # if entry doesn't exist, insert it
+                    insert_query = """
+                        INSERT INTO weekly_count (day_of_week, hour, minute, average_crowd_count)
+                        VALUES (%s, %s, %s, %s);
+                    """
+                    self.cursor.execute(insert_query, (day_of_week, hour, minute, normalized_count))
+                    self.connection.commit() 
+                    db_logger.info(f"Inserted new {day_of_week} {hour}:{minute} -> {normalized_count}%")
+
+            db_logger.info(f"weekly_count table successfully updated for {day_of_week}")
 
         except Exception as e:
-            db_logger.warning(f"Failed to update weekly_count table: {e}")     
+            db_logger.warning(f"Failed to update weekly_count table: {e}")
 
 
     # get all previous weeks data to graph (same logic as get_daily but with all 7 days)
@@ -495,9 +518,9 @@ if __name__ == "__main__":
     # for hour in day_data['hourly_data']:
     #     print(hour['crowd_count'])
 
-    # weeky_data = db.get_weekly_query()
-    # write_to_json(weeky_data)
-    # print(db.check_count())
+    weeky_data = db.get_weekly_query()
+    write_to_json(weeky_data)
+    print(db.check_count())
     # db.initialize_weekly_table() # initialize weekly table with data from hourly_count table
 
     # checking weekly table

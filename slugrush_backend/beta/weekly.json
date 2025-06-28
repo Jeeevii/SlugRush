@@ -4,183 +4,183 @@
         "hourly_data": [
             {
                 "hour": 6,
-                "minute": 30,
-                "crowd_count": 32.0
+                "minute": 0,
+                "crowd_count": 19.71
             },
             {
                 "hour": 6,
-                "minute": 0,
-                "crowd_count": 23.0
+                "minute": 30,
+                "crowd_count": 28.0
             },
             {
                 "hour": 7,
                 "minute": 0,
-                "crowd_count": 38.0
+                "crowd_count": 33.71
+            },
+            {
+                "hour": 7,
+                "minute": 30,
+                "crowd_count": 39.24
             },
             {
                 "hour": 8,
                 "minute": 0,
-                "crowd_count": 53.0
+                "crowd_count": 47.33
             },
             {
                 "hour": 8,
                 "minute": 30,
-                "crowd_count": 58.0
+                "crowd_count": 51.62
             },
             {
                 "hour": 9,
                 "minute": 0,
-                "crowd_count": 61.0
+                "crowd_count": 54.19
             },
             {
                 "hour": 9,
                 "minute": 30,
-                "crowd_count": 63.0
+                "crowd_count": 57.14
             },
             {
                 "hour": 10,
                 "minute": 0,
-                "crowd_count": 70.0
+                "crowd_count": 63.71
             },
             {
                 "hour": 10,
                 "minute": 30,
-                "crowd_count": 74.0
+                "crowd_count": 67.14
             },
             {
                 "hour": 11,
                 "minute": 0,
-                "crowd_count": 85.0
+                "crowd_count": 81.33
             },
             {
                 "hour": 11,
                 "minute": 30,
-                "crowd_count": 104.0
+                "crowd_count": 98.57
             },
             {
                 "hour": 12,
                 "minute": 0,
-                "crowd_count": 105.0
+                "crowd_count": 97.9
             },
             {
                 "hour": 12,
                 "minute": 30,
-                "crowd_count": 110.0
+                "crowd_count": 102.29
             },
             {
                 "hour": 13,
                 "minute": 0,
-                "crowd_count": 117.0
+                "crowd_count": 108.29
             },
             {
                 "hour": 13,
                 "minute": 30,
-                "crowd_count": 116.0
+                "crowd_count": 104.19
             },
             {
                 "hour": 14,
                 "minute": 0,
-                "crowd_count": 115.0
+                "crowd_count": 104.76
             },
             {
                 "hour": 14,
                 "minute": 30,
-                "crowd_count": 109.0
+                "crowd_count": 101.52
             },
             {
                 "hour": 15,
                 "minute": 0,
-                "crowd_count": 110.0
+                "crowd_count": 103.71
             },
             {
                 "hour": 15,
                 "minute": 30,
-                "crowd_count": 114.0
+                "crowd_count": 107.71
+            },
+            {
+                "hour": 16,
+                "minute": 0,
+                "crowd_count": 103.43
             },
             {
                 "hour": 16,
                 "minute": 30,
-                "crowd_count": 108.0
+                "crowd_count": 101.43
             },
             {
                 "hour": 17,
                 "minute": 0,
-                "crowd_count": 111.0
+                "crowd_count": 105.52
             },
             {
                 "hour": 17,
                 "minute": 30,
-                "crowd_count": 115.0
+                "crowd_count": 107.52
             },
             {
                 "hour": 18,
                 "minute": 0,
-                "crowd_count": 109.0
+                "crowd_count": 17.05
             },
             {
                 "hour": 18,
                 "minute": 30,
-                "crowd_count": 126.0
+                "crowd_count": 116.95
             },
             {
                 "hour": 19,
                 "minute": 0,
-                "crowd_count": 124.0
+                "crowd_count": 115.24
             },
             {
                 "hour": 19,
                 "minute": 30,
-                "crowd_count": 127.0
+                "crowd_count": 117.81
             },
             {
                 "hour": 20,
                 "minute": 0,
-                "crowd_count": 127.0
+                "crowd_count": 117.81
             },
             {
                 "hour": 20,
                 "minute": 30,
-                "crowd_count": 120.0
+                "crowd_count": 108.67
             },
             {
                 "hour": 21,
                 "minute": 0,
-                "crowd_count": 119.0
+                "crowd_count": 106.95
             },
             {
                 "hour": 21,
                 "minute": 30,
-                "crowd_count": 119.0
+                "crowd_count": 106.95
             },
             {
                 "hour": 22,
                 "minute": 0,
-                "crowd_count": 119.0
+                "crowd_count": 106.95
             },
             {
                 "hour": 22,
                 "minute": 30,
-                "crowd_count": 109.0
+                "crowd_count": 98.38
             },
             {
                 "hour": 23,
                 "minute": 0,
-                "crowd_count": 44.0
+                "crowd_count": 37.71
             },
             {
                 "hour": 23,
                 "minute": 30,
                 "crowd_count": 15.0
-            },
-            {
-                "hour": 7,
-                "minute": 30,
-                "crowd_count": 44.0
-            },
-            {
-                "hour": 16,
-                "minute": 0,
-                "crowd_count": 109.0
             }
         ]
     },
@@ -191,6 +191,11 @@
                 "hour": 6,
                 "minute": 0,
                 "crowd_count": 15.0
+            },
+            {
+                "hour": 6,
+                "minute": 30,
+                "crowd_count": 23.0
             },
             {
                 "hour": 7,
@@ -274,6 +279,11 @@
             },
             {
                 "hour": 15,
+                "minute": 0,
+                "crowd_count": 136.0
+            },
+            {
+                "hour": 15,
                 "minute": 30,
                 "crowd_count": 127.0
             },
@@ -351,16 +361,6 @@
                 "hour": 23,
                 "minute": 0,
                 "crowd_count": 64.0
-            },
-            {
-                "hour": 6,
-                "minute": 30,
-                "crowd_count": 23.0
-            },
-            {
-                "hour": 15,
-                "minute": 0,
-                "crowd_count": 136.0
             },
             {
                 "hour": 23,
@@ -454,6 +454,11 @@
             },
             {
                 "hour": 14,
+                "minute": 0,
+                "crowd_count": 119.0
+            },
+            {
+                "hour": 14,
                 "minute": 30,
                 "crowd_count": 124.0
             },
@@ -533,6 +538,11 @@
                 "crowd_count": 122.0
             },
             {
+                "hour": 22,
+                "minute": 30,
+                "crowd_count": 118.0
+            },
+            {
                 "hour": 23,
                 "minute": 0,
                 "crowd_count": 67.0
@@ -541,16 +551,6 @@
                 "hour": 23,
                 "minute": 30,
                 "crowd_count": 33.0
-            },
-            {
-                "hour": 14,
-                "minute": 0,
-                "crowd_count": 119.0
-            },
-            {
-                "hour": 22,
-                "minute": 30,
-                "crowd_count": 118.0
             }
         ]
     },
@@ -613,6 +613,11 @@
                 "crowd_count": 121.0
             },
             {
+                "hour": 11,
+                "minute": 30,
+                "crowd_count": 116.0
+            },
+            {
                 "hour": 12,
                 "minute": 0,
                 "crowd_count": 114.0
@@ -621,6 +626,11 @@
                 "hour": 12,
                 "minute": 30,
                 "crowd_count": 122.0
+            },
+            {
+                "hour": 13,
+                "minute": 0,
+                "crowd_count": 117.0
             },
             {
                 "hour": 13,
@@ -703,6 +713,11 @@
                 "crowd_count": 118.0
             },
             {
+                "hour": 21,
+                "minute": 30,
+                "crowd_count": 110.0
+            },
+            {
                 "hour": 22,
                 "minute": 0,
                 "crowd_count": 107.0
@@ -721,21 +736,6 @@
                 "hour": 23,
                 "minute": 30,
                 "crowd_count": 0.0
-            },
-            {
-                "hour": 11,
-                "minute": 30,
-                "crowd_count": 116.0
-            },
-            {
-                "hour": 13,
-                "minute": 0,
-                "crowd_count": 117.0
-            },
-            {
-                "hour": 21,
-                "minute": 30,
-                "crowd_count": 110.0
             }
         ]
     },
@@ -801,6 +801,11 @@
                 "hour": 11,
                 "minute": 30,
                 "crowd_count": 120.0
+            },
+            {
+                "hour": 12,
+                "minute": 0,
+                "crowd_count": 124.0
             },
             {
                 "hour": 12,
@@ -883,6 +888,11 @@
                 "crowd_count": 85.0
             },
             {
+                "hour": 20,
+                "minute": 30,
+                "crowd_count": 68.0
+            },
+            {
                 "hour": 21,
                 "minute": 0,
                 "crowd_count": 69.0
@@ -911,16 +921,6 @@
                 "hour": 23,
                 "minute": 30,
                 "crowd_count": 9.0
-            },
-            {
-                "hour": 12,
-                "minute": 0,
-                "crowd_count": 124.0
-            },
-            {
-                "hour": 20,
-                "minute": 30,
-                "crowd_count": 68.0
             }
         ]
     },
@@ -976,6 +976,11 @@
                 "hour": 12,
                 "minute": 30,
                 "crowd_count": 66.0
+            },
+            {
+                "hour": 13,
+                "minute": 0,
+                "crowd_count": 65.0
             },
             {
                 "hour": 13,
@@ -1051,11 +1056,6 @@
                 "hour": 20,
                 "minute": 30,
                 "crowd_count": 44.0
-            },
-            {
-                "hour": 13,
-                "minute": 0,
-                "crowd_count": 65.0
             }
         ]
     },
@@ -1066,6 +1066,11 @@
                 "hour": 8,
                 "minute": 0,
                 "crowd_count": 44.0
+            },
+            {
+                "hour": 8,
+                "minute": 30,
+                "crowd_count": 39.0
             },
             {
                 "hour": 9,
@@ -1149,6 +1154,11 @@
             },
             {
                 "hour": 17,
+                "minute": 0,
+                "crowd_count": 58.0
+            },
+            {
+                "hour": 17,
                 "minute": 30,
                 "crowd_count": 59.0
             },
@@ -1181,16 +1191,6 @@
                 "hour": 20,
                 "minute": 30,
                 "crowd_count": 23.0
-            },
-            {
-                "hour": 8,
-                "minute": 30,
-                "crowd_count": 39.0
-            },
-            {
-                "hour": 17,
-                "minute": 0,
-                "crowd_count": 58.0
             }
         ]
     }

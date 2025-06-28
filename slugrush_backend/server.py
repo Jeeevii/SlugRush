@@ -27,17 +27,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-#scheduler = Scheduler() # runs background scheduler seperate thread
+scheduler = Scheduler() # runs background scheduler seperate thread
 db = Database()
 
 # updated startup and shutdown with FastAPI lifespan
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     db.start()
-    #scheduler.start_jobs()
+    scheduler.start_jobs()
     yield # when server shutdowns down (manual ctrl + c)
     db.exit()
-    #scheduler.stop_jobs()
+    scheduler.stop_jobs()
 
 app.router.lifespan_context = lifespan
 
