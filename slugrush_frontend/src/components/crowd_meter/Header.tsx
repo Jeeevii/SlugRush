@@ -27,7 +27,7 @@ export default function Header() {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
               <div className="w-10 h-10 bg-[#FDC700] rounded-full flex items-center justify-center">
-                <img src="/icons/web-app-manifest-192x192.png" alt="Logo" className="w-10 h-10" />
+                <img src="/icons/web-app-manifest-512x512.png" alt="Mr.Slug" className="w-10 h-10 rounded-full" />
                 {/* <span className="text-[#003C6B] text-xl font-bold">🐌</span> */}
               </div>
               <div className="flex items-center">

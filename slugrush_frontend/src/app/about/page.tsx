@@ -4,7 +4,8 @@ import Link from "next/link"
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#f5f5f5]">
+    <div className="min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('/slugbackground.png')" }}>
       <Header />
 
       <main className="max-w-4xl mx-auto p-4 sm:p-6">
@@ -54,7 +55,7 @@ export default function AboutPage() {
                   </div>
                   <div>
                     <h3 className="font-bold text-[#003C6B] text-lg">Jeevithan Mahenthran</h3>
-                    <p className="text-gray-600">Project Lead & Full Stack Developer</p>
+                    <p className="text-gray-600">Project Lead & Full Stack Engineer</p>
                     <div className="flex items-center gap-3 mt-2">
                       <a
                         href="https://linkedin.com/in/jeevithan-mahenthran"
