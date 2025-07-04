@@ -23,7 +23,7 @@ export const FetchFormattedDailyData = async (): Promise<ProcessedDailyData[]> =
       throw new Error(`Failed to fetch data: ${res.statusText}`);
     }
     const raw = await res.json();
-    console.log("fetched data from get/count endpoint", raw)
+    console.log("fetched data from get/daily endpoint", raw)
     const hourlyData: HourlyEntry[] = raw.hourly_data
 
     const hourGroups: { [hour: number]: number[] } = {}

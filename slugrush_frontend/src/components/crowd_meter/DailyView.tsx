@@ -6,6 +6,9 @@ import type { ProcessedDailyData } from "@/src/lib/types"
 import { ArrowDownToLine, Clock, BarChart3, LayoutGrid } from "lucide-react"
 import { ResponsiveContainer, XAxis, YAxis, Tooltip, Bar, BarChart } from "recharts"
 
+const CACHE_DAILY_KEY = "dailyData"
+const CACHE_DURATION = 30 * 60 * 1000 // 30 minutes
+
 export default function DailyView() {
   const [data, setData] = useState<ProcessedDailyData[]>([])
   const [loading, setLoading] = useState(true)
@@ -25,8 +28,26 @@ export default function DailyView() {
   const loadData = async () => {
     setLoading(true)
     try {
+      const cachedData = localStorage.getItem(CACHE_DAILY_KEY)
+      const currentTime = Date.now()
+
+      if (cachedData){
+        const { data: cachedDataArray, timestamp } = JSON.parse(cachedData)
+        if (currentTime - timestamp < CACHE_DURATION) {
+          console.log("Using cached daily data")
+          setData(cachedDataArray)
+          setLoading(false)
+          return
+        }
+      }
+
+      console.log("Fetching daily data from API")
       const data = await FetchFormattedDailyData()
       setData(data)
+      localStorage.setItem(
+        CACHE_DAILY_KEY,
+        JSON.stringify({ data: data, timestamp: currentTime })
+      )
     } catch (error) {
       console.error("Error loading daily data:", error)
     } finally {
@@ -37,6 +58,9 @@ export default function DailyView() {
 
   const handleRefresh = async () => {
     setRefreshing(true)
+    setLoading(true)
+    localStorage.removeItem(CACHE_DAILY_KEY) // Clear cache to force fetch
+    console.log("Refreshing daily data")
     await loadData()
   }
 
@@ -142,20 +166,8 @@ export default function DailyView() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-2">
-        <div className="text-sm text-gray-500 font-bold px-2">Today's Crowd Levels</div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500">{hoursText}</span>
-          {/* <button
-            onClick={handleRefresh}
-            className="flex items-center gap-1 text-xs text-[#003C6B] px-2 py-1 rounded hover:bg-gray-100 cursor-pointer"
-          >
-            <ArrowDownToLine className={`h-3 w-3 ${refreshing ? "animate-bounce" : ""}`} />
-            <span>Refresh</span>
-          </button> */}
-        </div>
-      </div>
 
+      <div className="flex justify-between items-center mb-2 text-sm text-gray-500 font-bold px-2">Today's Crowd Levels</div>
       {/* View Type Selector */}
       <div className="flex mb-4 border rounded-md overflow-hidden">
         <button
@@ -178,6 +190,18 @@ export default function DailyView() {
         </button>
       </div>
 
+      {/* Hours & Refresh */}
+      <div className="flex justify-end items-center gap-2">
+        <span className="text-xs text-gray-500">{hoursText}</span>
+        <button
+          onClick={handleRefresh}
+          className="flex items-center gap-1 text-xs text-[#003C6B] px-2 py-1 rounded hover:bg-gray-100 cursor-pointer"
+        >
+          <ArrowDownToLine className={`h-3 w-3 ${refreshing ? "animate-bounce" : ""}`} />
+          <span>Refresh</span>
+        </button>
+      </div>
+      
       {/* Bar Chart View */}
       {viewType === "bar" && (
         <div className="bg-white text-gray-400 rounded-lg p-3 h-[280px]">

@@ -3,14 +3,18 @@
 import { useState, useEffect } from "react"
 import { fetchWeeklyData, getCurrentDay, getBestTimesToVisit } from "@/src/lib/weekly_api"
 import type { DayData } from "@/src/lib/types"
-import { Clock, TrendingUp, BarChart3, Grid, Notebook, NotebookIcon, TriangleAlert } from "lucide-react"
+import { Clock, TrendingUp, BarChart3, Grid, Notebook, NotebookIcon, TriangleAlert, ArrowDownToLine } from "lucide-react"
 import { ResponsiveContainer, XAxis, YAxis, Tooltip, Bar, BarChart } from "recharts"
+
+const CACHE_WEEKLY_KEY = "weeklyData"
+const CACHE_DURATION = 5 * 60 * 60 * 1000 // 24 hours
 
 export default function WeeklyView() {
   const [weeklyData, setWeeklyData] = useState<DayData[]>([])
   const [selectedDay, setSelectedDay] = useState(getCurrentDay())
   const [loading, setLoading] = useState(true)
   const [viewType, setViewType] = useState<"bar" | "heatmap">("bar")
+  const [refreshing, setRefreshing] = useState(false)
 
   useEffect(() => {
     loadData()
@@ -20,16 +24,40 @@ export default function WeeklyView() {
   const loadData = async () => {
     setLoading(true)
     try {
+      const cachedData = localStorage.getItem(CACHE_WEEKLY_KEY)
+      const currentTime = Date.now()
+
+      if (cachedData) {
+        const { data, timestamp } = JSON.parse(cachedData)
+        if (currentTime - timestamp < CACHE_DURATION) {
+          console.log("Using cached weekly data")
+          setWeeklyData(data)
+          setLoading(false)
+          return
+        }
+      }
+
+      console.log("Fetching weekly data from API")
       const data = await fetchWeeklyData()
       //console.log(data)
       setWeeklyData(data)
+      localStorage.setItem(
+        CACHE_WEEKLY_KEY,
+        JSON.stringify({ data: data, timestamp: currentTime })
+      )
     } catch (error) {
       console.error("Error loading weekly data:", error)
     } finally {
       setLoading(false)
     }
   }
-
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    setLoading(true)
+    localStorage.removeItem(CACHE_WEEKLY_KEY) // Clear cache to force fetch
+    console.log("Refreshing weekly data")
+    await loadData()
+  }
   if (loading) {
     return (
       <div className="h-[300px] flex items-center justify-center">
@@ -136,10 +164,17 @@ export default function WeeklyView() {
           <span>Simple</span>
         </button>
       </div>
-
-      {/* hours legend */}
-      <div className="flex justify-end mb-2">
+          
+      {/* Hours & Refresh */}
+      <div className="flex justify-end items-center gap-2">
         <span className="text-xs text-gray-500">{hoursText}</span>
+        <button
+          onClick={handleRefresh}
+          className="flex items-center gap-1 text-xs text-[#003C6B] px-2 py-1 rounded hover:bg-gray-100 cursor-pointer"
+        >
+          <ArrowDownToLine className={`h-3 w-3 ${refreshing ? "animate-bounce" : ""}`} />
+          <span>Refresh</span>
+        </button>
       </div>
 
       {/* Bar Chart View */}
@@ -191,19 +226,19 @@ export default function WeeklyView() {
       )}
 
       {/* Best times to visit */}
-      <div className="mt-6 p-3 bg-gray-50 rounded-lg border border-gray-200">
+      {/* <div className="mt-6 p-3 bg-gray-50 rounded-lg border border-gray-200">
         <div className="flex items-center gap-2 mb-2">
           <Clock className="h-4 w-4 text-[#003C6B]" />
           <h3 className="text-sm font-medium text-[#003C6B]">Best Times to Visit on {selectedDay}</h3>
         </div>
         <p className="text-sm text-gray-700">{bestTimes}</p>
-      </div>
-      <div className="mt-6 p-3 bg-gray-50 rounded-lg border border-gray-200">
+      </div> */}
+      {/* <div className="mt-6 p-3 bg-gray-50 rounded-lg border border-gray-200">
         <div className="flex items-center gap-2 mb-2">
           <TriangleAlert className="h-4 w-4 text-[#FF0000]" />
           <h2 className="text-sm font-medium text-[#FF0000]">At peak capacity, expect potential 5-10 minute wait times.</h2>
         </div>
-      </div>
+      </div> */}
       {/* Trend analysis
       <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
         <div className="flex items-center gap-2 mb-2">
