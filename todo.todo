@@ -1,7 +1,7 @@
 # ✅ SlugRush Project TODO
 
-## 🔄 Current Work
-Weekly Count System:
+## 🔄 Overall Tasks
+Overall Tasks:
     [x] Create new table for storing calculated weekly averages  
     [x] Create new task/job for updating weekly averages (once a week)  
     [x] Modify `get_weekly_query` to return weekly averages from new table  
@@ -9,8 +9,10 @@ Weekly Count System:
     [x] Modify APScheduler to update `weekly_counts` with daily averages  
     [x] Cache weekly view data for 1 day to prevent re-pings on every visit  
     [] Unit tests for new weekly averages logic (if time allows)  
-    [] Set up React Native to wrap app in WebView for IOS/Android app
+    [x] Set up React Native to wrap app in WebView for IOS/Android app
     [] Basic Pop Up linking to the app store for IOS/Android app (using local storage to not show again)  
+    [] Add a "Download App" button in the header for mobile users (if not already installed)
+    [] Ship the app to the app stores (whole diff process, need to learn how to do this)
     
 ## 🚀 SlugRush Full Release Prep
 Backend Tasks:
