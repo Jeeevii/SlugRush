@@ -168,8 +168,10 @@ DBNAME=your_database_name
 DBUSER=your_database_user
 PASSWORD=your_database_password
 PORT=your_database_port
+
 FO_URL=gym_occupancy_url
 FO_ID=gym_facility_id
+SLUGRUSH_API_KEY=your_api_key (custom)
 BACKEND_PORT=8000
 
 # Frontend (.env.local)
@@ -184,21 +186,13 @@ NEXT_PUBLIC_SLUGRUSH_API_KEY=your_api_key
 - **Analytics**: Vercel Analytics for performance monitoring
 - **Error Handling**: Comprehensive logging and error recovery
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## 👥 Team
 
-**Jeevithan Mahenthran** - Project Lead & Full Stack Developer  
+**Jeevithan Mahenthran** - Project Lead & Full Stack Engineer  
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?logo=linkedin&logoColor=white)](https://linkedin.com/in/jeevithan-mahenthran)
 [![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)](https://github.com/jeeevii)
 
@@ -208,9 +202,8 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## 📞 Support
 
 For questions, feedback, or support:
-- 📧 Email: [Contact Form](mailto:your-email@example.com)
+- 📧 Email: slugrushedu@gmail.com
 - 🐛 Issues: [GitHub Issues](https://github.com/Jeeevii/SlugRush/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/Jeeevii/SlugRush/discussions)
 
 ---
 
