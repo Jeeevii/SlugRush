@@ -14,7 +14,7 @@ export const FetchFormattedDailyData = async (): Promise<ProcessedDailyData[]> =
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "x-api-key": API_KEY,
+            "slugrush-api-key": API_KEY,
         },
       }
     )

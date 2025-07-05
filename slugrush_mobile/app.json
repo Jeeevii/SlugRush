@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "SlugRush",
+    "slug": "slugrush",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icons/apple-touch-icon.png",  
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/icons/favicon.svg",  
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "bundleIdentifier": "com.yourname.slugrush",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.yourname.slugrush",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icons/favicon.svg",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/icons/favicon.ico"
+    },
+    "extra": {
+      "description": "SlugRush helps UCSC students visualize gym crowd levels in real-time and track historical data to plan workouts better.",
+      "authors": [
+        {
+          "name": "Jeevithan Mahenthran",
+          "url": "https://www.linkedin.com/in/jeevithan-mahenthran"
+        },
+        {
+          "name": "Kevin Huang",
+          "url": "https://www.linkedin.com/in/hanlin-huang-6aa4131ba/"
+        }
+      ]
+    }
+  }
+}

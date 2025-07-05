@@ -13,7 +13,7 @@ export async function fetchWeeklyData(): Promise<DayData[]> {
       method: "GET",
       headers: {
           "Content-Type": "application/json",
-          "x-api-key": API_KEY,
+          "slugrush-api-key": API_KEY,
       },
     }
   )

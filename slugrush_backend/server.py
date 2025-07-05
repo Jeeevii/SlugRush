@@ -12,8 +12,10 @@ import json
 import uvicorn
 import os
 import json
-load_dotenv()
+load_dotenv()\
+
 FRONTEND_URL = os.environ.get("TEST_FRONTEND_URL")
+MOBILE_URL = os.environ.get("TEST_MOBILE_IP")
 BACKEND_PORT = int(os.environ.get("BACKEND_PORT", 8000))
 SLUGRUSH_API_KEY = os.getenv("SLUGRUSH_API_KEY")
 print(f"Allowed Origin: {FRONTEND_URL}")
@@ -22,10 +24,11 @@ print(f"Allowed Origin: {FRONTEND_URL}")
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_URL], 
+    # allow_origins=["*"], 
+    allow_origins=[FRONTEND_URL, MOBILE_URL], 
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET"],
+    allow_headers=["Authorization", "Content-Type", "slugrush-api-key"],
 )
 #scheduler = Scheduler() # runs background scheduler seperate thread
 db = Database()
@@ -54,8 +57,8 @@ async def root():
 
 # GET endpoint - scrapes gym page when called and returns jsonified dict
 @app.get("/get/count")
-def get_count(x_api_key: str = Header(None)) -> Dict:
-    if x_api_key != SLUGRUSH_API_KEY:
+def get_count(slugrush_api_key: str = Header(None)) -> Dict:
+    if slugrush_api_key != SLUGRUSH_API_KEY:
         raise HTTPException(status_code=403, detail="Forbidden: Invalid API Key")
     scraper = Scraper()
     try:
@@ -66,16 +69,16 @@ def get_count(x_api_key: str = Header(None)) -> Dict:
     
 # GET endpoint - queries database and returns all rows with current day crowd_counts - NEEDED FOR GRAPHING DAILY VIEW
 @app.get("/get/daily")
-def get_daily(x_api_key: str = Header(None)) -> Dict:
-    if x_api_key != SLUGRUSH_API_KEY:
+def get_daily(slugrush_api_key: str = Header(None)) -> Dict:
+    if slugrush_api_key != SLUGRUSH_API_KEY:
         raise HTTPException(status_code=403, detail="Forbidden: Invalid API Key")
     msg = db.get_daily_query()
     return msg
 
 # GET endpoint - queries database and returns all of previous weeks (1-7) crowd_count - NEEDED FOR GRAPHING WEEKLY VIEW
 @app.get("/get/weekly")
-def get_weekly(x_api_key: str = Header(None)) -> list:
-    if x_api_key != SLUGRUSH_API_KEY:
+def get_weekly(slugrush_api_key: str = Header(None)) -> list:
+    if slugrush_api_key != SLUGRUSH_API_KEY:
         raise HTTPException(status_code=403, detail="Forbidden: Invalid API Key")
     msg = db.get_weekly_query()
     return msg

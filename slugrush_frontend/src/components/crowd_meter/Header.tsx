@@ -22,7 +22,10 @@ export default function Header() {
   }, [])
 
   return (
-    <header className="bg-[#003C6B] text-white shadow-md">
+    // for mobile devices, need paddling on the top to avoid the notch
+    <header className="bg-[#003C6B] text-white shadow-md pt-4 md:pt-0" 
+      style={{ paddingTop: 'env(safe-area-inset-top, 1rem)' }}
+      >
       <div className="max-w-4xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
@@ -61,14 +64,14 @@ export default function Header() {
           <div className="md:hidden mt-2 pt-2 border-t border-[#004d8a]">
             <Link
               href="/about"
-              className="block w-full text-right px-2 py-2 hover:bg-[#002a4d] rounded transition-colors"
+              className="block w-full text-left px-2 py-2 hover:bg-[#002a4d] rounded transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               About Us
             </Link>
             <Link
               href="/contact"
-              className="block w-full text-right px-2 py-2 hover:bg-[#002a4d] rounded transition-colors"
+              className="block w-full text-left px-2 py-2 hover:bg-[#002a4d] rounded transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Contact
@@ -78,7 +81,7 @@ export default function Header() {
 
         <div className="mt-2 flex flex-wrap items-center justify-between">
           <p className="text-sm text-gray-200 font-bold">{greeting}, Slugs!</p>
-          <span className="text-sm text-[#FEC700]">UCSC Facility Occupancy Counts</span>
+          <span className="text-sm text-[#FEC700]">UCSC Fitness Center</span>
         </div>
       </div>
     </header>

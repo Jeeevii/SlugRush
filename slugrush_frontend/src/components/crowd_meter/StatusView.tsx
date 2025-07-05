@@ -35,7 +35,7 @@ export default function StatusBar() {
       const currentTime = Date.now() 
 
       if (cachedData){ // if cached data exists
-        console.log("loading cached data:", JSON.parse(cachedData))
+        //console.log("loading cached data:", JSON.parse(cachedData))
         const {data, timestamp} = JSON.parse(cachedData)
         if (currentTime - timestamp < CACHE_DURATION) {
           console.log("Using cached status data")
@@ -48,12 +48,13 @@ export default function StatusBar() {
       // cache data doesnt exist (or expired)
       console.log("fetching status data from API")
       const data = await fetchCurrentStatus() // fetch data from get/count
+      //console.log("fetched status data:", data)
       setStatusData(data) // update state 
       localStorage.setItem(
         CACHE_STATUS_KEY,
         JSON.stringify({data: data, timestamp: currentTime})
       )
-      console.log("caching current status data:", data)
+      //console.log("caching current status data:", data)
     } catch (error) {
       console.error("Error loading status data:", error)
     } finally {

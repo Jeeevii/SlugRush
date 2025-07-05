@@ -29,7 +29,7 @@ export async function fetchCurrentStatus(): Promise<StatusData> {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "x-api-key": API_KEY,
+            "slugrush-api-key": API_KEY,
         },
       }
     )
@@ -38,7 +38,7 @@ export async function fetchCurrentStatus(): Promise<StatusData> {
       throw new Error(`Failed to fetch data: ${res.statusText}`);
     }
     const data = await res.json();
-  
+    // console.log("get/count fetched data:", data);
     const capacity = 150
   
     const currentCount = data.crowd_count

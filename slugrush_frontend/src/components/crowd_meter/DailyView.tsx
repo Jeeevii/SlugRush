@@ -43,6 +43,7 @@ export default function DailyView() {
 
       console.log("Fetching daily data from API")
       const data = await FetchFormattedDailyData()
+      //console.log("Fetched daily data:", data)
       setData(data)
       localStorage.setItem(
         CACHE_DAILY_KEY,
