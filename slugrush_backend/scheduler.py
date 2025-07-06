@@ -11,6 +11,10 @@ from database import Database
 load_dotenv()
 
 BACKEND_URL = os.environ.get("BACKEND_URL")
+SLUGRUSH_API_KEY = os.getenv("SLUGRUSH_API_KEY")
+
+if not SLUGRUSH_API_KEY:
+    raise ValueError("SLUGRUSH_API_KEY environment variable not set.")
 # BACKEND_URL = "http://localhost:8000" 
 if not BACKEND_URL:
     raise ValueError("BACKEND_URL environment variable not set.")
@@ -73,7 +77,7 @@ class Scheduler:
 
     def get_scraped_data(self) -> dict[str, int | str]:
         try:
-            response = requests.get(BACKEND_URL + "/get/count")
+            response = requests.get(BACKEND_URL + "/get/count", headers={"slugrush-api-key": SLUGRUSH_API_KEY})
             response.raise_for_status()  # raise an error for bad responses
             data = response.json()
             return data
