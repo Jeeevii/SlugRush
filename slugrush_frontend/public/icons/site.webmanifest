@@ -17,5 +17,8 @@
   ],
   "theme_color": "#ffc801",
   "background_color": "#ffc801",
-  "display": "standalone"
+  "display": "standalone",
+  "orientation": "portrait",
+  "description": "SlugRush helps UCSC students visualize gym crowd levels in real-time and track historical data to plan workouts better.",
+  "start_url": "/"
 }
