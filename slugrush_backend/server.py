@@ -30,20 +30,17 @@ app.add_middleware(
     allow_methods=["GET"],
     allow_headers=["Authorization", "Content-Type", "slugrush-api-key"],
 )
-#scheduler = Scheduler() # runs background scheduler seperate thread
+scheduler = Scheduler() # runs background scheduler seperate thread
 db = Database()
 
 # updated startup and shutdown with FastAPI lifespan
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    
-    db.start() # only testing
-    #scheduler.start_jobs()
+    # db.start() # only testing
+    scheduler.start_jobs()
     yield # when server shutdowns down (manual ctrl + c)
-
-    db.exit() # only testing
-    
-    #scheduler.stop_jobs()
+    # db.exit() # only testing
+    scheduler.stop_jobs()
 
 app.router.lifespan_context = lifespan
 
