@@ -113,7 +113,7 @@ export default function DownloadPage() {
                   <div className="bg-gray-100 rounded-lg p-4 sm:p-6 flex items-center justify-center min-h-[250px] sm:min-h-[300px]">
                     <div className="text-center">
                         <img
-                            src="/gifs/install-demo.gif"
+                            src="/slugrush_guide.gif"
                             alt="Add to Home Screen Demo"
                             className="rounded-lg shadow-sm mx-auto max-w-full h-auto"
                         />

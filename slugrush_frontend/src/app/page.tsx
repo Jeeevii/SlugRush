@@ -1,7 +1,11 @@
+import React from 'react'
+
 import CrowdMeterContainer from '../components/crowd_meter/CrowdMeterContainer'
 import GymHours from '../components/crowd_meter/GymHours'
 import Header from '../components/crowd_meter/Header'
 import StatusBar from '../components/crowd_meter/StatusView'
+import InstallGuide from '../components/pop_ups/InstallGuide'
+
 
 export default function Home() {
   return (
@@ -12,6 +16,7 @@ export default function Home() {
         <CrowdMeterContainer /> 
         <GymHours />
        </div>
+      <InstallGuide />
     </div>
   )
 }
