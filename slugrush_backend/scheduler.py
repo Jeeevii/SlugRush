@@ -8,10 +8,12 @@ import logging
 import requests
 
 from database import Database
-from web_scraper import Scraper
 load_dotenv()
 
 BACKEND_URL = os.environ.get("BACKEND_URL")
+# BACKEND_URL = "http://localhost:8000" 
+if not BACKEND_URL:
+    raise ValueError("BACKEND_URL environment variable not set.")
 local_time = timezone("America/Los_Angeles") # render has different time zone
 
 # scheduler logging 
@@ -28,18 +30,35 @@ class Scheduler:
     def __init__(self) -> None:
         self.scheduler = BackgroundScheduler(timezone=local_time)
         self.database = Database()
-        self.scraper = Scraper()
 
     def start_jobs(self) -> None:
         self.database.start()
         # Daily at 12:00 AM
         self.scheduler.add_job(self.add_new_day, 'cron', hour=0, minute=0)
+        # Daily at 11:30 PM
+        self.scheduler.add_job(self.update_weekly_count, 'cron', hour=23, minute=30)
+    
         # Weekdays: 6 AM to 11 PM every 30 min
         self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week="0-4", hour="6-23", minute="*/30")
+        # Weekdays: 6 AM to 11 PM
+        self.scheduler.add_job(
+            self.ping_backend,
+            'cron',
+            day_of_week='0-4',
+            hour='6-22',
+            minute='0,14,28,42,56'
+        )
+        
         # Weekends: 8 AM to 8 PM every 30 min
         self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week="5-6", hour="8-20", minute="*/30")
-        # Ping the main backend every 10 minutes to prevent idle timeout (15 minutes)
-        self.scheduler.add_job(self.ping_backend, 'interval', minutes=5)
+        # Weekends: 8 AM to 8 PM
+        self.scheduler.add_job(
+            self.ping_backend,
+            'cron',
+            day_of_week='5-6',
+            hour='8-19',
+            minute='0,14,28,42,56'
+        )
         
         self.scheduler.start()
         scheduler_logger.info("Scheduler started...")
@@ -59,16 +78,27 @@ class Scheduler:
         return
 
     def get_scraped_data(self) -> dict[str, int | str]:
-        # JOB for fetching occupancy count 
-        scraped_data = self.scraper.gym_scrape()
-        return json.loads(scraped_data)
+        try:
+            response = requests.get(BACKEND_URL + "/get/count")
+            response.raise_for_status()  # raise an error for bad responses
+            data = response.json()
+            return data
+        except requests.RequestException as e:
+            scheduler_logger.error(f"Failed to fetch data from backend: {e}")
+            return {"count": -1, "timestamp": "error"}
 
     def add_hourly_count(self) -> None:
         scheduler_logger.info("Executing ADD_HOURLY_COUNT Task!")
         crowd_data = self.get_scraped_data()
         self.database.send_hourly_count(crowd_data)
         return
-
+    
+    # job to update weekly averages every day at 11:30 PM
+    def update_weekly_count(self) -> None:
+        scheduler_logger.info("Executing UPDATE_WEEKLY_AVERAGES Task!")
+        self.database.update_weekly_query()
+        return
+    
     # task to prevent render server from idle and shutdown
     def ping_backend(self) -> None:
         try:
@@ -85,7 +115,8 @@ class Scheduler:
 if __name__ == "__main__":
     scheduler = Scheduler()
     scheduler.start_jobs()  # Start the scheduler with a 5-second interval
-
+    data = scheduler.get_scraped_data()
+    print(f"Scraped data: {json.dumps(data, indent=2)}")
     try:
         # Keep the program running to allow the scheduler to run tasks
         while True:

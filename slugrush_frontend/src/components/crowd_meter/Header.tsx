@@ -22,12 +22,15 @@ export default function Header() {
   }, [])
 
   return (
-    <header className="bg-[#003C6B] text-white shadow-md">
+    // for mobile devices, need paddling on the top to avoid the notch
+    <header className="bg-[#003C6B] text-white shadow-md pt-4 md:pt-0" 
+      style={{ paddingTop: 'env(safe-area-inset-top, 1rem)' }}
+      >
       <div className="max-w-4xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
               <div className="w-10 h-10 bg-[#FDC700] rounded-full flex items-center justify-center">
-                <img src="/icons/web-app-manifest-192x192.png" alt="Logo" className="w-10 h-10" />
+                <img src="/icons/web-app-manifest-512x512.png" alt="Mr.Slug" className="w-10 h-10 rounded-full" />
                 {/* <span className="text-[#003C6B] text-xl font-bold">🐌</span> */}
               </div>
               <div className="flex items-center">
@@ -37,7 +40,7 @@ export default function Header() {
                 </div>
               </div>
             </Link>
-
+          {/* default menu */}
           <div className="flex items-center gap-3">
             <div className="hidden md:flex items-center gap-1">
               <Link href="/about" className="px-2 py-1.5 text-sm rounded hover:bg-[#002a4d] transition-colors">
@@ -78,7 +81,7 @@ export default function Header() {
 
         <div className="mt-2 flex flex-wrap items-center justify-between">
           <p className="text-sm text-gray-200 font-bold">{greeting}, Slugs!</p>
-          <span className="text-sm text-[#FEC700]">UCSC Facility Occupancy Counts</span>
+          <span className="text-sm text-[#FEC700]">UCSC Fitness Center</span>
         </div>
       </div>
     </header>

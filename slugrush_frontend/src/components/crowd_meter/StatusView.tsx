@@ -5,6 +5,9 @@ import { Users, RefreshCw } from "lucide-react"
 import { fetchCurrentStatus, getStatusText } from "@/src/lib/current_api"
 import type { StatusData } from "@/src/lib/types"
 
+const CACHE_STATUS_KEY = "statusData"
+const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
+
 export default function StatusBar() {
   const [statusData, setStatusData] = useState<StatusData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -14,20 +17,44 @@ export default function StatusBar() {
   useEffect(() => {
     loadData()
 
-    // refresh data every 30 mins
+    // refresh data every 5 mins
     const interval = setInterval(() => {
       loadData(false)
-    }, 1800000)
+    }, CACHE_DURATION)
 
     return () => clearInterval(interval)
   }, [])
 
   // function to load data - on every mount
   const loadData = async (showLoading = true) => {
-    if (showLoading) setLoading(true)
+    if (showLoading) {
+      setLoading(true)
+    }
     try {
-      const data = await fetchCurrentStatus()
-      setStatusData(data)
+      const cachedData = localStorage.getItem(CACHE_STATUS_KEY)
+      const currentTime = Date.now() 
+
+      if (cachedData){ // if cached data exists
+        //console.log("loading cached data:", JSON.parse(cachedData))
+        const {data, timestamp} = JSON.parse(cachedData)
+        if (currentTime - timestamp < CACHE_DURATION) {
+          console.log("Using cached status data")
+          setStatusData(data)
+          setLoading(false)
+          return
+        }
+      }
+
+      // cache data doesnt exist (or expired)
+      console.log("fetching status data from API")
+      const data = await fetchCurrentStatus() // fetch data from get/count
+      //console.log("fetched status data:", data)
+      setStatusData(data) // update state 
+      localStorage.setItem(
+        CACHE_STATUS_KEY,
+        JSON.stringify({data: data, timestamp: currentTime})
+      )
+      //console.log("caching current status data:", data)
     } catch (error) {
       console.error("Error loading status data:", error)
     } finally {
@@ -36,10 +63,13 @@ export default function StatusBar() {
     }
   }
 
-  // Handle manual refresh
+  // handle manual refetch/clear cache
   const handleRefresh = async () => {
     setRefreshing(true)
-     window.location.reload()
+    setLoading(true)
+    localStorage.removeItem(CACHE_STATUS_KEY) // clear cache
+    await loadData(false) // fetch fresh data
+    //window.location.reload()
   }
 
   if (loading) {

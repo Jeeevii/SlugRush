@@ -12,7 +12,8 @@ import {
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-[#f5f5f5]">
+    <div className="min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('/slugbackground.png')" }}>
       <Header />
 
       <main className="max-w-4xl mx-auto p-4 sm:p-6">
@@ -92,14 +93,14 @@ export default function ContactPage() {
                 </div>
 
                 {/* Hours */}
-                <div className="bg-[#12A5DC]/10 border border-[#12A5DC]/20 rounded-lg p-4">
+                {/* <div className="bg-[#12A5DC]/10 border border-[#12A5DC]/20 rounded-lg p-4">
                   <h3 className="font-medium text-[#003C6B] mb-1 flex items-center gap-2">
                     <CalendarClock className="h-4 w-4 text-[#003C6B]" />
                     Hours
                   </h3>
                   <p className="text-gray-700">Weekdays: 6am–11pm</p>
                   <p className="text-gray-700">Weekends: 8am–8pm</p>
-                </div>
+                </div> */}
 
                 {/* Website */}
                 <div className="bg-[#12A5DC]/10 border border-[#12A5DC]/20 rounded-lg p-4">

@@ -34,7 +34,7 @@ DB = os.environ.get("DBNAME")
 USER = os.environ.get("DBUSER")
 PASS = os.environ.get("DBPASSWORD")
 PORT = os.environ.get("DBPORT")
-
+print(f"Connecting to Database: {DB} on {HOST}:{PORT} with user {USER}")
 class Database():
     # basic constructer starting database connection with psycopgg
     def __init__(self) -> None:
@@ -63,7 +63,7 @@ class Database():
                 status SMALLINT NOT NULL CHECK (status IN (0, 1)),  -- 0 = Old, 1 = Live
                 day_of_week VARCHAR(10) NOT NULL
             );
-        """
+        """ 
         hourly_table_query = """
             CREATE TABLE IF NOT EXISTS hourly_count (
                 id SERIAL PRIMARY KEY,  -- auto-increment
@@ -74,10 +74,23 @@ class Database():
                 timestamp TIMESTAMP NOT NULL
             );
         """
+        weekly_table_query = """
+            CREATE TABLE IF NOT EXISTS weekly_count (
+                id SERIAL PRIMARY KEY,
+                day_of_week TEXT NOT NULL CHECK (
+                    day_of_week IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')   
+                ),
+                hour INTEGER NOT NULL CHECK (hour BETWEEN 0 AND 23),
+                minute INTEGER NOT NULL CHECK (minute IN (0, 30)),
+                average_crowd_count FLOAT NOT NULL,
+                last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        """
         try:
             db_logger.info("Sent days, and hourly table to Database!")
             self.send_query(days_table_query)
             self.send_query(hourly_table_query)
+            self.send_query(weekly_table_query)
         except Exception as e:
             db_logger.info("Failed to send Tables to Database: ", e)
         return
@@ -163,7 +176,7 @@ class Database():
     # helper for deleting oldest week of data from days_count and hourly_count tables
     def delete_oldest(self) -> None:
         try:
-            # Find the oldest 7 days (1 week) based on the `id` in `days_count`
+            # find the oldest 7 days (1 week) based on the `id` in `days_count`
             oldest_days_query = """
                 SELECT id FROM days_count
                 ORDER BY date ASC
@@ -176,7 +189,7 @@ class Database():
                 db_logger.info("No data to delete.")
                 return
 
-            # Delete corresponding rows from `hourly_count` for the oldest days
+            # delete corresponding rows from `hourly_count` for the oldest days
             delete_hourly_query = """
                 DELETE FROM hourly_count
                 WHERE day_id = ANY(%s)
@@ -184,7 +197,7 @@ class Database():
             self.cursor.execute(delete_hourly_query, (oldest_ids,))
             db_logger.info(f"Deleted hourly data for day_ids: {oldest_ids}")
 
-            # Delete the oldest days from `days_count`
+            # delete the oldest days from `days_count`
             delete_days_query = """
                 DELETE FROM days_count
                 WHERE id = ANY(%s)
@@ -326,58 +339,108 @@ class Database():
             'day_of_week': day_of_week,
             'hourly_data': hourly_data
         }
+    
+    # function should update weekly table once a day with new data from hourly table
+    def update_weekly_query(self) -> None:
+        try:
+            gym_capacity = 150
+            n = 7  # Total data points we assume for the average (1 per weekday, weekly average)
+            
+            curr_day_data = self.get_daily_query()
+            day_of_week = curr_day_data['day_of_week']
+            hourly_data = curr_day_data['hourly_data']
+
+            db_logger.info(f"Updating weekly_count table for {day_of_week}")
+
+            previous_average_query = """ 
+                SELECT hour, minute, average_crowd_count
+                FROM weekly_count
+                WHERE day_of_week = %s
+                ORDER BY hour, minute;
+            """
+            self.send_query(previous_average_query, (day_of_week,))
+            previous_averages = self.read_all()
+
+            # loop by index to combine current data with previous averages
+            for i, hour_data in enumerate(hourly_data):
+                hour = hour_data['hour']
+                minute = hour_data['minute']
+                raw_count = hour_data['crowd_count']
+
+                # normalize based on max capacity (stored as %)
+                normalized_count = round((raw_count / gym_capacity) * 100, 2)
+
+                if i < len(previous_averages):
+                    prev_hour, prev_minute, prev_avg = previous_averages[i]
+
+                    # calculate rolling average
+                    updated_avg = round(((prev_avg * (n - 1)) + normalized_count) / n, 2)
+
+                    update_query = """
+                        UPDATE weekly_count
+                        SET average_crowd_count = %s, last_updated = CURRENT_TIMESTAMP
+                        WHERE day_of_week = %s AND hour = %s AND minute = %s;
+                    """
+                    self.cursor.execute(update_query, (updated_avg, day_of_week, hour, minute))
+                    self.connection.commit() 
+                    db_logger.info(f"Updated {day_of_week} {hour}:{minute} -> {updated_avg}%")
+                else:
+                    # if entry doesn't exist, insert it
+                    insert_query = """
+                        INSERT INTO weekly_count (day_of_week, hour, minute, average_crowd_count)
+                        VALUES (%s, %s, %s, %s);
+                    """
+                    self.cursor.execute(insert_query, (day_of_week, hour, minute, normalized_count))
+                    self.connection.commit() 
+                    db_logger.info(f"Inserted new {day_of_week} {hour}:{minute} -> {normalized_count}%")
+
+            db_logger.info(f"weekly_count table successfully updated for {day_of_week}")
+
+        except Exception as e:
+            db_logger.warning(f"Failed to update weekly_count table: {e}")
+
 
     # get all previous weeks data to graph (same logic as get_daily but with all 7 days)
     def get_weekly_query(self) -> list:
         weekly_query = """
-            SELECT 
-                dc.day_of_week, 
-                hc.hour, 
-                hc.minute, 
-                ROUND(AVG(hc.crowd_count)) AS total_crowd
-            FROM hourly_count hc
-            JOIN days_count dc ON hc.day_id = dc.id
-            GROUP BY dc.day_of_week, hc.hour, hc.minute
-            ORDER BY 
-                CASE 
-                    WHEN dc.day_of_week = 'Monday' THEN 1
-                    WHEN dc.day_of_week = 'Tuesday' THEN 2
-                    WHEN dc.day_of_week = 'Wednesday' THEN 3
-                    WHEN dc.day_of_week = 'Thursday' THEN 4
-                    WHEN dc.day_of_week = 'Friday' THEN 5
-                    WHEN dc.day_of_week = 'Saturday' THEN 6
-                    WHEN dc.day_of_week = 'Sunday' THEN 7
-                END,
-                hc.hour, 
-                hc.minute;
+            SELECT * FROM weekly_count
+            ORDER BY
+            CASE day_of_week
+                WHEN 'Monday' THEN 1
+                WHEN 'Tuesday' THEN 2
+                WHEN 'Wednesday' THEN 3
+                WHEN 'Thursday' THEN 4
+                WHEN 'Friday' THEN 5
+                WHEN 'Saturday' THEN 6
+                WHEN 'Sunday' THEN 7
+            END,
+            hour,
+            minute;
         """
+
         try:    
             db_logger.warning("Sent get_weekly_query to Database!")
             self.send_query(weekly_query)
         except Exception as e:
             db_logger.warning("Error sending get_weekly_query to Database: ", e)
-        rows = self.read_all()
+        weekly_data = self.read_all()
         # write_to_json(rows)
         #print(rows)
         final_data = {}
-        for row in rows:
-            day = row[0]
+        for row in weekly_data:
+            day = row[1] # day_of_week
+            #print(day)
             if day not in final_data:
                 final_data[day] = {
-                    'day_of_week': row[0],
-                    #'date': row[1],
-                    #'status': row[2],
-                    #'day_of_week': row[3],
+                    'day_of_week': day,
                     'hourly_data': []
                 }
             
-            if row[1] is not None:
+            if day is not None:
                 hourly = {
-                    #'day_id': row[4],
-                    'hour': row[1],
-                    'minute': row[2],
-                    'crowd_count': row[3],
-                    #'timestamp': row[8]
+                    'hour': row[2],
+                    'minute': row[3],
+                    'crowd_count': row[4],
                 }
                 final_data[day]['hourly_data'].append(hourly) # adding to query list
 
@@ -396,6 +459,9 @@ get_day_query = """
 """
 get_hour_query = """
     SELECT * FROM hourly_count
+"""
+get_weekly_query = """
+    SELECT * FROM weekly_count
 """
 join_query = """
     select * from days_count dc join hourly_count hc on dc.id = hc.day_id
@@ -432,7 +498,8 @@ if __name__ == "__main__":
     # dev_data = db.read_all()
     # for row in dev_data:
     #     print(row)
-
+    
+    db.update_weekly_query()
     
     # PLEASE DOUBLE CHECK BEFORE DELETING ITEMS
     #db.delete_by_id(DAY_TABLE, 2)
@@ -451,17 +518,23 @@ if __name__ == "__main__":
     # for hour in day_data['hourly_data']:
     #     print(hour['crowd_count'])
 
-    # weeky_data = db.get_weekly_query()
-    # print(weeky_data)
-    # write_to_json(weeky_data)
+    weeky_data = db.get_weekly_query()
+    write_to_json(weeky_data)
+    print(db.check_count())
+    # db.initialize_weekly_table() # initialize weekly table with data from hourly_count table
 
-    # print(db.check_count())
-
+    # checking weekly table
+    # print("\nCHECKING ALL CONTENT IN WEEKLY_COUNT TABLE\n")
+    # db.send_query(get_weekly_query)
+    # weekly_data = db.read_all()
+    # write_to_json(weekly_data, "beta/new_weekly.json")
+    
     # checking days table
-    print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
-    db.send_query(get_day_query)
-    data = db.read_all()
-    print(data)
+    # print("\nCHECKING ALL CONTENT IN DAY_COUNT TABLE\n")
+    # db.send_query(get_day_query)
+    # data = db.read_all()
+    # print(data)
+
     # # checking hours table
     # print("\nCHECKING ALL CONTENT IN HOURLY_COUNT TABLE\n")
     # db.send_query(get_hour_query)
