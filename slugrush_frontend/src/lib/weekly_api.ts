@@ -2,7 +2,7 @@ import type { GymCrowdEntry, DayData } from "@/src/lib/types"
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_TEST_BACKEND_URL + "/get/weekly" || "";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL + "/get/weekly" || "";
 const API_KEY = process.env.NEXT_PUBLIC_SLUGRUSH_API_KEY || "";
 
 const MAX_CAPACITY = 150
