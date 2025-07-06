@@ -12,10 +12,10 @@ import json
 import uvicorn
 import os
 import json
-load_dotenv()\
+load_dotenv()
 
-FRONTEND_URL = os.environ.get("TEST_FRONTEND_URL")
-MOBILE_URL = os.environ.get("TEST_MOBILE_IP")
+FRONTEND_URL = os.environ.get("FRONTEND_URL")
+MOBILE_URL = os.environ.get("MOBILE_URL")
 BACKEND_PORT = int(os.environ.get("BACKEND_PORT", 8000))
 SLUGRUSH_API_KEY = os.getenv("SLUGRUSH_API_KEY")
 print(f"Allowed Origin: {FRONTEND_URL}")
