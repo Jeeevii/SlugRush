@@ -33,33 +33,27 @@ class Scheduler:
 
     def start_jobs(self) -> None:
         self.database.start()
-        # Daily at 12:00 AM
+        # daily new day reset at 12:00 AM
         self.scheduler.add_job(self.add_new_day, 'cron', hour=0, minute=0)
-        # Daily at 11:30 PM
+
+        # daily update at 11:30 PM
         self.scheduler.add_job(self.update_weekly_count, 'cron', hour=23, minute=30)
-    
-        # Weekdays: 6 AM to 11 PM every 30 min
+
+        # Weekdays (Mon-Fri):
+        # hourly counts: 6 AM – 11 PM every 30 min
         self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week="0-4", hour="6-23", minute="*/30")
-        # Weekdays: 6 AM to 11 PM
-        self.scheduler.add_job(
-            self.ping_backend,
-            'cron',
-            day_of_week='0-4',
-            hour='6-22',
-            minute='0,14,28,42,56'
-        )
-        
-        # Weekends: 8 AM to 8 PM every 30 min
+        # backend wake-up pings: 5:30 AM – 11:30 PM every 10 min
+        self.scheduler.add_job(self.ping_backend, 'cron', day_of_week='0-4', hour='5-23', minute='*/10')
+
+        # Weekends (Sat-Sun):
+        # hourly counts: 8 AM – 8 PM every 30 min
         self.scheduler.add_job(self.add_hourly_count, 'cron', day_of_week="5-6", hour="8-20", minute="*/30")
-        # Weekends: 8 AM to 8 PM
-        self.scheduler.add_job(
-            self.ping_backend,
-            'cron',
-            day_of_week='5-6',
-            hour='8-19',
-            minute='0,14,28,42,56'
-        )
-        
+        # backend wake-up pings: 7:30 AM – 8:30 PM every 10 min
+        self.scheduler.add_job(self.ping_backend, 'cron', day_of_week='5-6', hour='7-20', minute='*/10')
+
+        # late-night jobs (11 PM – 12 AM)
+        self.scheduler.add_job(self.ping_backend, 'cron', hour='22-23', minute='*/10')
+                
         self.scheduler.start()
         scheduler_logger.info("Scheduler started...")
 

@@ -10,9 +10,9 @@ Overall Tasks:
     [x] Cache weekly view data for 1 day to prevent re-pings on every visit  
     [] Unit tests for new weekly averages logic (if time allows)  
     [x] Set up React Native to wrap app in WebView for IOS/Android app
-    [] Basic Pop Up linking to the app store for IOS/Android app (using local storage to not show again)  
-    [] Add a "Download App" button in the header for mobile users (if not already installed)
-    [] Ship the app to the app stores (whole diff process, need to learn how to do this)
+    [x] Basic Pop Up linking to the app store for IOS/Android app (using local storage to not show again)  
+    [x] Add a "Download App" button in the header for mobile users (if not already installed)
+    [o] Ship the app to the app stores (whole diff process, need to learn how to do this)
     
 ## 🚀 SlugRush Full Release Prep
 Backend Tasks:
@@ -31,7 +31,7 @@ Frontend Tasks:
 Design Refresh (New Branding):
     [x] Update app icon with new project logo (all devices)  
     [x] Replace background image (ensure it scales cleanly)  
-    [] Small UI/UX tweaks for consistency with new branding 
+    [x] Small UI/UX tweaks for consistency with new branding - manual refresh
 
 
 ## 🧼 Nice-to-Haves / Extras
