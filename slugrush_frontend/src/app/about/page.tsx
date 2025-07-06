@@ -91,7 +91,7 @@ export default function AboutPage() {
                     </div>
                     <div>
                       <h3 className="font-bold text-[#003C6B]">Hanlin (Kevin) Huang</h3>
-                      <p className="text-sm text-gray-600">Data Scientist</p>
+                      <p className="text-sm text-gray-600">Data Analyst</p>
                       <div className="flex items-center gap-2 mt-1">
                         <a
                           href="https://www.linkedin.com/in/hanlin-huang-6aa4131ba/"
@@ -120,32 +120,23 @@ export default function AboutPage() {
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-16 h-16 rounded-full overflow-hidden">
                         <img
-                          src="https://media.licdn.com/dms/image/v2/C5603AQGzPnQsjUgj_w/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1604957221788?e=1752105600&v=beta&t=9O8EgK14qRffDYhbMZzZyLtHt_hbbZYWkIFIuubH19s"
-                          alt="Linkedin Pic - Kevin"
+                          src="https://media.licdn.com/dms/image/v2/D4E03AQFLSCl04ivYcw/profile-displayphoto-shrink_200_200/B4EZbxGZDFHMAc-/0/1747801707667?e=1757548800&v=beta&t=peOYr-fnY2TbNpN_D8sYrTV2mDODERR4kG2suZAfRJ0"
+                          alt="Linkedin Pic - Shanglong"
                           className="w-full h-full object-cover"
                         />
                       </div>
                       <div>
-                      <h3 className="font-bold text-[#003C6B]">Yongsheng Chen</h3>
-                      <p className="text-sm text-gray-600">Business Analyst</p>
+                      <h3 className="font-bold text-[#003C6B]">Shanglong Chen</h3>
+                      <p className="text-sm text-gray-600">UI/UX Designer</p>
                       <div className="flex items-center gap-2 mt-2">
                         <a
-                          href="https://www.linkedin.com/in/yongsheng-chen-4504121b2/"
+                          href="https://www.linkedin.com/in/shanglong-chen-56a98a29a/"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors"
                         >
                           <Linkedin className="h-4 w-4" />
                           <span className="text-xs">LinkedIn</span>
-                        </a>
-                        <a
-                          href="https://github.com/YongC26"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-gray-700 hover:text-gray-900 transition-colors"
-                        >
-                          <Github className="h-4 w-4" />
-                          <span className="text-xs">GitHub</span>
                         </a>
                       </div>
                     </div>

@@ -1,5 +1,4 @@
 import React from 'react'
-
 import CrowdMeterContainer from '../components/crowd_meter/CrowdMeterContainer'
 import GymHours from '../components/crowd_meter/GymHours'
 import Header from '../components/crowd_meter/Header'
