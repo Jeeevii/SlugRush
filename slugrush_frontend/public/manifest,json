@@ -2,7 +2,7 @@
   "name": "SlugRush",
   "short_name": "SlugRush",
   "description": "SlugRush helps UCSC students visualize gym crowd levels in real-time and track historical data to plan workouts better.",
-  "start_url": "/",
+  "start_url": "https://slugrush.vercel.app",
   "display": "standalone",
   "background_color": "#ffc801",
   "theme_color": "#003C6B",

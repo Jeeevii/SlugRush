@@ -35,7 +35,7 @@ export const metadata: Metadata = {
         { url: "/icons/favicon.ico", sizes: "any", type: "image/x-icon" },
       ],
     },
-    manifest: "/manifest.json", // Web app manifest for PWA
+    manifest: "/icons/site.webmanifest", // Web app manifest for PWA
   };
 
 export default function RootLayout({

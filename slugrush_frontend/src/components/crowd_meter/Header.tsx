@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import LiveIndicator from "./ui/LiveIndicator"
-import { Menu, X } from "lucide-react"
+import { Menu, X, Download} from "lucide-react"
 import Link from "next/link"
 
 export default function Header() {
@@ -43,6 +43,10 @@ export default function Header() {
           {/* default menu */}
           <div className="flex items-center gap-3">
             <div className="hidden md:flex items-center gap-1">
+              <Link href="/download" className="px-2 py-1.5 text-sm rounded hover:bg-[#002a4d] transition-colors">
+                <Download className="h-4 w-4 inline-block mr-1" />
+                Get App
+              </Link>
               <Link href="/about" className="px-2 py-1.5 text-sm rounded hover:bg-[#002a4d] transition-colors">
                 About Us
               </Link>
@@ -62,6 +66,14 @@ export default function Header() {
         {/* Mobile menu */}
         {isMenuOpen &&  (
           <div className="md:hidden mt-2 pt-2 border-t border-[#004d8a]">
+            <Link
+              href="/download"
+              className="flex items-center gap-2 w-full text-left px-2 py-2 hover:bg-[#002a4d] rounded transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Download className="h-4 w-4" />
+              Get App
+            </Link>
             <Link
               href="/about"
               className="block w-full text-left px-2 py-2 hover:bg-[#002a4d] rounded transition-colors"
